@@ -212,3 +212,5 @@ const data = [
     __v: 0,
   },
 ];
+
+export default data;

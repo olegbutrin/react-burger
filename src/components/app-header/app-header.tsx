@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes, { any, arrayOf, number, string } from "prop-types";
+import PropTypes, { number, string } from "prop-types";
 import {
   BurgerIcon,
   ListIcon,
@@ -41,20 +41,18 @@ class MenuButton extends React.Component<{
   render() {
     return (
       <div
-        className={appHeaderStyles.menuButton}
+        className={
+          this.props.active
+            ? appHeaderStyles.menuButtonActive
+            : appHeaderStyles.menuButton
+        }
         style={{ order: this.props.id < 3 ? this.props.id : this.props.id + 1 }}
         onClick={() => {
           this.props.callback(this.props.id);
         }}
       >
         {this.itemIcon(this.props.icon)}
-        <span
-          className={
-            this.props.active
-              ? "text text_type_main-default"
-              : "text text_type_main-default text_color_inactive"
-          }
-        >
+        <span className={"text text_type_main-default"}>
           {this.props.value}
         </span>
       </div>
@@ -64,7 +62,7 @@ class MenuButton extends React.Component<{
 
 // Основной компонент, реализующий заголовок
 class AppHeader extends React.Component<
-  { menu: any; callback: any },
+  { menu: any; callbackFunc: any },
   { activeItem: number }
 > {
   constructor(props: any) {
@@ -72,30 +70,29 @@ class AppHeader extends React.Component<
     this.state = { activeItem: 1 };
   }
 
-  // Заглушка для потенциального эвента переклбчения меню вверх
+  // Заглушка для потенциального эвента переключения меню вверх
   menuCallback = (id: any) => {
+    this.props.callbackFunc(id);
     this.setState({ activeItem: id });
   };
 
   render() {
     return (
-      <header className={`${appHeaderStyles.header} mt-40`}>
-        <nav className={appHeaderStyles.navigation}>
-          <div className={appHeaderStyles.logo}>
-            <Logo />
-          </div>
-          {this.props.menu.map((button: any, index: number) => (
-            <MenuButton
-              key={button.id}
-              id={button.id}
-              icon={button.icon}
-              value={button.value}
-              active={button.id === this.state.activeItem}
-              callback={this.menuCallback}
-            />
-          ))}
-        </nav>
-      </header>
+      <nav className={appHeaderStyles.navigation}>
+        <div className={appHeaderStyles.logo}>
+          <Logo />
+        </div>
+        {this.props.menu.map((button: any, index: number) => (
+          <MenuButton
+            key={button.id}
+            id={button.id}
+            icon={button.icon}
+            value={button.value}
+            active={button.id === this.state.activeItem}
+            callback={this.menuCallback}
+          />
+        ))}
+      </nav>
     );
   }
 }
