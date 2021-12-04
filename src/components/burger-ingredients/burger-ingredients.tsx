@@ -35,61 +35,40 @@ const ingredientData = PropTypes.shape({
 
 */
 
-// Компонент блока интгредиентов определенного типа
+// Компонент блока ингредиентов определенного типа
 
-class IngredientTypeBox extends React.Component<
-  {
-    value: string;
-    data: any;
-    type: any;
-    max: number;
-    unique: boolean;
-    itemref: any;
-  },
-  { selectedIngrs: any }
-> {
+class IngredientTypeBox extends React.Component<{
+  value: string;
+  type: any;
+  itemref: any;
+  productsData: any;
+  selectedIngredients: any;
+  selectIngredientCallback: any;
+}> {
   constructor(props: any) {
     super(props);
-    // state.selectedIngrs - обычный массив, где хранятся id ингредиентов
-    // в зависимости от настроек типа id может повторяться
-    this.state = {
-      selectedIngrs: [],
-    };
   }
-
-  addIngredient = (id: any) => {
-    this.setState((prevState: any) => {
-      let selectedIngrs = [...prevState.selectedIngrs];
-      if (this.props.unique) {
-        selectedIngrs = selectedIngrs.filter((item) => {
-          return item === id;
-        });
-      }
-      selectedIngrs.push(id);
-      if (selectedIngrs.length > this.props.max) {
-        selectedIngrs.splice(0, 1);
-      }
-      return { ...prevState, selectedIngrs: selectedIngrs };
-    });
-  };
 
   render() {
     return (
       <div className={css.ingrBox + " mb-10"} ref={this.props.itemref}>
         <p className="text text_type_main-medium">{this.props.value}</p>
         <div className={css.ingrList}>
-          {this.props.data.map((item: any, index: number) => {
-            let itemCount: number = this.state.selectedIngrs.filter(
-              (count: any) => {
-                return count === item._id;
-              }
-            ).length;
+          {this.props.productsData.map((item: any, index: number) => {
+            let itemCount: number = this.props.selectedIngredients[
+              this.props.type
+            ].filter((count: any) => {
+              return count === item._id;
+            }).length;
             return (
               <div
                 key={index}
                 className={css.ingrPreview}
                 onClick={() => {
-                  this.addIngredient(item._id);
+                  this.props.selectIngredientCallback(
+                    this.props.type,
+                    item._id
+                  );
                 }}
               >
                 {itemCount > 0 ? (
@@ -100,6 +79,7 @@ class IngredientTypeBox extends React.Component<
                 <img
                   className={css.image + " mr-4 mb-1 ml-4"}
                   src={item.image}
+                  alt={item.name}
                 />
                 <div className={css.price}>
                   <p className="text text_type_digits-default">{item.price}</p>
@@ -121,20 +101,24 @@ class IngredientTypeBox extends React.Component<
 
 class BurgerIngredients extends React.Component<
   {
-    data: any;
-    ingredients: any;
+    productsData: any;
+    ingredientTypes: any;
+    selectedIngredients: any;
+    selectIngredientCallback: any;
   },
   {
-    activeIngr: string;
+    activeIngrType: string;
   }
 > {
   typeRefs: any = [];
 
   constructor(props: any) {
     super(props);
-    this.state = { activeIngr: this.props.ingredients[0].value };
+    this.state = {
+      activeIngrType: this.props.ingredientTypes[0].value,
+    };
     // для каждого типа ингредиентов создается свой реф, который потом используется в блоке для прокрутки
-    this.props.ingredients.forEach((ingr: any) => {
+    this.props.ingredientTypes.forEach((ingr: any) => {
       this.typeRefs.push({ value: ingr.value, ref: React.createRef() });
     });
   }
@@ -154,22 +138,22 @@ class BurgerIngredients extends React.Component<
     }
 
     this.setState((prevState: object) => {
-      return { ...prevState, activeIngr: value };
+      return { ...prevState, activeIngrType: value };
     });
   };
 
   render() {
     return (
-      <div className={css.main}>
+      <div className={css.main + " mt-4 mr-2 mb-4 ml-2"}>
         <div className={"mt-10 mb-5"}>
           <p className="text text_type_main-large">Соберите бургер</p>
         </div>
         <div className={css.menu + " mb-10"}>
-          {this.props.ingredients.map((ingr: any, index: number) => {
+          {this.props.ingredientTypes.map((ingr: any, index: number) => {
             return (
               <Tab
                 key={index}
-                active={ingr.value === this.state.activeIngr}
+                active={ingr.value === this.state.activeIngrType}
                 value={ingr.value}
                 onClick={this.ingredientTabClick}
               >
@@ -179,8 +163,8 @@ class BurgerIngredients extends React.Component<
           })}
         </div>
         <div className={css.container + " custom-scroll"}>
-          {this.props.ingredients.map((ingr: any, index: number) => {
-            let items = this.props.data.filter((item: any) => {
+          {this.props.ingredientTypes.map((ingr: any, index: number) => {
+            let items = this.props.productsData.filter((item: any) => {
               return item.type === ingr.type;
             });
             let itemRef = this.typeRefs.find((ref: any) => {
@@ -192,9 +176,9 @@ class BurgerIngredients extends React.Component<
                 itemref={itemRef.ref}
                 value={ingr.value}
                 type={ingr.type}
-                max={ingr.max}
-                unique={ingr.unique}
-                data={items}
+                productsData={items}
+                selectedIngredients={this.props.selectedIngredients}
+                selectIngredientCallback={this.props.selectIngredientCallback}
               />
             );
           })}

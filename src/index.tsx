@@ -4,9 +4,23 @@ import "./index.css";
 import App from "./components/app/app";
 import reportWebVitals from "./reportWebVitals";
 
+// Данные
+import mainMenu from "./utils/menu";
+import productsData from "./utils/data";
+
+const ingredientTypes = [
+  { value: "Булки", type: "bun", max: 1, unique: true, initial: true },
+  { value: "Соусы", type: "sauce", max: 3, unique: false, initial: false },
+  { value: "Начинки", type: "main", max: 5, unique: false, initial: false },
+];
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App
+      productsData={productsData}
+      menuData={mainMenu}
+      ingredientTypes={ingredientTypes}
+    />
   </React.StrictMode>,
   document.getElementById("root")
 );
