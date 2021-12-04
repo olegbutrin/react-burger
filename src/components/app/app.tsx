@@ -10,8 +10,8 @@ import productsData from "../../utils/data";
 
 const ingredients = [
   { value: "Булки", type: "bun", max: 1, unique: true },
-  { value: "Соусы", type: "sauce", max: 3, unique: false },
-  { value: "Начинки", type: "main", max: 3, unique: false },
+  { value: "Соусы", type: "sauce", max: 3, unique: true },
+  { value: "Начинки", type: "main", max: 5, unique: false },
 ];
 
 class App extends React.Component {

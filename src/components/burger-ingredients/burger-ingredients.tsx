@@ -1,12 +1,5 @@
 import React from "react";
-import PropTypes, {
-  number,
-  object,
-  string,
-  bool,
-  arrayOf,
-  any,
-} from "prop-types";
+import PropTypes, { number, string } from "prop-types";
 import {
   Counter,
   CurrencyIcon,
@@ -30,6 +23,20 @@ const ingredientData = PropTypes.shape({
   __v: number,
 });
 
+/*
+
+Декомпозиция по типу ингредиента (Булки, Соусы, Начинки) обусловлена необходимостью прокрутки
+через компонент Tab до начала списка. Одновременно позволяет в дальнейшем легко добавить дополнительный тип ингредиентов.
+Метод addIngredient позволяет контролировать количество ингредиентов внутри каждого типа с учетом параметра уникальности.
+Например, булку для гамбургера можно выбрать только одну и одного типа, соусов до трех штук одного типа
+и до пяти любых начинок
+
+При необходимости (при усложнении) можно вынести блок конкретного ингредиента в отдельный функциональный компонент
+
+*/
+
+// Компонент блока интгредиентов определенного типа
+
 class IngredientTypeBox extends React.Component<
   {
     value: string;
@@ -39,28 +46,30 @@ class IngredientTypeBox extends React.Component<
     unique: boolean;
     itemref: any;
   },
-  { counts: any }
+  { selectedIngrs: any }
 > {
   constructor(props: any) {
     super(props);
+    // state.selectedIngrs - обычный массив, где хранятся id ингредиентов
+    // в зависимости от настроек типа id может повторяться
     this.state = {
-      counts: [],
+      selectedIngrs: [],
     };
   }
 
   addIngredient = (id: any) => {
     this.setState((prevState: any) => {
-      let counts = [...prevState.counts];
+      let selectedIngrs = [...prevState.selectedIngrs];
       if (this.props.unique) {
-        counts = counts.filter((item) => {
+        selectedIngrs = selectedIngrs.filter((item) => {
           return item === id;
         });
       }
-      counts.push(id);
-      if (counts.length > this.props.max) {
-        counts.splice(0, counts.length - this.props.max);
+      selectedIngrs.push(id);
+      if (selectedIngrs.length > this.props.max) {
+        selectedIngrs.splice(0, 1);
       }
-      return { ...prevState, counts: counts };
+      return { ...prevState, selectedIngrs: selectedIngrs };
     });
   };
 
@@ -70,9 +79,11 @@ class IngredientTypeBox extends React.Component<
         <p className="text text_type_main-medium">{this.props.value}</p>
         <div className={css.ingrList}>
           {this.props.data.map((item: any, index: number) => {
-            let itemCount: number = this.state.counts.filter((count: any) => {
-              return count === item._id;
-            }).length;
+            let itemCount: number = this.state.selectedIngrs.filter(
+              (count: any) => {
+                return count === item._id;
+              }
+            ).length;
             return (
               <div
                 key={index}
@@ -122,16 +133,17 @@ class BurgerIngredients extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = { activeIngr: this.props.ingredients[0].value };
+    // для каждого типа ингредиентов создается свой реф, который потом используется в блоке для прокрутки
     this.props.ingredients.forEach((ingr: any) => {
       this.typeRefs.push({ value: ingr.value, ref: React.createRef() });
     });
   }
 
-  ingredientClick = (value: string) => {
+  // колбек для элеметов Tab прокручивающий список ингредиентов до выбранного блока
+  ingredientTabClick = (value: string) => {
     let itemRef = this.typeRefs.find((ref: any) => {
       return ref.value === value;
     });
-
     if (itemRef && itemRef.ref.current) {
       itemRef.ref.current.scrollIntoView({
         behavior: "smooth",
@@ -159,7 +171,7 @@ class BurgerIngredients extends React.Component<
                 key={index}
                 active={ingr.value === this.state.activeIngr}
                 value={ingr.value}
-                onClick={this.ingredientClick}
+                onClick={this.ingredientTabClick}
               >
                 {ingr.value}
               </Tab>
