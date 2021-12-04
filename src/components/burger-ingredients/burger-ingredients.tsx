@@ -1,1 +1,188 @@
 import React from "react";
+import PropTypes, {
+  number,
+  object,
+  string,
+  bool,
+  arrayOf,
+  any,
+} from "prop-types";
+import {
+  Counter,
+  CurrencyIcon,
+  Tab,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+
+import css from "./burger-ingredients.module.css";
+
+const ingredientData = PropTypes.shape({
+  _id: string,
+  name: string,
+  type: string,
+  proteins: number,
+  fat: number,
+  carbohydrates: number,
+  calories: number,
+  price: number,
+  image: string,
+  image_mobile: string,
+  Image_large: string,
+  __v: number,
+});
+
+class IngredientTypeBox extends React.Component<
+  {
+    value: string;
+    data: any;
+    type: any;
+    max: number;
+    unique: boolean;
+    itemref: any;
+  },
+  { counts: any }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      counts: [],
+    };
+  }
+
+  addIngredient = (id: any) => {
+    this.setState((prevState: any) => {
+      let counts = [...prevState.counts];
+      if (this.props.unique) {
+        counts = counts.filter((item) => {
+          return item === id;
+        });
+      }
+      counts.push(id);
+      if (counts.length > this.props.max) {
+        counts.splice(0, counts.length - this.props.max);
+      }
+      return { ...prevState, counts: counts };
+    });
+  };
+
+  render() {
+    return (
+      <div className={css.ingrBox} ref={this.props.itemref}>
+        <p className="text text_type_main-medium">{this.props.value}</p>
+        <div className={css.ingrList}>
+          {this.props.data.map((item: any, index: number) => {
+            let itemCount: number = this.state.counts.filter((count: any) => {
+              return count === item._id;
+            }).length;
+            return (
+              <div
+                key={index}
+                className={css.ingrPreview}
+                onClick={() => {
+                  this.addIngredient(item._id);
+                }}
+              >
+                {itemCount > 0 ? (
+                  <Counter count={itemCount} size={"default"} />
+                ) : (
+                  ""
+                )}
+                <img className={css.image} src={item.image} />
+                <div className={css.price}>
+                  <p className="text text_type_digits-default">{item.price}</p>
+                  <CurrencyIcon type="primary" />
+                </div>
+                <div className={css.name}>
+                  <p className="text text_type_main-small">{item.name}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+}
+
+class BurgerIngredients extends React.Component<
+  {
+    data: any;
+    ingredients: any;
+  },
+  {
+    activeIngr: string;
+  }
+> {
+  typeRefs: any = [];
+
+  constructor(props: any) {
+    super(props);
+    this.state = { activeIngr: this.props.ingredients[0].value };
+    this.props.ingredients.forEach((ingr: any) => {
+      this.typeRefs.push({ value: ingr.value, ref: React.createRef() });
+    });
+  }
+
+  ingredientClick = (value: string) => {
+    let itemRef = this.typeRefs.find((ref: any) => {
+      return ref.value === value;
+    });
+
+    if (itemRef && itemRef.ref.current) {
+      itemRef.ref.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+      window.scrollTo(0, 0);
+    }
+
+    this.setState((prevState: object) => {
+      return { ...prevState, activeIngr: value };
+    });
+  };
+
+  render() {
+    return (
+      <div className={css.main}>
+        <p className="text text_type_main-large">Соберите бургер</p>
+        <div className={css.menu}>
+          {this.props.ingredients.map((ingr: any, index: number) => {
+            return (
+              <Tab
+                key={index}
+                active={ingr.value === this.state.activeIngr}
+                value={ingr.value}
+                onClick={this.ingredientClick}
+              >
+                {ingr.value}
+              </Tab>
+            );
+          })}
+        </div>
+        <div className={css.container + " custom-scroll"}>
+          {this.props.ingredients.map((ingr: any, index: number) => {
+            let items = this.props.data.filter((item: any) => {
+              return item.type === ingr.type;
+            });
+            let itemRef = this.typeRefs.find((ref: any) => {
+              return ref.value === ingr.value;
+            });
+            return (
+              <IngredientTypeBox
+                key={index}
+                itemref={itemRef.ref}
+                value={ingr.value}
+                type={ingr.type}
+                max={ingr.max}
+                unique={ingr.unique}
+                data={items}
+              />
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default BurgerIngredients;

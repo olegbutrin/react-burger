@@ -1,17 +1,32 @@
-main {
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: stretch;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 100vh;
+}
+
+.main {
+  height: 80vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  flex-grow: 2;
+  flex-shrink: 2;
 }
 
-header {
+.header {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-grow: 2;
+  flex-shrink: 2;
 }
 
-section {
+.section {
   max-width: 600px;
 }

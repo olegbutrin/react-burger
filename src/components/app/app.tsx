@@ -1,11 +1,18 @@
 import React from "react";
 import AppHeader from "../app-header/app-header";
+import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 
-import appStyles from "./app.module.css";
+import css from "./app.module.css";
 
 // Данные
 import mainMenu from "../../utils/menu";
 import productsData from "../../utils/data";
+
+const ingredients = [
+  { value: "Булки", type: "bun", max: 1, unique: true },
+  { value: "Соусы", type: "sauce", max: 3, unique: false },
+  { value: "Начинки", type: "main", max: 3, unique: false },
+];
 
 class App extends React.Component {
   constructor(props: any) {
@@ -18,15 +25,17 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
-        <header className={"mt-40"}>
+      <div className={css.page}>
+        <header className={css.header}>
           <AppHeader menu={mainMenu} callbackFunc={this.headerNavChanged} />
         </header>
-        <main>
-          <section></section>
+        <main className={css.main}>
+          <section className={css.section}>
+            <BurgerIngredients data={productsData} ingredients={ingredients} />
+          </section>
           <section></section>
         </main>
-      </>
+      </div>
     );
   }
 }

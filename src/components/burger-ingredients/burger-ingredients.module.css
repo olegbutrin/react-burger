@@ -1,0 +1,72 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 16px 8px;
+
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.container {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 800px;
+  margin-top: 10px;
+}
+
+.ingrBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.ingrList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.ingrPreview {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  margin: 3px;
+  margin-top: 24px;
+}
+
+.image {
+  margin: 0px 16px 4px 16px;
+  width: 240px;
+  height: 120px;
+  max-width: 240px;
+  max-height: 120px;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 1em;
+}
+
+.price > * {
+  margin: 0px 4px 0px 4px;
+}
+
+.name {
+  display: block;
+  overflow: hidden;
+  width: 272px;
+  height: 48px;
+  max-width: 272px;
+  max-height: 48px;
+  text-align: center;
+}
