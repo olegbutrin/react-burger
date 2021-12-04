@@ -66,7 +66,7 @@ class IngredientTypeBox extends React.Component<
 
   render() {
     return (
-      <div className={css.ingrBox} ref={this.props.itemref}>
+      <div className={css.ingrBox + " mb-10"} ref={this.props.itemref}>
         <p className="text text_type_main-medium">{this.props.value}</p>
         <div className={css.ingrList}>
           {this.props.data.map((item: any, index: number) => {
@@ -86,12 +86,17 @@ class IngredientTypeBox extends React.Component<
                 ) : (
                   ""
                 )}
-                <img className={css.image} src={item.image} />
+                <img
+                  className={css.image + " mr-4 mb-1 ml-4"}
+                  src={item.image}
+                />
                 <div className={css.price}>
                   <p className="text text_type_digits-default">{item.price}</p>
-                  <CurrencyIcon type="primary" />
+                  <div className={"ml-2"}>
+                    <CurrencyIcon type="primary" />
+                  </div>
                 </div>
-                <div className={css.name}>
+                <div className={css.name + " mt-1"}>
                   <p className="text text_type_main-small">{item.name}</p>
                 </div>
               </div>
@@ -144,8 +149,10 @@ class BurgerIngredients extends React.Component<
   render() {
     return (
       <div className={css.main}>
-        <p className="text text_type_main-large">Соберите бургер</p>
-        <div className={css.menu}>
+        <div className={"mt-10 mb-5"}>
+          <p className="text text_type_main-large">Соберите бургер</p>
+        </div>
+        <div className={css.menu + " mb-10"}>
           {this.props.ingredients.map((ingr: any, index: number) => {
             return (
               <Tab

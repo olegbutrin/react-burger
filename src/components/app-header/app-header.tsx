@@ -7,7 +7,7 @@ import {
   Logo,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import appHeaderStyles from "./app-header.module.css";
+import css from "./app-header.module.css";
 
 // Описание формата данных кнопок меню
 const menuPropType = PropTypes.shape({
@@ -25,14 +25,14 @@ class MenuButton extends React.Component<{
   callback: any;
 }> {
   // Функция для выбора иконки меню
-  itemIcon = (name: string) => {
+  itemIcon = (name: string, active: boolean) => {
     switch (name) {
       case "burger":
-        return <BurgerIcon type="primary" />;
+        return <BurgerIcon type={active ? "primary" : "secondary"} />;
       case "list":
-        return <ListIcon type="primary" />;
+        return <ListIcon type={active ? "primary" : "secondary"} />;
       case "profile":
-        return <ProfileIcon type="primary" />;
+        return <ProfileIcon type={active ? "primary" : "secondary"} />;
       default:
         return <></>;
     }
@@ -41,18 +41,22 @@ class MenuButton extends React.Component<{
   render() {
     return (
       <div
-        className={
-          this.props.active
-            ? appHeaderStyles.menuButtonActive
-            : appHeaderStyles.menuButton
-        }
+        className={css.menuButton + " mt-4 mr-2 mb-4 ml-2 p-4"}
         style={{ order: this.props.id < 3 ? this.props.id : this.props.id + 1 }}
         onClick={() => {
           this.props.callback(this.props.id);
         }}
       >
-        {this.itemIcon(this.props.icon)}
-        <span className={"text text_type_main-default"}>
+        <div className="mr-2">
+          {this.itemIcon(this.props.icon, this.props.active)}
+        </div>
+        <span
+          className={
+            this.props.active
+              ? "text text_type_main-default"
+              : "text text_type_main-default text_color_inactive"
+          }
+        >
           {this.props.value}
         </span>
       </div>
@@ -78,8 +82,8 @@ class AppHeader extends React.Component<
 
   render() {
     return (
-      <nav className={appHeaderStyles.navigation}>
-        <div className={appHeaderStyles.logo}>
+      <nav className={css.navigation}>
+        <div className={css.logo + " mr-10 ml-5"}>
           <Logo />
         </div>
         {this.props.menu.map((button: any, index: number) => (

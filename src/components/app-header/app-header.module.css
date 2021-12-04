@@ -3,75 +3,39 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 4;
 }
 
-.header {
-  margin-top: 40px;
-}
 
-.menuButtonActive,
 .menuButton {
   display: flex;
   cursor: pointer;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
-  padding: 16px 20px;
-  margin-top: 8px;
-}
-
-.menuButtonActive > span,
-.menuButton > span {
-  white-space: nowrap;
-  color: var(--text-inactive-color);
-}
-
-.menuButtonActive > svg,
-.menuButton > svg {
-  margin-right: 12px;
-  fill: var(--text-inactive-color);
-}
-
-.menuButtonActive > span {
-  color: var(--text-primary-color);
-}
-
-.menuButtonActive > svg {
-  fill: var(--text-primary-color);
+  flex-shrink: 4;
 }
 
 .logo {
   display: flex;
   order: 3;
-  margin-left: 48px;
-  margin-right: 96px;
-  height: 40px;
+  flex-shrink: 4;
 }
 
-@media screen and (max-width: 900px) {
+/* @media screen and (max-width: 900px) {
   
   .navigation {
-    margin-top: 20px;
     flex-wrap: wrap;
   }
 
-  .menuButtonActive,
   .menuButton {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .menuButtonActive > span,
   .menuButton > span {
     white-space: normal;
     text-align: center;
-  }
-
-  .menuButtonActive > svg,
-  .menuButton > svg {
-    margin-right: 0px;
-    margin-bottom: 8px;
-    width: 100%;
   }
 
   .logo {
@@ -82,4 +46,4 @@
     margin: 0px;
   }
 
-}
+} */

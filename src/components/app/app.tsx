@@ -26,7 +26,7 @@ class App extends React.Component {
   render() {
     return (
       <div className={css.page}>
-        <header className={css.header}>
+        <header className={css.header + " mt-10 ml-10 mr-10"}>
           <AppHeader menu={mainMenu} callbackFunc={this.headerNavChanged} />
         </header>
         <main className={css.main}>
