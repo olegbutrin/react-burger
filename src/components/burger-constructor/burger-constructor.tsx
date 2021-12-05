@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes, { any, number, string } from "prop-types";
 import {
   Button,
   ConstructorElement,
@@ -9,6 +8,7 @@ import {
 
 import css from "./burger-constructor.module.css";
 
+// Определяем класс для изменяемого ингредиента. В нем используется проброшенный колбэк для удаления ингредиента.
 class BurgerIngredient extends React.Component<{
   type: string;
   index: number;
@@ -39,6 +39,8 @@ class BurgerIngredient extends React.Component<{
   }
 }
 
+// Основной класс конструктора бургеров
+
 class BurgerConstructor extends React.Component<{
   selectedIngredients: any;
   ingredientsData: any;
@@ -48,6 +50,7 @@ class BurgerConstructor extends React.Component<{
     super(props);
   }
 
+  // Половинки булок
   getTopBun() {
     if (this.props.selectedIngredients["bun"]) {
       let bunData = this.props.ingredientsData.find((data: any) => {
@@ -92,10 +95,11 @@ class BurgerConstructor extends React.Component<{
     }
   }
 
+  // Суммаризатор (возможно, объединить с кнопкой для отработки чека)
   getSummaryPrice() {
     let summ = 0;
-    Object.keys(this.props.selectedIngredients).map((type) => {
-      this.props.selectedIngredients[type].map((id: string) => {
+    Object.keys(this.props.selectedIngredients).forEach((type) => {
+      this.props.selectedIngredients[type].forEach((id: string) => {
         summ += this.props.ingredientsData.find((data: any) => {
           return data._id === id;
         }).price;

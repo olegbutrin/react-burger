@@ -11,11 +11,6 @@
 .main {
   display: block;
   margin: auto;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  flex-shrink: 4; */
 }
 
 .contents {
@@ -45,4 +40,25 @@
 
 .sectionLeft {
   max-width: 600px;
+}
+
+@media screen and (max-width: 1200px) {
+  
+  .page {
+    max-height: max-content;
+  }
+
+  .contents {
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+  }
+
+  .sectionLeft,
+  .sectionRight {
+    max-height: none;
+  }
+
 }

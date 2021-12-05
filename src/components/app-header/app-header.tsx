@@ -9,7 +9,7 @@ import {
 
 import css from "./app-header.module.css";
 
-// Описание формата данных кнопок меню
+// Описание формата данных кнопок меню (пока не применен)
 const menuPropType = PropTypes.shape({
   id: number,
   value: string,

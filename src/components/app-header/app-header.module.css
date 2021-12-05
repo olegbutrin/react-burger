@@ -28,28 +28,30 @@
   margin-right: 70%;
 } 
 
-/* @media screen and (max-width: 900px) {
+/* При ширине менее 1200 страница переключается в одноколоночну верстку шириной 600 */
+
+@media screen and (max-width: 1200px) {
   
   .navigation {
     flex-wrap: wrap;
+    justify-content: center;
   }
 
-  .menuButton {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .menuButton > span {
-    white-space: normal;
-    text-align: center;
-  }
 
   .logo {
+    display: flex;
     order: 0;
     flex-basis: 100%;
     align-items: center;
     justify-content: center;
     margin: 0px;
+    margin-top: 40px;
   }
 
-} */
+  .logo > * {
+    height: auto;
+    width: 600px;
+    margin: 0%;
+  }
+
+}

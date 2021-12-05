@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes, { number, string } from "prop-types";
 import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
@@ -82,7 +81,7 @@ class App extends React.Component<
   // собираем данные выбанных ингредиентов
   getSelectedIngredientsData() {
     let data: any = [];
-    Object.keys(this.state.selectedIngredients).map((key) => {
+    Object.keys(this.state.selectedIngredients).forEach((key) => {
       let ids = this.state.selectedIngredients[key];
       if (ids && ids.length) {
         data = [
@@ -100,7 +99,7 @@ class App extends React.Component<
   render() {
     return (
       <div className={css.page}>
-        <main className={css.main}>
+        <main className={css.main + " mt-10 ml-10 mr-10"}>
           <header className={css.header}>
             <AppHeader
               menu={this.props.menuData}
@@ -108,7 +107,7 @@ class App extends React.Component<
             />
           </header>
           <div className={css.contents}>
-            <section className={css.sectionLeft + " mr-10 ml-5"}>
+            <section className={css.sectionLeft + " mr-5 ml-5"}>
               <BurgerIngredients
                 productsData={this.props.productsData}
                 ingredientTypes={this.props.ingredientTypes}
@@ -116,7 +115,7 @@ class App extends React.Component<
                 selectIngredientCallback={this.selectIngredient}
               />
             </section>
-            <section className={css.sectionRight + " mr-5"}>
+            <section className={css.sectionRight + " mr-5 ml-5"}>
               <BurgerConstructor
                 selectedIngredients={this.state.selectedIngredients}
                 ingredientsData={this.getSelectedIngredientsData()}

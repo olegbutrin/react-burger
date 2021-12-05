@@ -8,6 +8,7 @@ import {
 
 import css from "./burger-ingredients.module.css";
 
+// Описание формата
 const ingredientData = PropTypes.shape({
   _id: string,
   name: string,
@@ -144,10 +145,8 @@ class BurgerIngredients extends React.Component<
 
   render() {
     return (
-      <div className={css.main + " mt-4 mr-2 mb-4 ml-2"}>
-        <div className={"mt-10 mb-5"}>
-          <p className="text text_type_main-large">Соберите бургер</p>
-        </div>
+      <div className={css.main}>
+        <p className="text text_type_main-large mt-10 mb-5">Соберите бургер</p>
         <div className={css.menu + " mb-10"}>
           {this.props.ingredientTypes.map((ingr: any, index: number) => {
             return (
