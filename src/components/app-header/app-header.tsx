@@ -83,7 +83,7 @@ class AppHeader extends React.Component<
   render() {
     return (
       <nav className={css.navigation}>
-        <div className={css.logo + " mr-10 ml-5"}>
+        <div className={css.logo}>
           <Logo />
         </div>
         {this.props.menu.map((button: any, index: number) => (

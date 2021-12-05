@@ -10,8 +10,8 @@ import productsData from "./utils/data";
 
 const ingredientTypes = [
   { value: "Булки", type: "bun", max: 1, unique: true, initial: true },
-  { value: "Соусы", type: "sauce", max: 3, unique: false, initial: false },
-  { value: "Начинки", type: "main", max: 5, unique: false, initial: false },
+  { value: "Соусы", type: "sauce", max: 2, unique: false, initial: false },
+  { value: "Начинки", type: "main", max: 3, unique: false, initial: false },
 ];
 
 ReactDOM.render(

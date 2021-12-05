@@ -1,7 +1,7 @@
 .navigation {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-shrink: 4;
 }
@@ -17,10 +17,16 @@
 }
 
 .logo {
-  display: flex;
+  display: inline-block;
   order: 3;
   flex-shrink: 4;
+  flex-grow: 3;
 }
+
+.logo > * {
+  margin-left: 17%;
+  margin-right: 70%;
+} 
 
 /* @media screen and (max-width: 900px) {
   
