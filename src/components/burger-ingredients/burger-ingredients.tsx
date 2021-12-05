@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes, { number, string } from "prop-types";
 import {
   Counter,
   CurrencyIcon,
@@ -8,21 +7,13 @@ import {
 
 import css from "./burger-ingredients.module.css";
 
-// Описание формата
-const ingredientData = PropTypes.shape({
-  _id: string,
-  name: string,
-  type: string,
-  proteins: number,
-  fat: number,
-  carbohydrates: number,
-  calories: number,
-  price: number,
-  image: string,
-  image_mobile: string,
-  Image_large: string,
-  __v: number,
-});
+import "../app/app.interface";
+import {
+  IIngredientData,
+  IIngredientListType,
+  IIngredientSelectedList,
+  IIngredientTypeName,
+} from "../app/app.interface";
 
 /*
 
@@ -40,11 +31,11 @@ const ingredientData = PropTypes.shape({
 
 class IngredientTypeBox extends React.Component<{
   value: string;
-  type: any;
+  type: IIngredientTypeName;
   itemref: any;
-  productsData: any;
-  selectedIngredients: any;
-  selectIngredientCallback: any;
+  productsData: IIngredientData[];
+  selectedIngredients: IIngredientSelectedList;
+  selectIngredientCallback: (type: IIngredientTypeName, id: string) => void;
 }> {
   constructor(props: any) {
     super(props);
@@ -58,12 +49,12 @@ class IngredientTypeBox extends React.Component<{
           {this.props.productsData.map((item: any, index: number) => {
             let itemCount: number = this.props.selectedIngredients[
               this.props.type
-            ].filter((count: any) => {
+            ].filter((count: string) => {
               return count === item._id;
             }).length;
             return (
               <div
-                key={index}
+                key={item._id}
                 className={css.ingrPreview}
                 onClick={() => {
                   this.props.selectIngredientCallback(
@@ -102,16 +93,16 @@ class IngredientTypeBox extends React.Component<{
 
 class BurgerIngredients extends React.Component<
   {
-    productsData: any;
-    ingredientTypes: any;
-    selectedIngredients: any;
-    selectIngredientCallback: any;
+    productsData: [IIngredientData];
+    ingredientTypes: [IIngredientListType];
+    selectedIngredients: IIngredientSelectedList;
+    selectIngredientCallback: (type: IIngredientTypeName, id: string) => void;
   },
   {
     activeIngrType: string;
   }
 > {
-  typeRefs: any = [];
+  typeRefs: { value: string; ref: any }[] = [];
 
   constructor(props: any) {
     super(props);
@@ -119,7 +110,7 @@ class BurgerIngredients extends React.Component<
       activeIngrType: this.props.ingredientTypes[0].value,
     };
     // для каждого типа ингредиентов создается свой реф, который потом используется в блоке для прокрутки
-    this.props.ingredientTypes.forEach((ingr: any) => {
+    this.props.ingredientTypes.forEach((ingr: IIngredientListType) => {
       this.typeRefs.push({ value: ingr.value, ref: React.createRef() });
     });
   }
@@ -148,39 +139,45 @@ class BurgerIngredients extends React.Component<
       <div className={css.main}>
         <p className="text text_type_main-large mt-10 mb-5">Соберите бургер</p>
         <div className={css.menu + " mb-10"}>
-          {this.props.ingredientTypes.map((ingr: any, index: number) => {
-            return (
-              <Tab
-                key={index}
-                active={ingr.value === this.state.activeIngrType}
-                value={ingr.value}
-                onClick={this.ingredientTabClick}
-              >
-                {ingr.value}
-              </Tab>
-            );
-          })}
+          {this.props.ingredientTypes.map(
+            (ingr: IIngredientListType, index: number) => {
+              return (
+                <Tab
+                  key={"IngrTab" + index}
+                  active={ingr.value === this.state.activeIngrType}
+                  value={ingr.value}
+                  onClick={this.ingredientTabClick}
+                >
+                  {ingr.value}
+                </Tab>
+              );
+            }
+          )}
         </div>
         <div className={css.container + " custom-scroll"}>
-          {this.props.ingredientTypes.map((ingr: any, index: number) => {
-            let items = this.props.productsData.filter((item: any) => {
-              return item.type === ingr.type;
-            });
-            let itemRef = this.typeRefs.find((ref: any) => {
-              return ref.value === ingr.value;
-            });
-            return (
-              <IngredientTypeBox
-                key={index}
-                itemref={itemRef.ref}
-                value={ingr.value}
-                type={ingr.type}
-                productsData={items}
-                selectedIngredients={this.props.selectedIngredients}
-                selectIngredientCallback={this.props.selectIngredientCallback}
-              />
-            );
-          })}
+          {this.props.ingredientTypes.map(
+            (ingr: IIngredientListType, index: number) => {
+              let items = this.props.productsData.filter(
+                (item: IIngredientData) => {
+                  return item.type === ingr.type;
+                }
+              );
+              let itemRef = this.typeRefs.find((ref: any) => {
+                return ref.value === ingr.value;
+              }) || { ref: null };
+              return (
+                <IngredientTypeBox
+                  key={"IngrTypeBox" + index}
+                  itemref={itemRef.ref}
+                  value={ingr.value}
+                  type={ingr.type}
+                  productsData={items}
+                  selectedIngredients={this.props.selectedIngredients}
+                  selectIngredientCallback={this.props.selectIngredientCallback}
+                />
+              );
+            }
+          )}
         </div>
       </div>
     );
