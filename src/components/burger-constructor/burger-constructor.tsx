@@ -12,6 +12,7 @@ import {
 } from "../app/app.interfaces";
 
 import css from "./burger-constructor.module.css";
+import data from "../../utils/data";
 
 // Определяем класс для изменяемого ингредиента. В нем используется проброшенный колбэк для удаления ингредиента.
 class BurgerIngredient extends React.Component<{
@@ -58,7 +59,7 @@ class BurgerConstructor extends React.Component<{
         return (
           <div className={css.ingredientPin + " m-2 pl-9 pr-3"}>
             <ConstructorElement
-              key={"top"}
+              key={"top-bun"}
               type="top"
               isLocked={true}
               text={bunData.name + " (верх)"}
@@ -85,7 +86,7 @@ class BurgerConstructor extends React.Component<{
         return (
           <div className={css.ingredientPin + " m-2 pl-9 pr-3"}>
             <ConstructorElement
-              key={"bottom"}
+              key={"bottom-bun"}
               type="bottom"
               isLocked={true}
               text={bunData.name + " (низ)"}
@@ -134,6 +135,7 @@ class BurgerConstructor extends React.Component<{
             (id: string, index: number) => {
               return (
                 <BurgerIngredient
+                  key={id}
                   index={index}
                   data={this.props.ingredientsData.find((data: any) => {
                     return data._id === id;
@@ -148,6 +150,7 @@ class BurgerConstructor extends React.Component<{
             (id: string, index: number) => {
               return (
                 <BurgerIngredient
+                  key={id}
                   index={index}
                   data={this.props.ingredientsData.find((data: any) => {
                     return data._id === id;
