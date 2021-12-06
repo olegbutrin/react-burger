@@ -7,13 +7,12 @@ import {
 
 import css from "./burger-ingredients.module.css";
 
-import "../app/app.interface";
 import {
   IIngredientData,
   IIngredientListType,
   IIngredientSelectedList,
   IIngredientTypeName,
-} from "../app/app.interface";
+} from "../app/app.interfaces";
 
 /*
 
@@ -37,17 +36,13 @@ class IngredientTypeBox extends React.Component<{
   selectedIngredients: IIngredientSelectedList;
   selectIngredientCallback: (type: IIngredientTypeName, id: string) => void;
 }> {
-  constructor(props: any) {
-    super(props);
-  }
-
   render() {
     return (
       <div className={css.ingrBox + " mb-10"} ref={this.props.itemref}>
         <p className="text text_type_main-medium">{this.props.value}</p>
         <div className={css.ingrList}>
           {this.props.productsData.map((item: any, index: number) => {
-            let itemCount: number = this.props.selectedIngredients[
+            const itemCount: number = this.props.selectedIngredients[
               this.props.type
             ].filter((count: string) => {
               return count === item._id;
@@ -93,8 +88,8 @@ class IngredientTypeBox extends React.Component<{
 
 class BurgerIngredients extends React.Component<
   {
-    productsData: [IIngredientData];
-    ingredientTypes: [IIngredientListType];
+    productsData: IIngredientData[];
+    ingredientTypes: IIngredientListType[];
     selectedIngredients: IIngredientSelectedList;
     selectIngredientCallback: (type: IIngredientTypeName, id: string) => void;
   },
@@ -117,7 +112,7 @@ class BurgerIngredients extends React.Component<
 
   // колбек для элеметов Tab прокручивающий список ингредиентов до выбранного блока
   ingredientTabClick = (value: string) => {
-    let itemRef = this.typeRefs.find((ref: any) => {
+    const itemRef = this.typeRefs.find((ref: any) => {
       return ref.value === value;
     });
     if (itemRef && itemRef.ref.current) {
@@ -157,12 +152,12 @@ class BurgerIngredients extends React.Component<
         <div className={css.container + " custom-scroll"}>
           {this.props.ingredientTypes.map(
             (ingr: IIngredientListType, index: number) => {
-              let items = this.props.productsData.filter(
+              const items = this.props.productsData.filter(
                 (item: IIngredientData) => {
                   return item.type === ingr.type;
                 }
               );
-              let itemRef = this.typeRefs.find((ref: any) => {
+              const itemRef = this.typeRefs.find((ref: any) => {
                 return ref.value === ingr.value;
               }) || { ref: null };
               return (

@@ -1,6 +1,8 @@
-export enum IIngredientTypeName {
-  bun = "bun", sauce = "sauce", main = "main" 
-}
+// export enum IIngredientTypeName {
+//   bun = "bun", sauce = "bun", main = "main" 
+// }
+
+export type IIngredientTypeName = 'bun' | 'sauce' | 'main'
 
 export interface IMenuItem {
   id: number,
@@ -32,7 +34,5 @@ export interface IIngredientData {
 }
 
 export interface IIngredientSelectedList {
-  bun: [string],
-  sauce: [string],
-  main: [string]
+  [index: string | IIngredientTypeName]: string[];
 }

@@ -1,4 +1,8 @@
-const mainMenu = [
+import {
+  IMenuItem,
+} from "../components/app/app.interfaces";
+
+const mainMenu: Array<IMenuItem> = [
   {
     id: 1,
     value: "Конструктор",

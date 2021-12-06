@@ -6,6 +6,11 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import {
+  IIngredientData,
+  IIngredientSelectedList,
+} from "../app/app.interfaces";
+
 import css from "./burger-constructor.module.css";
 
 // Определяем класс для изменяемого ингредиента. В нем используется проброшенный колбэк для удаления ингредиента.
@@ -15,10 +20,6 @@ class BurgerIngredient extends React.Component<{
   data: any;
   callback: any;
 }> {
-  constructor(props: any) {
-    super(props);
-  }
-
   render() {
     return (
       <div draggable={true} className={css.ingredient + " m-2"}>
@@ -42,32 +43,33 @@ class BurgerIngredient extends React.Component<{
 // Основной класс конструктора бургеров
 
 class BurgerConstructor extends React.Component<{
-  selectedIngredients: any;
-  ingredientsData: any;
-  removeElementCallback: any;
+  selectedIngredients: IIngredientSelectedList;
+  ingredientsData: IIngredientData[];
+  removeElementCallback: (type: string, index: number) => void;
 }> {
-  constructor(props: any) {
-    super(props);
-  }
-
   // Половинки булок
   getTopBun() {
     if (this.props.selectedIngredients["bun"]) {
-      let bunData = this.props.ingredientsData.find((data: any) => {
-        return data._id === this.props.selectedIngredients["bun"][0];
-      });
-      return (
-        <div className={css.ingredientPin + " m-2 pl-9"}>
-          <ConstructorElement
-            key={"top"}
-            type="top"
-            isLocked={true}
-            text={bunData.name + " (верх)"}
-            price={bunData.price}
-            thumbnail={bunData.image_mobile}
-          />
-        </div>
-      );
+      const bunData: IIngredientData | undefined =
+        this.props.ingredientsData.find((data: any) => {
+          return data._id === this.props.selectedIngredients["bun"][0];
+        });
+      if (bunData) {
+        return (
+          <div className={css.ingredientPin + " m-2 pl-9 pr-3"}>
+            <ConstructorElement
+              key={"top"}
+              type="top"
+              isLocked={true}
+              text={bunData.name + " (верх)"}
+              price={bunData.price}
+              thumbnail={bunData.image_mobile}
+            />
+          </div>
+        );
+      } else {
+        return "";
+      }
     } else {
       return "";
     }
@@ -75,21 +77,26 @@ class BurgerConstructor extends React.Component<{
 
   getBottomBun() {
     if (this.props.selectedIngredients["bun"]) {
-      let bunData = this.props.ingredientsData.find((data: any) => {
-        return data._id === this.props.selectedIngredients["bun"][0];
-      });
-      return (
-        <div className={css.ingredientPin + " m-2 pl-9"}>
-          <ConstructorElement
-            key={"bottom"}
-            type="bottom"
-            isLocked={true}
-            text={bunData.name + " (низ)"}
-            price={bunData.price}
-            thumbnail={bunData.image_mobile}
-          />
-        </div>
-      );
+      const bunData: IIngredientData | undefined =
+        this.props.ingredientsData.find((data: any) => {
+          return data._id === this.props.selectedIngredients["bun"][0];
+        });
+      if (bunData) {
+        return (
+          <div className={css.ingredientPin + " m-2 pl-9 pr-3"}>
+            <ConstructorElement
+              key={"bottom"}
+              type="bottom"
+              isLocked={true}
+              text={bunData.name + " (низ)"}
+              price={bunData.price}
+              thumbnail={bunData.image_mobile}
+            />
+          </div>
+        );
+      } else {
+        return "";
+      }
     } else {
       return "";
     }
@@ -100,9 +107,13 @@ class BurgerConstructor extends React.Component<{
     let summ = 0;
     Object.keys(this.props.selectedIngredients).forEach((type) => {
       this.props.selectedIngredients[type].forEach((id: string) => {
-        summ += this.props.ingredientsData.find((data: any) => {
-          return data._id === id;
-        }).price;
+        const price: IIngredientData | undefined =
+          this.props.ingredientsData.find((data: IIngredientData) => {
+            return data._id === id;
+          });
+        if (price) {
+          summ += price.price;
+        }
       });
     });
     return (
@@ -116,9 +127,9 @@ class BurgerConstructor extends React.Component<{
   render() {
     return (
       <div className={css.main + " mt-25"}>
+        {/* проверяем булку */}
+        {this.getTopBun()}
         <div className={css.container + " custom-scroll"}>
-          {/* проверяем булку */}
-          {this.getTopBun()}
           {this.props.selectedIngredients.sauce.map(
             (id: string, index: number) => {
               return (
@@ -147,8 +158,8 @@ class BurgerConstructor extends React.Component<{
               );
             }
           )}
-          {this.getBottomBun()}
         </div>
+        {this.getBottomBun()}
         <div className={css.orderContainer + " mt-10 mr-4"}>
           {this.getSummaryPrice()}
           <Button type="primary" size="medium">

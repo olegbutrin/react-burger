@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes, { number, string } from "prop-types";
 import {
   BurgerIcon,
   ListIcon,
@@ -7,14 +6,9 @@ import {
   Logo,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import css from "./app-header.module.css";
+import { IMenuItem } from "../app/app.interfaces";
 
-// Описание формата данных кнопок меню (пока не применен)
-const menuPropType = PropTypes.shape({
-  id: number,
-  value: string,
-  icon: string,
-});
+import css from "./app-header.module.css";
 
 // Вспомогательный компонент для рендеринга кнопок меню
 class MenuButton extends React.Component<{
@@ -66,7 +60,7 @@ class MenuButton extends React.Component<{
 
 // Основной компонент, реализующий заголовок
 class AppHeader extends React.Component<
-  { menu: any; callbackFunc: any },
+  { menu: IMenuItem[]; callbackFunc: any },
   { activeItem: number }
 > {
   constructor(props: any) {
@@ -82,21 +76,23 @@ class AppHeader extends React.Component<
 
   render() {
     return (
-      <nav className={css.navigation}>
-        <div className={css.logo}>
-          <Logo />
-        </div>
-        {this.props.menu.map((button: any, index: number) => (
-          <MenuButton
-            key={button.id}
-            id={button.id}
-            icon={button.icon}
-            value={button.value}
-            active={button.id === this.state.activeItem}
-            callback={this.menuCallback}
-          />
-        ))}
-      </nav>
+      <header className={css.header}>
+        <nav className={css.navigation}>
+          <div className={css.logo}>
+            <Logo />
+          </div>
+          {this.props.menu.map((button: IMenuItem, index: number) => (
+            <MenuButton
+              key={button.id}
+              id={button.id}
+              icon={button.icon}
+              value={button.value}
+              active={button.id === this.state.activeItem}
+              callback={this.menuCallback}
+            />
+          ))}
+        </nav>
+      </header>
     );
   }
 }

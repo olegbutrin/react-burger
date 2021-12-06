@@ -22,14 +22,6 @@
   flex-shrink: 4;
 }
 
-.header {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 4;
-}
-
 .sectionRight,
 .sectionLeft {
   display: flex;
@@ -46,6 +38,7 @@
   
   .page {
     max-height: max-content;
+    padding-bottom: 48px;
   }
 
   .contents {
