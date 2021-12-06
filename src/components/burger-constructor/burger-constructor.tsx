@@ -12,7 +12,6 @@ import {
 } from "../app/app.interfaces";
 
 import css from "./burger-constructor.module.css";
-import data from "../../utils/data";
 
 // Определяем класс для изменяемого ингредиента. В нем используется проброшенный колбэк для удаления ингредиента.
 class BurgerIngredient extends React.Component<{
