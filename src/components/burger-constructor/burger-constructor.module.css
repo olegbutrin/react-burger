@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-  align-items: flex-start;
+  align-items: stretch;
   overflow-x: hidden;
   overflow-y: scroll;
   max-height: 384px;
@@ -27,7 +27,7 @@
 }
 
 .ingredient {
-  flex-grow: 2;
+  flex-grow: 4;
 }
 /* 
 .ingredient:first-child {
@@ -64,5 +64,11 @@
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+}
+
+@media screen and (max-height: 940) {
+  .container {
+    max-height: 290px;
+  }
 }
 

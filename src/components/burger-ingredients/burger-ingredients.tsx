@@ -49,7 +49,7 @@ class IngredientTypeBox extends React.Component<{
             }).length;
             return (
               <div
-                key={item._id}
+                key={index + ":" + item._id}
                 className={css.ingrPreview}
                 onClick={() => {
                   this.props.selectIngredientCallback(

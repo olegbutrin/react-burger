@@ -48,7 +48,8 @@
     align-items: center;
     height: auto;
   }
-
+  
+  .page,
   .sectionLeft,
   .sectionRight {
     max-height: none;

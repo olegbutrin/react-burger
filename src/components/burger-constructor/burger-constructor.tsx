@@ -134,7 +134,7 @@ class BurgerConstructor extends React.Component<{
             (id: string, index: number) => {
               return (
                 <BurgerIngredient
-                  key={id}
+                  key={["BI", index, id].join("_")}
                   index={index}
                   data={this.props.ingredientsData.find((data: any) => {
                     return data._id === id;
@@ -149,7 +149,7 @@ class BurgerConstructor extends React.Component<{
             (id: string, index: number) => {
               return (
                 <BurgerIngredient
-                  key={id}
+                  key={["BI", index, id].join("_")}
                   index={index}
                   data={this.props.ingredientsData.find((data: any) => {
                     return data._id === id;
