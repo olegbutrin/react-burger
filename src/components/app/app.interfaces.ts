@@ -36,3 +36,7 @@ export interface IIngredientData {
 export interface IIngredientSelectedList {
   [index: string | IIngredientTypeName]: string[];
 }
+
+export interface IOrderInfoProps {
+  orderID: string;
+}

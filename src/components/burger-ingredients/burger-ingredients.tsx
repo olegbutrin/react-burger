@@ -130,6 +130,7 @@ class BurgerIngredients extends React.Component<
   };
 
   render() {
+    console.log("Render ingredients");
     return (
       <div className={css.main}>
         <p className="text text_type_main-large mt-10 mb-5">Соберите бургер</p>
