@@ -1,3 +1,4 @@
+import React, { useRef } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
@@ -13,9 +14,30 @@ const Modal = (props: {
   children: any;
   closeCallback: (...args: any[]) => void;
 }) => {
+  const handleKeyDown = (e: any) => {
+    if (e.keyCode === 27) {
+      props.closeCallback();
+    }
+  };
+
+  const spanRef: any = React.useRef(null);
+
+  React.useEffect(() => {
+    if (spanRef != null && spanRef.current) {
+      spanRef.current.focus();
+    }
+  }, []);
+
   const contents = (
     <ModalOverlay closeCallback={props.closeCallback}>
-      <div className={css.container}>
+      <div
+        tabIndex={0}
+        className={css.container}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <span tabIndex={0} ref={spanRef} onKeyDown={handleKeyDown}></span>
         <div className={css.closeButton} onClick={props.closeCallback}>
           <CloseIcon type="primary" />
         </div>

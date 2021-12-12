@@ -7,7 +7,12 @@ const ModalOverlay = (props: {
   closeCallback: (...args: any[]) => void;
 }) => {
   return (
-    <div onClick={props.closeCallback} className={css.background}>
+    <div
+      onClick={() => {
+        props.closeCallback();
+      }}
+      className={css.background}
+    >
       {props.children}
     </div>
   );
