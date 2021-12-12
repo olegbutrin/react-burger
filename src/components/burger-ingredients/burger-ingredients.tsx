@@ -1,18 +1,25 @@
 import React from "react";
-import {
-  Counter,
-  CurrencyIcon,
-  Tab,
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from "prop-types";
 
-import css from "./burger-ingredients.module.css";
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+
+import IngredientBox from "./components/ingredient-box/ingredient-box";
 
 import {
   IIngredientData,
   IIngredientListType,
   IIngredientSelectedList,
   IIngredientTypeName,
-} from "../app/app.interfaces";
+  ingrTypeNames,
+} from "../../utils/types";
+
+import {
+  PTIngredientData,
+  PTIngredientSelected,
+  PTIngrList,
+} from "../../utils/props";
+
+import css from "./burger-ingredients.module.css";
 
 /*
 
@@ -22,162 +29,110 @@ import {
 Например, булку для гамбургера можно выбрать только одну и одного типа, соусов до трех штук одного типа
 и до пяти любых начинок
 
-При необходимости (при усложнении) можно вынести блок конкретного ингредиента в отдельный функциональный компонент
-
 */
 
-// Компонент блока ингредиентов определенного типа
-
-class IngredientTypeBox extends React.Component<{
-  value: string;
-  type: IIngredientTypeName;
-  itemref: any;
+const BurgerIngredients = (props: {
   productsData: IIngredientData[];
   selectedIngredients: IIngredientSelectedList;
-  selectIngredientCallback: (type: IIngredientTypeName, id: string) => void;
-}> {
-  render() {
-    return (
-      <div className={css.ingrBox + " mb-10"} ref={this.props.itemref}>
-        <p className="text text_type_main-medium">{this.props.value}</p>
-        <div className={css.ingrList}>
-          {this.props.productsData.map((item: any, index: number) => {
-            const itemCount: number = this.props.selectedIngredients[
-              this.props.type
-            ].filter((count: string) => {
-              return count === item._id;
-            }).length;
-            return (
-              <div
-                key={index + ":" + item._id}
-                className={css.ingrPreview}
-                onClick={() => {
-                  this.props.selectIngredientCallback(
-                    this.props.type,
-                    item._id
-                  );
-                }}
-              >
-                {itemCount > 0 ? (
-                  <Counter count={itemCount} size={"default"} />
-                ) : (
-                  ""
-                )}
-                <img
-                  className={css.image + " mr-4 mb-1 ml-4"}
-                  src={item.image}
-                  alt={item.name}
-                />
-                <div className={css.price}>
-                  <p className="text text_type_digits-default">{item.price}</p>
-                  <div className={"ml-2"}>
-                    <CurrencyIcon type="primary" />
-                  </div>
-                </div>
-                <div className={css.name + " mt-1"}>
-                  <p className="text text_type_main-small">{item.name}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-}
+  ingredientTypes: IIngredientListType[];
+  selectCallback: (...args: any[]) => void;
+}) => {
+  const bunRef = React.useRef(null);
+  const sauceRef = React.useRef(null);
+  const mainRef = React.useRef(null);
 
-class BurgerIngredients extends React.Component<
-  {
-    productsData: IIngredientData[];
-    ingredientTypes: IIngredientListType[];
-    selectedIngredients: IIngredientSelectedList;
-    selectIngredientCallback: (type: IIngredientTypeName, id: string) => void;
-  },
-  {
-    activeIngrType: string;
-  }
-> {
-  typeRefs: { value: string; ref: any }[] = [];
+  const [activeType, setActiveType] = React.useState(ingrTypeNames[0]);
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      activeIngrType: this.props.ingredientTypes[0].value,
-    };
-    // для каждого типа ингредиентов создается свой реф, который потом используется в блоке для прокрутки
-    this.props.ingredientTypes.forEach((ingr: IIngredientListType) => {
-      this.typeRefs.push({ value: ingr.value, ref: React.createRef() });
-    });
-  }
+  const getRefByType = (type: IIngredientTypeName) => {
+    switch (type) {
+      case "bun":
+        return bunRef;
+      case "sauce":
+        return sauceRef;
+      case "main":
+        return mainRef;
+      default:
+        return null;
+    }
+  };
 
-  // колбек для элеметов Tab прокручивающий список ингредиентов до выбранного блока
-  ingredientTabClick = (value: string) => {
-    const itemRef = this.typeRefs.find((ref: any) => {
-      return ref.value === value;
-    });
-    if (itemRef && itemRef.ref.current) {
-      itemRef.ref.current.scrollIntoView({
+  const scrollTo = (ref: any) => {
+    if (ref != null && ref.current) {
+      ref.current.scrollIntoView({
         behavior: "smooth",
         block: "start",
         inline: "start",
       });
       window.scrollTo(0, 0);
     }
+  };
 
-    this.setState((prevState: object) => {
-      return { ...prevState, activeIngrType: value };
+  const getIngrTypeList = (value: string) => {
+    return props.ingredientTypes.find((ingrType: IIngredientListType) => {
+      return ingrType.type === value;
     });
   };
 
-  render() {
-    console.log("Render ingredients");
-    return (
-      <div className={css.main}>
-        <p className="text text_type_main-large mt-10 mb-5">Соберите бургер</p>
-        <div className={css.menu + " mb-10"}>
-          {this.props.ingredientTypes.map(
-            (ingr: IIngredientListType, index: number) => {
-              return (
-                <Tab
-                  key={"IngrTab" + index}
-                  active={ingr.value === this.state.activeIngrType}
-                  value={ingr.value}
-                  onClick={this.ingredientTabClick}
-                >
-                  {ingr.value}
-                </Tab>
-              );
-            }
-          )}
-        </div>
-        <div className={css.container + " custom-scroll"}>
-          {this.props.ingredientTypes.map(
-            (ingr: IIngredientListType, index: number) => {
-              const items = this.props.productsData.filter(
-                (item: IIngredientData) => {
-                  return item.type === ingr.type;
-                }
-              );
-              const itemRef = this.typeRefs.find((ref: any) => {
-                return ref.value === ingr.value;
-              }) || { ref: null };
-              return (
-                <IngredientTypeBox
-                  key={"IngrTypeBox" + index}
-                  itemref={itemRef.ref}
-                  value={ingr.value}
-                  type={ingr.type}
-                  productsData={items}
-                  selectedIngredients={this.props.selectedIngredients}
-                  selectIngredientCallback={this.props.selectIngredientCallback}
-                />
-              );
-            }
-          )}
-        </div>
+  const tabClick = (type: string) => {
+    const ingrType = getIngrTypeList(type);
+    if (ingrType) {
+      const ref = getRefByType(ingrType.type);
+      if (ref != null) {
+        scrollTo(ref);
+      }
+      setActiveType(ingrType.type);
+    }
+  };
+
+  return (
+    <div className={css.main}>
+      <p className="text text_type_main-large mt-10 mb-5">Соберите бургер</p>
+      <div className={css.menu + " mb-10"}>
+        {props.ingredientTypes.map(
+          (ingrType: IIngredientListType, index: number) => {
+            return (
+              <Tab
+                key={"IngrTab_" + (index + 1)}
+                value={ingrType.type}
+                active={ingrType.type === activeType}
+                onClick={tabClick}
+              >
+                {ingrType.value}
+              </Tab>
+            );
+          }
+        )}
       </div>
-    );
-  }
-}
+      <div className={css.container + " custom-scroll"}>
+        {props.ingredientTypes.map(
+          (ingrType: IIngredientListType, index: number) => {
+            const items = props.productsData.filter((item: IIngredientData) => {
+              return item.type === ingrType.type;
+            });
+            const ref = getRefByType(ingrType.type);
+            return (
+              <IngredientBox
+                key={"IngrBox_" + (index + 1)}
+                itemRef={ref}
+                value={ingrType.value}
+                type={ingrType.type}
+                productsData={items}
+                selectedIngredients={props.selectedIngredients[ingrType.type]}
+                selectIngredientCallback={props.selectCallback}
+              />
+            );
+          }
+        )}
+      </div>
+    </div>
+  );
+};
+
+BurgerIngredients.propTypes = {
+  productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
+  selectedIngredients: PTIngredientSelected.isRequired,
+  ingredientTypes: PropTypes.arrayOf(PTIngrList).isRequired,
+  selectCallback: PropTypes.any,
+};
 
 export default BurgerIngredients;

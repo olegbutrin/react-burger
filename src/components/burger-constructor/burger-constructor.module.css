@@ -6,84 +6,13 @@
   max-height: 72vh;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  align-items: stretch;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  max-height: 384px;
-}
 
-.ingredientPin,
-.ingredient {
+.ingredientPin {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: nowrap;
   align-items: center;
   flex-shrink: 2;
-}
-
-.ingredient {
-  flex-grow: 4;
-}
-
-.ingredientPin {
   justify-content: flex-end;
 }
-
-.icon {
-  margin-right: 12px;
-  cursor: move;
-}
-
-.orderContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-self: flex-end;
-}
-
-.orderIcon {
-  display: inline-block;
-  align-items: center;
-}
-
-.priceValue {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-
-/* ======================= */
-.orderAnimation {
-  width: 120px;
-  height: 120px;
-  background-image: url("../../images/order.gif");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.contents {
-  display: flex;
-  flex-direction: column;
-  align-content: flex-start;
-  justify-content: center;
-}
-
-.contents > * {
-  text-align: center;
-}
-
-@media screen and (max-height: 940) {
-  .container {
-    max-height: 290px;
-  }
-}
-

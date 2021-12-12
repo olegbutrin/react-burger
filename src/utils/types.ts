@@ -1,6 +1,8 @@
 // export enum IIngredientTypeName {
-//   bun = "bun", sauce = "bun", main = "main" 
+//   bun = "bun", sauce = "bun", main = "main"
 // }
+
+export const ingrTypeNames: IIngredientTypeName[] = ["bun", "sauce", "main"];
 
 export type IIngredientTypeName = 'bun' | 'sauce' | 'main'
 
@@ -40,3 +42,9 @@ export interface IIngredientSelectedList {
 export interface IOrderInfoProps {
   orderID: string;
 }
+
+export interface IContentsOrderItem {
+  id: string,
+  index: number,
+  type: IIngredientTypeName,
+};

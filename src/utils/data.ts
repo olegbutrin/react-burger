@@ -1,6 +1,6 @@
 import {
   IIngredientData,
-} from "../components/app/app.interfaces";
+} from "./types";
 
 const data: Array<IIngredientData> =  [
   {

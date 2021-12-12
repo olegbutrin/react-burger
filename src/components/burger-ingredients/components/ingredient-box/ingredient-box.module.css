@@ -1,17 +1,12 @@
-.main {
+.ingrBox {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-.menu {
+.ingrList {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width: 100%;
-}
-
-.container {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  max-height: 800px;
 }

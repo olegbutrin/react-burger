@@ -1,6 +1,6 @@
 import {
   IMenuItem,
-} from "../components/app/app.interfaces";
+} from "./types";
 
 const mainMenu: Array<IMenuItem> = [
   {

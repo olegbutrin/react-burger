@@ -4,25 +4,9 @@ import "./index.css";
 import App from "./components/app/app";
 import reportWebVitals from "./reportWebVitals";
 
-import { IIngredientListType } from "./components/app/app.interfaces";
-
-// Данные
-import mainMenu from "./utils/menu";
-import productsData from "./utils/data";
-
-const ingredientTypes: Array<IIngredientListType> = [
-  { value: "Булки", type: "bun", max: 1, unique: true, initial: true },
-  { value: "Соусы", type: "sauce", max: 2, unique: false, initial: false },
-  { value: "Начинки", type: "main", max: 3, unique: false, initial: false },
-];
-
 ReactDOM.render(
   <React.StrictMode>
-    <App
-      productsData={productsData}
-      menuData={mainMenu}
-      ingredientTypes={ingredientTypes}
-    />
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
