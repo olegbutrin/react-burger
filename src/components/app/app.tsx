@@ -208,6 +208,7 @@ const App = () => {
           productsData={ingredientData}
           closeCallback={closeModal}
           useCallback={() => {
+            closeModal();
             selectIngredient(type, id);
           }}
         />
@@ -231,7 +232,10 @@ const App = () => {
           <ContentsOrder
             orderID={orderID}
             summary={summary}
-            closeCallback={clearIngredients}
+            closeCallback={() => {
+              closeModal();
+              clearIngredients();
+            }}
           />
         </Modal>
       );

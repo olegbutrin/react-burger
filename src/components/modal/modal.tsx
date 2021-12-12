@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
@@ -37,9 +37,9 @@ const Modal = (props: {
           e.stopPropagation();
         }}
       >
-        <span tabIndex={0} ref={spanRef} onKeyDown={handleKeyDown}></span>
         <div className={css.closeButton} onClick={props.closeCallback}>
           <CloseIcon type="primary" />
+          <span tabIndex={0} ref={spanRef} onKeyDown={handleKeyDown}></span>
         </div>
         {props.children}
       </div>
