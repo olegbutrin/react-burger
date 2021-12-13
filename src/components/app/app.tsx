@@ -54,8 +54,6 @@ const App = () => {
     modal: <></>,
   });
 
-  const modalRoot = document.getElementById("react-modals") || document.body;
-
   // запускаем асинхронное получение данных через хук при монтировании
   React.useEffect(() => {
     fetch(INGREDIENTS_URL)
@@ -256,9 +254,7 @@ const App = () => {
       </main>
       <div id="react-modals"></div>
       {modalState.show && (
-        <Modal closeCallback={closeModal} element={modalRoot}>
-          {modalState.modal}
-        </Modal>
+        <Modal closeCallback={closeModal}>{modalState.modal}</Modal>
       )}
     </div>
   );

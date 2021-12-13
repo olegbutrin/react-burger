@@ -8,10 +8,11 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 
 import css from "./modal.module.css";
 
+const modalRoot = document.getElementById("react-modals") || document.body;
+
 // модальное окно через портал
 const Modal = (props: {
-  element: Element;
-  children: ReactElement | ReactElement[];
+  children: ReactElement | ReactElement[] | Symbol;
   closeCallback: (...args: any[]) => void;
 }) => {
   const handleKeyDown = (e: any) => {
@@ -45,14 +46,15 @@ const Modal = (props: {
       </div>
     </ModalOverlay>
   );
-  const modal = ReactDOM.createPortal(contents, props.element);
+  const modal = ReactDOM.createPortal(contents, modalRoot);
   return modal;
 };
 
 Modal.propTypes = {
-  element: PropTypes.element,
-  children: PropTypes.oneOf([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
-    .isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node),
+  ]).isRequired,
   closeCallback: PropTypes.func,
 };
 

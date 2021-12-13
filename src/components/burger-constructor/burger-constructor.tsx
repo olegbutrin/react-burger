@@ -28,7 +28,7 @@ const BurgerConstructor = (props: {
           key={["BurgIngr_TOP", bun._id].join("_")}
           data={bun}
           type="top"
-          index={NaN}
+          index={-1}
           removeCallback={props.removeCallback}
         />
       )}
@@ -53,7 +53,7 @@ const BurgerConstructor = (props: {
           key={["BurgIngr_BOTTOM", bun._id].join("_")}
           data={bun}
           type="bottom"
-          index={NaN}
+          index={-1}
           removeCallback={props.removeCallback}
         />
       )}
