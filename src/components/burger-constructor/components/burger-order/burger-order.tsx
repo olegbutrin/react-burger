@@ -5,27 +5,41 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { IIngredientData } from "../../../../utils/types";
+import { PTIngredientData } from "../../../../utils/props";
+
 import css from "./burger-order.module.css";
 
 const BurgerOrder = (props: {
-  summary: number;
-  orderID: string;
-  orderList: string[];
+  productsData: IIngredientData[];
   doneCallback: (...args: any[]) => void;
 }) => {
+  const summary = props.productsData.reduce(
+    (sum, { price }: { price: number }) => sum + price,
+    0
+  );
+
+  const orderID = (() => {
+    const chars = "0123456789";
+    const len = Math.ceil(Math.random() * 4) + 2;
+    let id = "";
+    while (id.length < len) {
+      id += chars[Math.floor(Math.random() * 10)];
+    }
+    return id;
+  })();
+
+  const doneFn = () => {
+    props.doneCallback(summary, orderID, props.productsData);
+  };
+
   return (
     <div className={css.orderContainer + " mt-10 mr-4"}>
       <div className={css.priceValue + " mr-10"}>
-        <p className="text text_type_digits-medium mr-3">{props.summary}</p>
+        <p className="text text_type_digits-medium mr-3">{summary}</p>
         <CurrencyIcon type="primary" />
       </div>
-      <Button
-        type="primary"
-        size="medium"
-        onClick={() => {
-          props.doneCallback(props.summary, props.orderID, props.orderList);
-        }}
-      >
+      <Button type="primary" size="medium" onClick={doneFn}>
         Оформить заказ
       </Button>
     </div>
@@ -33,9 +47,7 @@ const BurgerOrder = (props: {
 };
 
 BurgerOrder.propTypes = {
-  summary: PropTypes.number,
-  orderID: PropTypes.string.isRequired,
-  orderList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
   doneCallback: PropTypes.func,
 };
 

@@ -1,12 +1,10 @@
 import PropTypes from "prop-types";
 
-import BurgerContents from "./components/burger-contents/burger-contents";
+import BurgerContentsItem from "./components/burger-contents-item/burger-contents-item";
 import BurgerOrder from "./components/burger-order/burger-order";
 
-import { IIngredientData, IContentsOrderItem } from "../../utils/types";
-import { PTContentsOrderItem, PTIngredientData } from "../../utils/props";
-
-import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
+import { IIngredientData } from "../../utils/types";
+import { PTIngredientData } from "../../utils/props";
 
 import css from "./burger-constructor.module.css";
 
@@ -14,119 +12,53 @@ import css from "./burger-constructor.module.css";
 
 const BurgerConstructor = (props: {
   productsData: IIngredientData[];
-  productsOrder: IContentsOrderItem[];
-  selectedBun: string;
   removeCallback: (...args: any[]) => void;
-  changeOrderCallback: (...args: any[]) => void;
   doneCallback: (...args: any[]) => void;
 }) => {
-  // рендер верхней булки
-  const topBun = () => {
-    const bunData: IIngredientData | undefined = props.productsData.find(
-      (data: IIngredientData) => {
-        return data._id === props.selectedBun;
-      }
-    );
-    if (bunData) {
-      return (
-        <div className={css.ingredientPin + " m-2 pl-9 pr-3"}>
-          <ConstructorElement
-            key={"top-bun"}
-            type="top"
-            isLocked={true}
-            text={bunData.name + " (верх)"}
-            price={bunData.price}
-            thumbnail={bunData.image_mobile}
-          />
-        </div>
-      );
-    } else {
-      return "";
-    }
-  };
-  // рендер нижней булки
-  const bottomBun = () => {
-    const bunData: IIngredientData | undefined = props.productsData.find(
-      (data: IIngredientData) => {
-        return data._id === props.selectedBun;
-      }
-    );
-    if (bunData) {
-      return (
-        <div className={css.ingredientPin + " m-2 pl-9 pr-3"}>
-          <ConstructorElement
-            key={"bottom-bun"}
-            type="bottom"
-            isLocked={true}
-            text={bunData.name + " (низ)"}
-            price={bunData.price}
-            thumbnail={bunData.image_mobile}
-          />
-        </div>
-      );
-    } else {
-      return "";
-    }
-  };
-
-  // получаем общий прайс
-  const getSummaryPrice = () => {
-    let summ = 0;
-    const bunData: IIngredientData | undefined = props.productsData.find(
-      (data: IIngredientData) => {
-        return data._id === props.selectedBun;
-      }
-    );
-    if (bunData) {
-      summ += bunData.price;
-    }
-    props.productsOrder.forEach((product: IContentsOrderItem) => {
-      const item: IIngredientData | undefined = props.productsData.find(
-        (data: IIngredientData) => {
-          return data._id === product.id;
-        }
-      );
-      if (item) {
-        summ += item.price;
-      }
-    });
-    return summ;
-  };
-
-  // получаем список ингредиентов
-  const getOrderList = () => {
-    let orderList = props.productsOrder.map((item: IContentsOrderItem) => {
-      return item.id;
-    });
-    orderList.push(props.selectedBun);
-    return orderList;
-  };
-
-  // получаем фейковый номер заказа
-  const getOrderID = () => {
-    const chars = "0123456789";
-    const len = Math.ceil(Math.random() * 4) + 2;
-    let id = "";
-    while (id.length < len) {
-      id += chars[Math.floor(Math.random() * 10)];
-    }
-    return id;
-  };
+  // ищем булку
+  const bun = props.productsData.find((ingr: IIngredientData) => {
+    return ingr.type === "bun";
+  });
 
   return (
     <div className={css.main + " mt-25"}>
-      {topBun()}
-      <BurgerContents
-        productsData={props.productsData}
-        productsOrder={props.productsOrder}
-        removeCallback={props.removeCallback}
-        changeOrderCallback={props.changeOrderCallback}
-      />
-      {bottomBun()}
+      {/* верхняя булка */}
+      {bun && (
+        <BurgerContentsItem
+          key={["BurgIngr_TOP", bun._id].join("_")}
+          data={bun}
+          type="top"
+          index={NaN}
+          removeCallback={props.removeCallback}
+        />
+      )}
+      <div className={css.container + " custom-scroll"}>
+        {props.productsData.map((ingr: IIngredientData, index: number) => {
+          return (
+            ingr.type !== "bun" && (
+              <BurgerContentsItem
+                key={["BurgIngr", ingr._id].join("_")}
+                data={ingr}
+                type={"center"}
+                index={index}
+                removeCallback={props.removeCallback}
+              />
+            )
+          );
+        })}
+      </div>
+      {/* нижняя булка */}
+      {bun && (
+        <BurgerContentsItem
+          key={["BurgIngr_BOTTOM", bun._id].join("_")}
+          data={bun}
+          type="bottom"
+          index={NaN}
+          removeCallback={props.removeCallback}
+        />
+      )}
       <BurgerOrder
-        summary={getSummaryPrice()}
-        orderID={getOrderID()}
-        orderList={getOrderList()}
+        productsData={props.productsData}
         doneCallback={props.doneCallback}
       ></BurgerOrder>
     </div>
@@ -135,10 +67,7 @@ const BurgerConstructor = (props: {
 
 BurgerConstructor.propTypes = {
   productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
-  productsOrder: PropTypes.arrayOf(PTContentsOrderItem).isRequired,
-  selectedBun: PropTypes.string,
   removeCallback: PropTypes.func,
-  changeOrderCallback: PropTypes.func,
   doneCallback: PropTypes.func,
 };
 

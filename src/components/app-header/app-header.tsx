@@ -12,15 +12,11 @@ import css from "./app-header.module.css";
 
 // Основной компонент, реализующий заголовок
 
-const AppHeader = (props: {
-  menu: IMenuItem[];
-  callbackFunc: (id: number) => void;
-}) => {
+const AppHeader = (props: { menu: IMenuItem[] }) => {
   const [activeItem, setActiveItem] = React.useState(1);
 
   const callbackMenu = (id: number) => {
     setActiveItem(id);
-    props.callbackFunc(id);
   };
 
   return (
@@ -46,7 +42,6 @@ const AppHeader = (props: {
 
 AppHeader.propTypes = {
   menu: PropTypes.arrayOf(PTMenuItem),
-  callbackFunc: () => {},
 };
 
 export default AppHeader;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
@@ -10,8 +10,8 @@ import css from "./modal.module.css";
 
 // модальное окно через портал
 const Modal = (props: {
-  element: any;
-  children: any;
+  element: Element;
+  children: ReactElement | ReactElement[];
   closeCallback: (...args: any[]) => void;
 }) => {
   const handleKeyDown = (e: any) => {
@@ -50,8 +50,9 @@ const Modal = (props: {
 };
 
 Modal.propTypes = {
-  element: PropTypes.any,
-  children: PropTypes.any,
+  element: PropTypes.element,
+  children: PropTypes.oneOf([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
+    .isRequired,
   closeCallback: PropTypes.func,
 };
 

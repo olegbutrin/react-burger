@@ -4,7 +4,11 @@ import IngredientPreview from "../ingredient-preview/ingredient-preview";
 
 import { IIngredientData } from "../../../../utils/types";
 
-import { PTIngrListType, PTIngredientData } from "../../../../utils/props";
+import {
+  PTIngrListType,
+  PTIngredientData,
+  PTRef,
+} from "../../../../utils/props";
 
 import css from "./ingredient-box.module.css";
 
@@ -12,9 +16,9 @@ import css from "./ingredient-box.module.css";
 const IngredientBox = (props: {
   value: string;
   type: string;
-  itemRef: any;
+  itemRef: React.MutableRefObject<null>;
   productsData: IIngredientData[];
-  selectedIngredients: string[];
+  selectedIngredients: IIngredientData[];
   selectIngredientCallback: (...args: any[]) => void;
 }) => {
   return (
@@ -23,8 +27,8 @@ const IngredientBox = (props: {
       <div className={css.ingrList}>
         {props.productsData.map((item: IIngredientData) => {
           const itemCount: number = props.selectedIngredients.filter(
-            (count: string) => {
-              return count === item._id;
+            (ingr: IIngredientData) => {
+              return ingr._id === item._id;
             }
           ).length;
           return (
@@ -44,10 +48,10 @@ const IngredientBox = (props: {
 IngredientBox.propTypes = {
   value: PropTypes.string.isRequired,
   type: PTIngrListType.isRequired,
-  itemRef: PropTypes.any.isRequired,
+  itemRef: PTRef,
   productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
-  selectedIngredients: PropTypes.arrayOf(PropTypes.string),
-  selectIngredientCallback: PropTypes.any,
+  selectedIngredients: PropTypes.arrayOf(PTIngredientData),
+  selectIngredientCallback: PropTypes.func,
 };
 
 export default IngredientBox;

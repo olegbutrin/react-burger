@@ -16,6 +16,10 @@ const IngredientPreview = (props: {
   count: number;
   selectIngredientCallback: (...args: any[]) => void;
 }) => {
+  const clickFn = () => {
+    props.selectIngredientCallback(props.productsData);
+  };
+
   return (
     <div
       className={css.ingrPreview}
@@ -24,12 +28,7 @@ const IngredientPreview = (props: {
         e.preventDefault();
         console.log(e);
       }}
-      onClick={() => {
-        props.selectIngredientCallback(
-          props.productsData.type,
-          props.productsData._id
-        );
-      }}
+      onClick={clickFn}
     >
       {props.count > 0 ? <Counter count={props.count} size={"default"} /> : ""}
       <img

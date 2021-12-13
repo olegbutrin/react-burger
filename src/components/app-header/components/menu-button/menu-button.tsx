@@ -27,24 +27,25 @@ const MenuButton = (props: {
         return <></>;
     }
   };
+
+  const clickFn = () => {
+    props.callback(props.id);
+  };
+
+  const className = props.active
+    ? "text text_type_main-default"
+    : "text text_type_main-default text_color_inactive";
+
+  const order = props.id < 3 ? props.id : props.id + 1;
+
   return (
     <div
       className={css.menuButton + " mt-4 mr-2 mb-4 ml-2 p-4"}
-      style={{ order: props.id < 3 ? props.id : props.id + 1 }}
-      onClick={() => {
-        props.callback(props.id);
-      }}
+      style={{ order: order }}
+      onClick={clickFn}
     >
       <div className="mr-2">{itemIcon(props.icon, props.active)}</div>
-      <span
-        className={
-          props.active
-            ? "text text_type_main-default"
-            : "text text_type_main-default text_color_inactive"
-        }
-      >
-        {props.value}
-      </span>
+      <span className={className}>{props.value}</span>
     </div>
   );
 };
@@ -54,7 +55,7 @@ MenuButton.propTypes = {
   icon: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   active: PropTypes.bool.isRequired,
-  callback: () => {},
+  callback: PropTypes.func,
 };
 
 export default MenuButton;

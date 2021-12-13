@@ -44,8 +44,4 @@ export const PTMenuItem = PropTypes.shape({
   icon: PropTypes.string.isRequired,
 });
 
-export const PTContentsOrderItem = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
-  type: PTIngrListType,
-});
+export const PTRef = PropTypes.any;

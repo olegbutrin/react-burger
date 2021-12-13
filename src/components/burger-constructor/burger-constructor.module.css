@@ -6,13 +6,18 @@
   max-height: 72vh;
 }
 
-
-.ingredientPin {
+.container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  align-items: center;
-  flex-shrink: 2;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 384px;
+}
+
+@media screen and (max-height: 940) {
+  .container {
+    max-height: 290px;
+  }
 }
