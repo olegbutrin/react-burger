@@ -1,17 +1,9 @@
-import PropTypes from "prop-types";
-
-import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
-
 import { IIngredientData } from "../../../utils/types";
 import { PTIngredientData } from "../../../utils/props";
 
 import css from "../modal-contents.module.css";
 
-const ContentsIngredientInfo = (props: {
-  productsData: IIngredientData;
-  useCallback: (...args: any[]) => void;
-  closeCallback: (...args: any[]) => void;
-}) => {
+const ContentsIngredientInfo = (props: { productsData: IIngredientData }) => {
   return (
     <div className={css.contents}>
       <p className="text text_type_main-large" style={{ textAlign: "left" }}>
@@ -59,26 +51,12 @@ const ContentsIngredientInfo = (props: {
           </p>
         </div>
       </div>
-      <div className={css.ingrButtonContainer + " mt-15 mb-15"}>
-        <div>
-          <Button type="primary" size="medium" onClick={props.useCallback}>
-            Уже хочу!
-          </Button>
-        </div>
-        <div className="ml-10">
-          <Button type="primary" size="medium" onClick={props.closeCallback}>
-            Ещё подумаю...
-          </Button>
-        </div>
-      </div>
     </div>
   );
 };
 
 ContentsIngredientInfo.propTypes = {
   productsData: PTIngredientData,
-  useCallback: PropTypes.func,
-  closeCallback: PropTypes.func,
 };
 
 export default ContentsIngredientInfo;

@@ -10,11 +10,7 @@ import css from "./burger-constructor.module.css";
 
 // Основной класс конструктора бургеров
 
-const BurgerConstructor = (props: {
-  productsData: IIngredientData[];
-  removeCallback: (...args: any[]) => void;
-  doneCallback: (...args: any[]) => void;
-}) => {
+const BurgerConstructor = (props: { productsData: IIngredientData[] }) => {
   // ищем булку
   const bun = props.productsData.find((ingr: IIngredientData) => {
     return ingr.type === "bun";
@@ -29,7 +25,6 @@ const BurgerConstructor = (props: {
           data={bun}
           type="top"
           index={-1}
-          removeCallback={props.removeCallback}
         />
       )}
       <div className={css.container + " custom-scroll"}>
@@ -37,11 +32,10 @@ const BurgerConstructor = (props: {
           return (
             ingr.type !== "bun" && (
               <BurgerContentsItem
-                key={["BurgIngr", ingr._id].join("_")}
+                key={["BurgIngr", ingr._id, index].join("_")}
                 data={ingr}
                 type={"center"}
                 index={index}
-                removeCallback={props.removeCallback}
               />
             )
           );
@@ -54,21 +48,15 @@ const BurgerConstructor = (props: {
           data={bun}
           type="bottom"
           index={-1}
-          removeCallback={props.removeCallback}
         />
       )}
-      <BurgerOrder
-        productsData={props.productsData}
-        doneCallback={props.doneCallback}
-      ></BurgerOrder>
+      <BurgerOrder productsData={props.productsData}></BurgerOrder>
     </div>
   );
 };
 
 BurgerConstructor.propTypes = {
   productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
-  removeCallback: PropTypes.func,
-  doneCallback: PropTypes.func,
 };
 
 export default BurgerConstructor;

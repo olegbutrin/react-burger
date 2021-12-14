@@ -9,6 +9,7 @@
   width: max-content;
   height: max-content;
   padding: 40px;
+  cursor: initial;
 }
 
 .header {

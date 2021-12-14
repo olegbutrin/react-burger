@@ -1,8 +1,29 @@
-.menuButton {
+.menuButton1 {
   display: flex;
   cursor: pointer;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
   flex-shrink: 4;
+  order: 1;
+}
+
+.menuButton2 {
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  flex-shrink: 4;
+  order: 2;
+}
+
+.menuButton3 {
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  flex-shrink: 4;
+  order: 4;
 }

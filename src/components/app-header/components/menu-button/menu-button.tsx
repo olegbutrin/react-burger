@@ -15,36 +15,42 @@ const MenuButton = (props: {
   active: boolean;
   callback: (id: number) => void;
 }) => {
-  const itemIcon = (name: string, active: boolean) => {
-    switch (name) {
+  const itemIcon = (() => {
+    switch (props.icon) {
       case "burger":
-        return <BurgerIcon type={active ? "primary" : "secondary"} />;
+        return <BurgerIcon type={props.active ? "primary" : "secondary"} />;
       case "list":
-        return <ListIcon type={active ? "primary" : "secondary"} />;
+        return <ListIcon type={props.active ? "primary" : "secondary"} />;
       case "profile":
-        return <ProfileIcon type={active ? "primary" : "secondary"} />;
+        return <ProfileIcon type={props.active ? "primary" : "secondary"} />;
       default:
         return <></>;
     }
-  };
+  })();
 
-  const clickFn = () => {
-    props.callback(props.id);
-  };
+  const cssName = (() => {
+    switch (props.id) {
+      case 1:
+        return css.menuButton1;
+      case 2:
+        return css.menuButton2;
+      case 3:
+      default:
+        return css.menuButton3;
+    }
+  })();
 
   const className = props.active
     ? "text text_type_main-default"
     : "text text_type_main-default text_color_inactive";
 
-  const order = props.id < 3 ? props.id : props.id + 1;
+  const setActive = () => {
+    props.callback(props.id);
+  };
 
   return (
-    <div
-      className={css.menuButton + " mt-4 mr-2 mb-4 ml-2 p-4"}
-      style={{ order: order }}
-      onClick={clickFn}
-    >
-      <div className="mr-2">{itemIcon(props.icon, props.active)}</div>
+    <div className={cssName + " mt-4 mr-2 mb-4 ml-2 p-4"} onClick={setActive}>
+      <div className="mr-2">{itemIcon}</div>
       <span className={className}>{props.value}</span>
     </div>
   );

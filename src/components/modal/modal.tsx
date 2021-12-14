@@ -13,12 +13,26 @@ const modalRoot = document.getElementById("react-modals") || document.body;
 // модальное окно через портал
 const Modal = (props: {
   children: ReactElement | ReactElement[] | Symbol;
-  closeCallback: (...args: any[]) => void;
+  closeCallback: () => void;
 }) => {
-  const handleKeyDown = (e: any) => {
-    if (e.keyCode === 27) {
+  // escape press
+  const handleEscape = (e: any) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
       props.closeCallback();
     }
+  };
+
+  const closeModal = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    props.closeCallback();
+  };
+
+  const stopEvent = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const spanRef: any = React.useRef(null);
@@ -30,24 +44,17 @@ const Modal = (props: {
   }, []);
 
   const contents = (
-    <ModalOverlay closeCallback={props.closeCallback}>
-      <div
-        tabIndex={0}
-        className={css.container}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <div className={css.closeButton} onClick={props.closeCallback}>
+    <ModalOverlay closeCallback={closeModal}>
+      <div tabIndex={0} className={css.container} onClick={stopEvent}>
+        <div className={css.closeButton} onClick={closeModal}>
           <CloseIcon type="primary" />
-          <span tabIndex={0} ref={spanRef} onKeyDown={handleKeyDown}></span>
+          <span tabIndex={0} ref={spanRef} onKeyDown={handleEscape}></span>
         </div>
         {props.children}
       </div>
     </ModalOverlay>
   );
-  const modal = ReactDOM.createPortal(contents, modalRoot);
-  return modal;
+  return ReactDOM.createPortal(contents, modalRoot);
 };
 
 Modal.propTypes = {

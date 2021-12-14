@@ -14,7 +14,6 @@ const BurgerContentsItem = (props: {
   data: IIngredientData;
   type: IComponentTypeName;
   index: number;
-  removeCallback: (...args: any[]) => void;
 }) => {
   //
   let itemClass, extraStyle, extraName, draggable;
@@ -29,7 +28,7 @@ const BurgerContentsItem = (props: {
     case "bottom":
       itemClass = css.itemPin;
       extraStyle = " m-2 pl-9 pr-3";
-      extraName = " (верх)";
+      extraName = " (низ)";
       draggable = false;
       break;
     case "center":
@@ -38,13 +37,6 @@ const BurgerContentsItem = (props: {
       extraName = "";
       draggable = false;
   }
-
-  const closeFn =
-    props.type === "center"
-      ? () => {
-          props.removeCallback([props.index]);
-        }
-      : undefined;
 
   return (
     <div draggable={draggable} className={itemClass + extraStyle}>
@@ -58,7 +50,6 @@ const BurgerContentsItem = (props: {
         text={props.data.name + extraName}
         price={props.data.price}
         thumbnail={props.data.image_mobile}
-        handleClose={closeFn}
       />
     </div>
   );
@@ -68,7 +59,6 @@ BurgerContentsItem.propTypes = {
   data: PTIngredientData.isRequired,
   type: PropTypes.oneOf(["top", "bottom", "center"]),
   index: PropTypes.number.isRequired,
-  removeCallback: PropTypes.func,
 };
 
 export default BurgerContentsItem;
