@@ -26,7 +26,6 @@ const IngredientPreview = (props: {
   };
 
   const closeModal = () => {
-    console.log("Close");
     setModalState(false);
   };
 
