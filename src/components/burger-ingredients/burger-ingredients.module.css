@@ -1,0 +1,17 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.container {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 800px;
+}

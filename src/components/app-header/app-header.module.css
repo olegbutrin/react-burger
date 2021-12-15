@@ -1,0 +1,55 @@
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 4;
+}
+
+.navigation {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 4;
+}
+
+.logo {
+  display: inline-block;
+  order: 3;
+  flex-shrink: 4;
+  flex-grow: 3;
+}
+
+.logo > * {
+  margin-left: 17%;
+  margin-right: 70%;
+} 
+
+/* При ширине менее 1200 страница переключается в одноколоночну верстку шириной 600 */
+
+@media screen and (max-width: 1200px) {
+  
+  .navigation {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+
+  .logo {
+    display: flex;
+    order: 0;
+    flex-basis: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: 0px;
+    margin-top: 40px;
+  }
+
+  .logo > * {
+    height: auto;
+    width: 600px;
+    margin: 0%;
+  }
+
+}

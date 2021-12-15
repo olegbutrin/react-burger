@@ -1,0 +1,31 @@
+.ingrPreview {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+}
+
+.image {
+  width: 240px;
+  height: 120px;
+  max-width: 240px;
+  max-height: 120px;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+
+}
+
+.name {
+  display: block;
+  overflow: hidden;
+  width: 272px;
+  height: 48px;
+  max-width: 272px;
+  max-height: 48px;
+  text-align: center;
+}

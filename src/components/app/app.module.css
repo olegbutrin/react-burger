@@ -1,0 +1,65 @@
+.preload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  flex-shrink: 4;
+  max-height: 95vh;
+  min-height: 95vh;
+}
+
+.main {
+  display: block;
+  margin: auto;
+}
+
+.contents {
+  height: 80vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  flex-shrink: 4;
+}
+
+.sectionRight,
+.sectionLeft {
+  display: flex;
+  justify-content: stretch;
+  align-content: stretch;
+  flex-shrink: 4;
+}
+
+.sectionLeft {
+  max-width: 600px;
+}
+
+@media screen and (max-width: 1200px) {
+  
+  .page {
+    max-height: max-content;
+    padding-bottom: 48px;
+  }
+
+  .contents {
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+  }
+  
+  .page,
+  .sectionLeft,
+  .sectionRight {
+    max-height: none;
+  }
+
+}

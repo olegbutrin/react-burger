@@ -1,0 +1,18 @@
+.orderContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-self: flex-end;
+}
+
+.orderIcon {
+  display: inline-block;
+  align-items: center;
+}
+
+.priceValue {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
