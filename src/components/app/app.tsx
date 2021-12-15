@@ -11,6 +11,8 @@ import css from "./app.module.css";
 
 import mainMenu from "../../utils/menu";
 
+import { ConstructorContext } from "../../utils/constructorContext";
+
 // хардкод URL
 const INGREDIENTS_URL = "https://norma.nomoreparties.space/api/ingredients";
 
@@ -56,24 +58,22 @@ const App = () => {
   // создаем список для выбранных ингредиентов сразу же после именения данных
   React.useEffect(() => {
     if (ingredientsState.ingredients.length) {
-      const startedIngredients: IIngredientData[] = [];
+      // только булки
       const buns = ingredientsState.ingredients.filter(
         (ingr: IIngredientData) => {
           return ingr.type === "bun";
         }
       );
-      const internal = ingredientsState.ingredients.filter(
-        (ingr: IIngredientData) => {
-          return ingr.type !== "bun";
-        }
-      );
-      // одну булку
-      startedIngredients.push(buns[(buns.length * Math.random()) | 0]);
-      // шесть ингредиентов
+      const startedIngredients: IIngredientData[] = [...buns];
+      // ИЗМЕНЕНИЕ от sprint1.
+      // Проверка и фильтрация количества булок перенесены в компонент BurgerConstructor
+      // шесть случайных ингредиентов, возможно дублирование (следует дополнительно обезопасить key)
+      // И для комплекта все доступные булки
       for (let i = 0; i < 6; i++) {
-        const idx = (internal.length * Math.random()) | 0;
-        startedIngredients.push(internal[idx]);
-        internal.slice(idx, 1);
+        const idx = (ingredientsState.ingredients.length * Math.random()) | 0;
+        startedIngredients.push(ingredientsState.ingredients[idx]);
+        // Не удаляем исходный, работаем с дубликатами
+        // ingredientsState.ingredients.slice(idx, 1);
       }
       setSelectedIngredients(startedIngredients);
     }
@@ -113,7 +113,11 @@ const App = () => {
                 <BurgerIngredients productsData={ingredients} />
               </section>
               <section className={css.sectionRight + " mr-5 ml-5"}>
-                <BurgerConstructor productsData={selectedIngredients} />
+                {/* Поскольку на первом этапе в конструктор передавался случайно отфильтрованный набор,
+                просто меняем props на контекст с таким же набором */}
+                <ConstructorContext.Provider value={selectedIngredients}>
+                  <BurgerConstructor />
+                </ConstructorContext.Provider>
               </section>
             </div>
           </>
