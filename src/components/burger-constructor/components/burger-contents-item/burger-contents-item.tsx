@@ -17,6 +17,7 @@ const BurgerContentsItem = (props: {
 }) => {
   //
   let itemClass, extraStyle, extraName, draggable;
+  let itemType: "top" | "bottom" | undefined;
 
   switch (props.type) {
     case "top":
@@ -24,18 +25,20 @@ const BurgerContentsItem = (props: {
       extraStyle = " m-2 pl-9 pr-3";
       extraName = " (верх)";
       draggable = false;
+      itemType = "top";
       break;
     case "bottom":
       itemClass = css.itemPin;
       extraStyle = " m-2 pl-9 pr-3";
       extraName = " (низ)";
       draggable = false;
+      itemType = "bottom";
       break;
     case "center":
       itemClass = css.item;
       extraStyle = " m-2";
       extraName = "";
-      draggable = false;
+      draggable = true;
   }
 
   return (
@@ -50,6 +53,8 @@ const BurgerContentsItem = (props: {
         text={props.data.name + extraName}
         price={props.data.price}
         thumbnail={props.data.image_mobile}
+        isLocked={!draggable}
+        type={itemType}
       />
     </div>
   );
