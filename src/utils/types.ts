@@ -34,3 +34,21 @@ export interface IIngredientData {
 
 export type IComponentTypeName = "top" | "bottom" | "center";
 
+export enum ISelectedIngrActs {
+  add = "add",
+  remove = "remove",
+  push = "push",
+  clear = "clear"
+}
+
+export interface ISelectedIngrState {
+  bun: IIngredientData | null,
+  products: IIngredientData[],
+}
+
+export type ISelectedIngrAction =
+  | { type: ISelectedIngrActs.add, product: IIngredientData }
+  | { type: ISelectedIngrActs.remove, index: number }
+  | { type: ISelectedIngrActs.push, products: IIngredientData[] }
+  | { type: ISelectedIngrActs.clear }
+

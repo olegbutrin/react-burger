@@ -35,8 +35,11 @@ const BurgerContentsItem = (props: {
       itemClass = css.item;
       extraStyle = " m-2";
       extraName = "";
-      draggable = false;
+      draggable = true;
   }
+
+  const buttonType =
+    props.type === "top" || props.type === "bottom" ? props.type : undefined;
 
   return (
     <div draggable={draggable} className={itemClass + extraStyle}>
@@ -50,6 +53,9 @@ const BurgerContentsItem = (props: {
         text={props.data.name + extraName}
         price={props.data.price}
         thumbnail={props.data.image_mobile}
+        type={buttonType}
+        isLocked={!draggable}
+        handleClose={undefined}
       />
     </div>
   );

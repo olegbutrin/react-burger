@@ -1,11 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import BurgerContentsItem from "./components/burger-contents-item/burger-contents-item";
 import BurgerOrder from "./components/burger-order/burger-order";
 
 import { IIngredientData } from "../../utils/types";
-import { PTIngredientData } from "../../utils/props";
 
 import css from "./burger-constructor.module.css";
 
@@ -13,13 +11,12 @@ import { ConstructorContext } from "../../utils/constructorContext";
 
 // Основной класс конструктора бургеров
 
-//
+//Поскольку список продуктов передается через контекст, props не используются
+
 const BurgerConstructor = () => {
-  const productsData = React.useContext(ConstructorContext);
-  // ищем булку
-  const bun = productsData.find((ingr: IIngredientData) => {
-    return ingr.type === "bun";
-  });
+  const productsContext = React.useContext(ConstructorContext);
+
+  const { bun, products } = productsContext.selectedIngredients;
 
   return (
     <div className={css.main + " mt-25"}>
@@ -33,16 +30,15 @@ const BurgerConstructor = () => {
         />
       )}
       <div className={css.container + " custom-scroll"}>
-        {productsData.map((ingr: IIngredientData, index: number) => {
+        {products.map((ingr: IIngredientData, index: number) => {
+          // поскольку фильтрация перенесена в редюсер selectedIngredients, обойдемся без проверки на тип
           return (
-            ingr.type !== "bun" && (
-              <BurgerContentsItem
-                key={["BurgIngr", ingr._id, index].join("_")}
-                data={ingr}
-                type={"center"}
-                index={index}
-              />
-            )
+            <BurgerContentsItem
+              key={["BurgIngr", ingr._id, index].join("_")}
+              data={ingr}
+              type={"center"}
+              index={index}
+            />
           );
         })}
       </div>
@@ -55,7 +51,7 @@ const BurgerConstructor = () => {
           index={-1}
         />
       )}
-      <BurgerOrder productsData={productsData}></BurgerOrder>
+      <BurgerOrder productsData={products}></BurgerOrder>
     </div>
   );
 };
