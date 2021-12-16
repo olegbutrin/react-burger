@@ -5,12 +5,7 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import {
-  IIngredientData,
-  ISelectedIngrActs,
-  ISelectedIngrState,
-  ISelectedIngrAction,
-} from "../../utils/types";
+import { IIngredientData } from "../../utils/types";
 
 import css from "./app.module.css";
 
@@ -21,44 +16,7 @@ import { ConstructorContext } from "../../utils/constructorContext";
 // хардкод URL
 const INGREDIENTS_URL = "https://norma.nomoreparties.space/api/ingredients";
 
-const selectedIngrDef: ISelectedIngrState = { bun: null, products: [] };
-
-// функция-редюсер для контроля ингредиентов для бургера
-const selectedIngrReducer = (
-  state: ISelectedIngrState,
-  action: ISelectedIngrAction
-): ISelectedIngrState => {
-  const currentState = { ...state };
-  switch (action.type) {
-    // функция добавления ингредиента
-    case "add":
-      if (action.product.type === "bun") {
-        currentState.bun = action.product;
-      } else {
-        currentState.products = [...currentState.products, action.product];
-      }
-      break;
-    // функция удаления ингредиента
-    case "remove":
-      currentState.products.slice(action.index, 1);
-      break;
-    // функция наваливания ингредиентов кучей
-    case "push":
-      action.products.forEach((ingr: IIngredientData) => {
-        if (ingr.type === "bun") {
-          currentState.bun = ingr;
-        } else {
-          currentState.products = [...currentState.products, ingr];
-        }
-      });
-      break;
-    case "clear":
-      return selectedIngrDef;
-    default:
-      throw new Error(`Unknown action: "${action.type}"`);
-  }
-  return currentState;
-};
+// хардкод типов ингредиентов
 
 // APP component
 const App = () => {
@@ -68,12 +26,9 @@ const App = () => {
     ingredients: [],
   });
 
-  // перепишем хук useState на useReducer и как бы будем использовать в burger-ingredients и burger-components
-  const [selectedIngredients, selectedIngredientsDispatcher] = React.useReducer(
-    selectedIngrReducer,
-    selectedIngrDef,
-    undefined
-  );
+  const [selectedIngredients, setSelectedIngredients] = React.useState<
+    IIngredientData[]
+  >([]);
 
   // запускаем асинхронное получение данных через хук при монтировании
   React.useEffect(() => {
@@ -111,20 +66,16 @@ const App = () => {
       );
       const startedIngredients: IIngredientData[] = [...buns];
       // ИЗМЕНЕНИЕ от sprint1.
-      // Проверка и фильтрация количества булок перенесены в reducer
+      // Проверка и фильтрация количества булок перенесены в компонент BurgerConstructor
       // шесть случайных ингредиентов, возможно дублирование (следует дополнительно обезопасить key)
-      // и для комплекта все доступные булки
+      // И для комплекта все доступные булки
       for (let i = 0; i < 6; i++) {
         const idx = (ingredientsState.ingredients.length * Math.random()) | 0;
         startedIngredients.push(ingredientsState.ingredients[idx]);
         // Не удаляем исходный, работаем с дубликатами
         // ingredientsState.ingredients.slice(idx, 1);
       }
-      // используем метод pull хука
-      selectedIngredientsDispatcher({
-        type: ISelectedIngrActs.push,
-        products: startedIngredients,
-      });
+      setSelectedIngredients(startedIngredients);
     }
   }, [ingredientsState.ingredients]);
 
@@ -164,9 +115,7 @@ const App = () => {
               <section className={css.sectionRight + " mr-5 ml-5"}>
                 {/* Поскольку на первом этапе в конструктор передавался случайно отфильтрованный набор,
                 просто меняем props на контекст с таким же набором */}
-                <ConstructorContext.Provider
-                  value={{ selectedIngredients, selectedIngredientsDispatcher }}
-                >
+                <ConstructorContext.Provider value={selectedIngredients}>
                   <BurgerConstructor />
                 </ConstructorContext.Provider>
               </section>
