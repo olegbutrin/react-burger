@@ -10,12 +10,13 @@ import css from "./ingredient-box.module.css";
 
 // Компонент блока ингредиентов определенного типа
 const IngredientBox = (props: {
+  tabRef: React.MutableRefObject<any>;
   value: string;
   type: string;
   productsData: IIngredientData[];
 }) => {
   return (
-    <div className={css.ingrBox + " mb-10"}>
+    <div ref={props.tabRef} className={css.ingrBox + " mb-10"}>
       <p className="text text_type_main-medium">{props.value}</p>
       <div className={css.ingrList}>
         {props.productsData.map((item: IIngredientData, index) => {
@@ -34,6 +35,10 @@ const IngredientBox = (props: {
 };
 
 IngredientBox.propTypes = {
+  tabRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
   value: PropTypes.string.isRequired,
   type: PTIngrListType.isRequired,
   productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
