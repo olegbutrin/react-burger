@@ -14,6 +14,7 @@ const IngredientBox = (props: {
   value: string;
   type: string;
   productsData: IIngredientData[];
+  previewCallback: (ingr: IIngredientData) => void;
 }) => {
   return (
     <div ref={props.tabRef} className={css.ingrBox + " mb-10"}>
@@ -26,6 +27,7 @@ const IngredientBox = (props: {
               key={["Preview", item.type, item._id].join("_")}
               productsData={item}
               count={itemCount}
+              previewCallback={props.previewCallback}
             />
           );
         })}
