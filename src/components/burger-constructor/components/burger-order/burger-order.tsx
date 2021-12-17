@@ -11,20 +11,16 @@ import { PTIngredientData } from "../../../../utils/props";
 
 import Modal from "../../../modal/modal";
 import ContentsOrder from "../../../modal-contents/modal-contents-order/modal-contents-order";
-
-import { OrderContext } from "../../../../utils/orderContext";
+import { API_URL } from "../../../../utils/defaults";
 
 import css from "./burger-order.module.css";
-
-// хардкод адреса сервиса заказов
-const ORDER_URL = "https://norma.nomoreparties.space/api/orders/";
 
 const BurgerOrder = (props: {
   bunData: IIngredientData | undefined;
   productsData: IIngredientData[];
 }) => {
   // расчет общей стоимости
-  // если сделать возможность добавления, то следует перенести в состояние useReducer
+  // если сделать возможность, то следует перенести в состояние useReducer
   const summary = (() => {
     let res = props.productsData.reduce(
       (sum, { price }: { price: number }) => sum + price,
@@ -56,7 +52,7 @@ const BurgerOrder = (props: {
 
   // получаем состояние зкаказа
   const connectForOrderID = () => {
-    fetch(ORDER_URL, {
+    fetch(API_URL + "/orders", {
       method: "POST",
       body: JSON.stringify({ ingredients: productsID }),
       headers: {
@@ -107,9 +103,7 @@ const BurgerOrder = (props: {
       {modalState && (
         <Modal closeCallback={closeModal}>
           {/* провайдер контекста для модального окна заказа */}
-          <OrderContext.Provider value={orderState}>
-            <ContentsOrder />
-          </OrderContext.Provider>
+          <ContentsOrder orderState={orderState} />
         </Modal>
       )}
     </div>

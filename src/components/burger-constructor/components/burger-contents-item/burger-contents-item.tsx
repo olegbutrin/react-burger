@@ -49,7 +49,6 @@ const BurgerContentsItem = (props: {
         </div>
       )}
       <ConstructorElement
-        key={[props.data.type, props.index].join("_")}
         text={props.data.name + extraName}
         price={props.data.price}
         thumbnail={props.data.image_mobile}
