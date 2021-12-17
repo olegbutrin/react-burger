@@ -1,18 +1,22 @@
-import React from "react";
-import { OrderContext } from "../../../utils/orderContext";
+import PropTypes from "prop-types";
 import css from "../modal-contents.module.css";
 
-const ContentsOrder = () => {
+const ContentsOrder = (props: {
+  orderState: {
+    name: string;
+    order: { number: string | number };
+    success: boolean;
+  };
+}) => {
   // подписываемся на обновления orderState через контекст
-  const orderState = React.useContext(OrderContext);
   return (
     <div className={css.contents}>
       <p className="text text_type_digits-large mt-10 mr-8 ml-8">
-        {orderState.order.number}
+        {props.orderState.order.number}
       </p>
       <p className="text text_type_main-medium mt-4">идентификатор заказа</p>
-      <p className="text text_type_main-small mt-10">{orderState.name}</p>
-      {orderState.success && (
+      <p className="text text_type_main-small mt-10">{props.orderState.name}</p>
+      {props.orderState.success && (
         <>
           <div className={css.orderAnimation + " mt-15"}></div>
           <p className="text text_type_main-small mt-15">
@@ -25,6 +29,16 @@ const ContentsOrder = () => {
       )}
     </div>
   );
+};
+
+ContentsOrder.propTypes = {
+  orderState: PropTypes.shape({
+    name: PropTypes.string,
+    order: PropTypes.shape({
+      order: PropTypes.string || PropTypes.number,
+    }),
+    success: PropTypes.bool,
+  }),
 };
 
 export default ContentsOrder;

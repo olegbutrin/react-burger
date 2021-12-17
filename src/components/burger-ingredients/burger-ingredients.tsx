@@ -7,9 +7,9 @@ import IngredientBox from "./components/ingredient-box/ingredient-box";
 
 import { IIngredientData } from "../../utils/types";
 
-import { PTIngredientData } from "../../utils/props";
-
 import css from "./burger-ingredients.module.css";
+
+import { ConstructorContext } from "../../utils/constructorContext";
 
 /*
 Декомпозиция по типу ингредиента (Булки, Соусы, Начинки) обусловлена необходимостью прокрутки
@@ -17,22 +17,22 @@ import css from "./burger-ingredients.module.css";
 
 */
 
-const BurgerIngredients = (props: { productsData: IIngredientData[] }) => {
+const BurgerIngredients = () => {
   //
-
+  const productsData = React.useContext(ConstructorContext);
   const [activeType, setActiveType] = React.useState("bun");
 
   const tabClick = (type: string) => {
     setActiveType(type);
   };
 
-  const buns = props.productsData.filter((ingr: IIngredientData) => {
+  const buns = productsData.filter((ingr: IIngredientData) => {
     return ingr.type === "bun";
   });
-  const sauces = props.productsData.filter((ingr: IIngredientData) => {
+  const sauces = productsData.filter((ingr: IIngredientData) => {
     return ingr.type === "sauce";
   });
-  const mains = props.productsData.filter((ingr: IIngredientData) => {
+  const mains = productsData.filter((ingr: IIngredientData) => {
     return ingr.type === "main";
   });
 
@@ -87,10 +87,6 @@ const BurgerIngredients = (props: { productsData: IIngredientData[] }) => {
       </div>
     </div>
   );
-};
-
-BurgerIngredients.propTypes = {
-  productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
 };
 
 export default BurgerIngredients;
