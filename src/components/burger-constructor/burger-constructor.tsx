@@ -1,24 +1,24 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import BurgerContentsItem from "./components/burger-contents-item/burger-contents-item";
 import BurgerOrder from "./components/burger-order/burger-order";
 
 import { IIngredientData } from "../../utils/types";
-import { PTIngredientData } from "../../utils/props";
+import { ConstructorContext } from "../../utils/constructorContext";
 
 import css from "./burger-constructor.module.css";
 
-import { ConstructorContext } from "../../utils/constructorContext";
-
 // Основной класс конструктора бургеров
 
-//
 const BurgerConstructor = () => {
   const productsData = React.useContext(ConstructorContext);
   // ищем булку
   const bun = productsData.find((ingr: IIngredientData) => {
     return ingr.type === "bun";
+  });
+
+  const products = productsData.filter((ingr: IIngredientData) => {
+    return ingr.type !== "bun";
   });
 
   return (
@@ -33,7 +33,7 @@ const BurgerConstructor = () => {
         />
       )}
       <div className={css.container + " custom-scroll"}>
-        {productsData.map((ingr: IIngredientData, index: number) => {
+        {products.map((ingr: IIngredientData, index: number) => {
           return (
             ingr.type !== "bun" && (
               <BurgerContentsItem
@@ -55,7 +55,7 @@ const BurgerConstructor = () => {
           index={-1}
         />
       )}
-      <BurgerOrder productsData={productsData}></BurgerOrder>
+      <BurgerOrder productsData={products} bunData={bun!}></BurgerOrder>
     </div>
   );
 };
