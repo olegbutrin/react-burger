@@ -4,17 +4,13 @@ import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-
-import { IIngredientData } from "../../utils/types";
+import { API_URL } from "../../utils/defaults";
 
 import css from "./app.module.css";
 
 import mainMenu from "../../utils/menu";
 
-// хардкод URL
-const INGREDIENTS_URL = "https://norma.nomoreparties.space/api/ingredients";
-
-// хардкод типов ингредиентов
+import { ConstructorContext } from "../../utils/constructorContext";
 
 // APP component
 const App = () => {
@@ -24,13 +20,9 @@ const App = () => {
     ingredients: [],
   });
 
-  const [selectedIngredients, setSelectedIngredients] = React.useState<
-    IIngredientData[]
-  >([]);
-
   // запускаем асинхронное получение данных через хук при монтировании
   React.useEffect(() => {
-    fetch(INGREDIENTS_URL)
+    fetch(API_URL + "/ingredients")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Error data receive");
@@ -52,32 +44,6 @@ const App = () => {
         }));
       });
   }, []);
-
-  // создаем список для выбранных ингредиентов сразу же после именения данных
-  React.useEffect(() => {
-    if (ingredientsState.ingredients.length) {
-      const startedIngredients: IIngredientData[] = [];
-      const buns = ingredientsState.ingredients.filter(
-        (ingr: IIngredientData) => {
-          return ingr.type === "bun";
-        }
-      );
-      const internal = ingredientsState.ingredients.filter(
-        (ingr: IIngredientData) => {
-          return ingr.type !== "bun";
-        }
-      );
-      // одну булку
-      startedIngredients.push(buns[(buns.length * Math.random()) | 0]);
-      // шесть ингредиентов
-      for (let i = 0; i < 6; i++) {
-        const idx = (internal.length * Math.random()) | 0;
-        startedIngredients.push(internal[idx]);
-        internal.slice(idx, 1);
-      }
-      setSelectedIngredients(startedIngredients);
-    }
-  }, [ingredientsState.ingredients]);
 
   // рендер в зависимости от данных
   const { ingredients, isLoading, hasError } = ingredientsState;
@@ -108,18 +74,19 @@ const App = () => {
         {!isLoading && !hasError && ingredients.length && (
           <>
             <AppHeader menu={mainMenu} />
-            <div className={css.contents}>
-              <section className={css.sectionLeft + " mr-5 ml-5"}>
-                <BurgerIngredients productsData={ingredients} />
-              </section>
-              <section className={css.sectionRight + " mr-5 ml-5"}>
-                <BurgerConstructor productsData={selectedIngredients} />
-              </section>
-            </div>
+            <ConstructorContext.Provider value={ingredientsState.ingredients}>
+              <div className={css.contents}>
+                <section className={css.sectionLeft + " mr-5 ml-5"}>
+                  <BurgerIngredients />
+                </section>
+                <section className={css.sectionRight + " mr-5 ml-5"}>
+                  <BurgerConstructor />
+                </section>
+              </div>
+            </ConstructorContext.Provider>
           </>
         )}
       </main>
-      <div id="react-modals"></div>
     </div>
   );
 };

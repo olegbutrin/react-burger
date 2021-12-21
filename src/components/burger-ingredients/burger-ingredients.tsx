@@ -1,15 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import IngredientBox from "./components/ingredient-box/ingredient-box";
+import Modal from "../modal/modal";
+import ContentsIngredientInfo from "../modal-contents/modal-contents-ingredient-info/modal-contents-ingredient-info";
 
 import { IIngredientData } from "../../utils/types";
 
-import { PTIngredientData } from "../../utils/props";
-
 import css from "./burger-ingredients.module.css";
+
+import { ConstructorContext } from "../../utils/constructorContext";
 
 /*
 Декомпозиция по типу ингредиента (Булки, Соусы, Начинки) обусловлена необходимостью прокрутки
@@ -17,24 +18,53 @@ import css from "./burger-ingredients.module.css";
 
 */
 
-const BurgerIngredients = (props: { productsData: IIngredientData[] }) => {
+const BurgerIngredients = () => {
   //
-
+  const productsData = React.useContext(ConstructorContext);
   const [activeType, setActiveType] = React.useState("bun");
+
+  // мапим рефы для дальнейшего использования
+  const itemRefs = new Map([
+    ["bun", React.useRef<null | HTMLDivElement>(null)],
+    ["sauce", React.useRef<null | HTMLDivElement>(null)],
+    ["main", React.useRef<null | HTMLDivElement>(null)],
+  ]);
 
   const tabClick = (type: string) => {
     setActiveType(type);
+    itemRefs.get(type)!.current!.scrollIntoView({ behavior: "smooth" });
   };
 
-  const buns = props.productsData.filter((ingr: IIngredientData) => {
+  const buns = productsData.filter((ingr: IIngredientData) => {
     return ingr.type === "bun";
   });
-  const sauces = props.productsData.filter((ingr: IIngredientData) => {
+  const sauces = productsData.filter((ingr: IIngredientData) => {
     return ingr.type === "sauce";
   });
-  const mains = props.productsData.filter((ingr: IIngredientData) => {
+  const mains = productsData.filter((ingr: IIngredientData) => {
     return ingr.type === "main";
   });
+
+  const defIngredientState: { product: null | IIngredientData } = {
+    product: null,
+  };
+
+  const [ingredientState, setIngredientState] =
+    React.useState(defIngredientState);
+  const [modalState, setModalState] = React.useState(false);
+
+  const showModal = () => {
+    setModalState(true);
+  };
+
+  const closeModal = () => {
+    setModalState(false);
+  };
+
+  const showIngredientInfo = (ingr: IIngredientData) => {
+    setIngredientState({ product: ingr });
+    showModal();
+  };
 
   return (
     <div className={css.main}>
@@ -50,8 +80,8 @@ const BurgerIngredients = (props: { productsData: IIngredientData[] }) => {
         </Tab>
         <Tab
           key={"TAB_SOUCE"}
-          value="souce"
-          active={activeType === "souce"}
+          value="sauce"
+          active={activeType === "sauce"}
           onClick={tabClick}
         >
           Соусы
@@ -67,30 +97,36 @@ const BurgerIngredients = (props: { productsData: IIngredientData[] }) => {
       </div>
       <div className={css.container + " custom-scroll"}>
         <IngredientBox
-          key={"BOX_BUN"}
+          tabRef={itemRefs.get("bun")!}
           value="Булки"
           type="bun"
           productsData={buns}
+          previewCallback={showIngredientInfo}
         ></IngredientBox>
         <IngredientBox
-          key={"BOX_SAUCE"}
+          tabRef={itemRefs.get("sauce")!}
           value="Соусы"
           type="sauce"
           productsData={sauces}
+          previewCallback={showIngredientInfo}
         ></IngredientBox>
         <IngredientBox
-          key={"BOX_MAIN"}
+          tabRef={itemRefs.get("main")!}
           value="Начинки"
           type="main"
           productsData={mains}
+          previewCallback={showIngredientInfo}
         ></IngredientBox>
       </div>
+      {modalState && (
+        <Modal closeCallback={closeModal}>
+          <ContentsIngredientInfo
+            productsData={ingredientState.product!}
+          ></ContentsIngredientInfo>
+        </Modal>
+      )}
     </div>
   );
-};
-
-BurgerIngredients.propTypes = {
-  productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
 };
 
 export default BurgerIngredients;

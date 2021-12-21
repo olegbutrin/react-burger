@@ -1,19 +1,24 @@
-import PropTypes from "prop-types";
+import React from "react";
 
 import BurgerContentsItem from "./components/burger-contents-item/burger-contents-item";
 import BurgerOrder from "./components/burger-order/burger-order";
 
 import { IIngredientData } from "../../utils/types";
-import { PTIngredientData } from "../../utils/props";
+import { ConstructorContext } from "../../utils/constructorContext";
 
 import css from "./burger-constructor.module.css";
 
 // Основной класс конструктора бургеров
 
-const BurgerConstructor = (props: { productsData: IIngredientData[] }) => {
+const BurgerConstructor = () => {
+  const productsData = React.useContext(ConstructorContext);
   // ищем булку
-  const bun = props.productsData.find((ingr: IIngredientData) => {
+  const bun = productsData.find((ingr: IIngredientData) => {
     return ingr.type === "bun";
+  });
+
+  const products = productsData.filter((ingr: IIngredientData) => {
+    return ingr.type !== "bun";
   });
 
   return (
@@ -28,7 +33,7 @@ const BurgerConstructor = (props: { productsData: IIngredientData[] }) => {
         />
       )}
       <div className={css.container + " custom-scroll"}>
-        {props.productsData.map((ingr: IIngredientData, index: number) => {
+        {products.map((ingr: IIngredientData, index: number) => {
           return (
             ingr.type !== "bun" && (
               <BurgerContentsItem
@@ -50,13 +55,9 @@ const BurgerConstructor = (props: { productsData: IIngredientData[] }) => {
           index={-1}
         />
       )}
-      <BurgerOrder productsData={props.productsData}></BurgerOrder>
+      <BurgerOrder productsData={products} bunData={bun!}></BurgerOrder>
     </div>
   );
-};
-
-BurgerConstructor.propTypes = {
-  productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
 };
 
 export default BurgerConstructor;
