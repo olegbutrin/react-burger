@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -6,11 +7,7 @@ import IngredientBox from "./components/ingredient-box/ingredient-box";
 import Modal from "../modal/modal";
 import ContentsIngredientInfo from "../modal-contents/modal-contents-ingredient-info/modal-contents-ingredient-info";
 
-import { IIngredientData } from "../../utils/types";
-
 import css from "./burger-ingredients.module.css";
-
-import { ConstructorContext } from "../../utils/constructorContext";
 
 /*
 Декомпозиция по типу ингредиента (Булки, Соусы, Начинки) обусловлена необходимостью прокрутки
@@ -19,33 +16,35 @@ import { ConstructorContext } from "../../utils/constructorContext";
 */
 
 const BurgerIngredients = () => {
+  const { productsData } = useSelector((state) => ({
+    productsData: state.raw.ingredients,
+  }));
   //
-  const productsData = React.useContext(ConstructorContext);
   const [activeType, setActiveType] = React.useState("bun");
 
   // мапим рефы для дальнейшего использования
   const itemRefs = new Map([
-    ["bun", React.useRef<null | HTMLDivElement>(null)],
-    ["sauce", React.useRef<null | HTMLDivElement>(null)],
-    ["main", React.useRef<null | HTMLDivElement>(null)],
+    ["bun", React.useRef(null)],
+    ["sauce", React.useRef(null)],
+    ["main", React.useRef(null)],
   ]);
 
-  const tabClick = (type: string) => {
+  const tabClick = (type) => {
     setActiveType(type);
-    itemRefs.get(type)!.current!.scrollIntoView({ behavior: "smooth" });
+    itemRefs.get(type).current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const buns = productsData.filter((ingr: IIngredientData) => {
+  const buns = productsData.filter((ingr) => {
     return ingr.type === "bun";
   });
-  const sauces = productsData.filter((ingr: IIngredientData) => {
+  const sauces = productsData.filter((ingr) => {
     return ingr.type === "sauce";
   });
-  const mains = productsData.filter((ingr: IIngredientData) => {
+  const mains = productsData.filter((ingr) => {
     return ingr.type === "main";
   });
 
-  const defIngredientState: { product: null | IIngredientData } = {
+  const defIngredientState = {
     product: null,
   };
 
@@ -61,7 +60,7 @@ const BurgerIngredients = () => {
     setModalState(false);
   };
 
-  const showIngredientInfo = (ingr: IIngredientData) => {
+  const showIngredientInfo = (ingr) => {
     setIngredientState({ product: ingr });
     showModal();
   };
@@ -97,21 +96,21 @@ const BurgerIngredients = () => {
       </div>
       <div className={css.container + " custom-scroll"}>
         <IngredientBox
-          tabRef={itemRefs.get("bun")!}
+          tabRef={itemRefs.get("bun")}
           value="Булки"
           type="bun"
           productsData={buns}
           previewCallback={showIngredientInfo}
         ></IngredientBox>
         <IngredientBox
-          tabRef={itemRefs.get("sauce")!}
+          tabRef={itemRefs.get("sauce")}
           value="Соусы"
           type="sauce"
           productsData={sauces}
           previewCallback={showIngredientInfo}
         ></IngredientBox>
         <IngredientBox
-          tabRef={itemRefs.get("main")!}
+          tabRef={itemRefs.get("main")}
           value="Начинки"
           type="main"
           productsData={mains}
@@ -121,7 +120,7 @@ const BurgerIngredients = () => {
       {modalState && (
         <Modal closeCallback={closeModal}>
           <ContentsIngredientInfo
-            productsData={ingredientState.product!}
+            productsData={ingredientState.product}
           ></ContentsIngredientInfo>
         </Modal>
       )}

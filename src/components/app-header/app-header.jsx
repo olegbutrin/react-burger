@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { IMenuItem } from "../../utils/types";
 import { PTMenuItem } from "../../utils/props";
 
 import { Logo } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -12,10 +11,10 @@ import css from "./app-header.module.css";
 
 // Основной компонент, реализующий заголовок
 
-const AppHeader = (props: { menu: IMenuItem[] }) => {
+const AppHeader = (props) => {
   const [activeItem, setActiveItem] = React.useState(1);
 
-  const callbackMenu = (id: number) => {
+  const callbackMenu = (id) => {
     setActiveItem(id);
   };
 
@@ -25,7 +24,7 @@ const AppHeader = (props: { menu: IMenuItem[] }) => {
         <div className={css.logo}>
           <Logo />
         </div>
-        {props.menu.map((button: IMenuItem) => (
+        {props.menu.map((button) => (
           <MenuButton
             key={"MenuButton_" + button.id}
             id={button.id}

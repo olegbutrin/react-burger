@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
@@ -11,12 +11,9 @@ import css from "./modal.module.css";
 const modalRoot = document.getElementById("react-modals") || document.body;
 
 // модальное окно через портал
-const Modal = (props: {
-  children: ReactElement | ReactElement[] | Symbol;
-  closeCallback: () => void;
-}) => {
+const Modal = (props) => {
   // escape press
-  const handleEscape = (e: any) => {
+  const handleEscape = (e) => {
     if (e.key === "Escape") {
       e.preventDefault();
       e.stopPropagation();
@@ -24,18 +21,18 @@ const Modal = (props: {
     }
   };
 
-  const closeModal = (e: any) => {
+  const closeModal = (e) => {
     e.preventDefault();
     e.stopPropagation();
     props.closeCallback();
   };
 
-  const stopEvent = (e: any) => {
+  const stopEvent = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const spanRef: any = React.useRef(null);
+  const spanRef = React.useRef(null);
 
   React.useEffect(() => {
     if (spanRef != null && spanRef.current) {

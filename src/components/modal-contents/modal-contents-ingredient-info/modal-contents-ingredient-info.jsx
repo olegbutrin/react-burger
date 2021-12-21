@@ -1,9 +1,8 @@
-import { IIngredientData } from "../../../utils/types";
 import { PTIngredientData } from "../../../utils/props";
 
 import css from "../modal-contents.module.css";
 
-const ContentsIngredientInfo = (props: { productsData: IIngredientData }) => {
+const ContentsIngredientInfo = (props) => {
   return (
     <div className={css.contents}>
       <p className="text text_type_main-large" style={{ textAlign: "left" }}>

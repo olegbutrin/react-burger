@@ -6,7 +6,6 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { IIngredientData } from "../../../../utils/types";
 import { PTIngredientData } from "../../../../utils/props";
 
 import Modal from "../../../modal/modal";
@@ -15,17 +14,11 @@ import { API_URL } from "../../../../utils/defaults";
 
 import css from "./burger-order.module.css";
 
-const BurgerOrder = (props: {
-  bunData: IIngredientData | undefined;
-  productsData: IIngredientData[];
-}) => {
+const BurgerOrder = (props) => {
   // расчет общей стоимости
   // если сделать возможность, то следует перенести в состояние useReducer
   const summary = (() => {
-    let res = props.productsData.reduce(
-      (sum, { price }: { price: number }) => sum + price,
-      0
-    );
+    let res = props.productsData.reduce((sum, ingr) => sum + ingr.price, 0);
     if (props.bunData) {
       res += props.bunData.price * 2;
     }
@@ -33,7 +26,7 @@ const BurgerOrder = (props: {
   })();
 
   const productsID = (() => {
-    let prods = props.productsData.map((ingr: IIngredientData) => {
+    let prods = props.productsData.map((ingr) => {
       return ingr._id;
     });
     if (props.bunData) {

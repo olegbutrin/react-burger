@@ -1,23 +1,23 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import BurgerContentsItem from "./components/burger-contents-item/burger-contents-item";
 import BurgerOrder from "./components/burger-order/burger-order";
-
-import { IIngredientData } from "../../utils/types";
-import { ConstructorContext } from "../../utils/constructorContext";
 
 import css from "./burger-constructor.module.css";
 
 // Основной класс конструктора бургеров
 
 const BurgerConstructor = () => {
-  const productsData = React.useContext(ConstructorContext);
+  const { productsData } = useSelector((state) => ({
+    productsData: state.raw.ingredients,
+  }));
   // ищем булку
-  const bun = productsData.find((ingr: IIngredientData) => {
+  const bun = productsData.find((ingr) => {
     return ingr.type === "bun";
   });
 
-  const products = productsData.filter((ingr: IIngredientData) => {
+  const products = productsData.filter((ingr) => {
     return ingr.type !== "bun";
   });
 
@@ -33,7 +33,7 @@ const BurgerConstructor = () => {
         />
       )}
       <div className={css.container + " custom-scroll"}>
-        {products.map((ingr: IIngredientData, index: number) => {
+        {products.map((ingr, index) => {
           return (
             ingr.type !== "bun" && (
               <BurgerContentsItem
@@ -55,7 +55,7 @@ const BurgerConstructor = () => {
           index={-1}
         />
       )}
-      <BurgerOrder productsData={products} bunData={bun!}></BurgerOrder>
+      <BurgerOrder productsData={products} bunData={bun}></BurgerOrder>
     </div>
   );
 };

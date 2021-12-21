@@ -8,13 +8,7 @@ import {
 
 import css from "./menu-button.module.css";
 
-const MenuButton = (props: {
-  id: number;
-  icon: string;
-  value: string;
-  active: boolean;
-  callback: (id: number) => void;
-}) => {
+const MenuButton = (props) => {
   // тип иконки зависит от значения active
   const iconType = props.active ? "primary" : "secondary";
 

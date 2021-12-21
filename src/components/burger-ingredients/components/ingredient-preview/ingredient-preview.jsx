@@ -6,17 +6,12 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { IIngredientData } from "../../../../utils/types";
 import { PTIngredientData } from "../../../../utils/props";
 
 import css from "./ingredient-preview.module.css";
 
 // компонент для ингредиента в списке выбора
-const IngredientPreview = (props: {
-  previewCallback: (ingr: IIngredientData) => void;
-  productsData: IIngredientData;
-  count: number;
-}) => {
+const IngredientPreview = (props) => {
   const showPreview = () => {
     props.previewCallback(props.productsData);
   };

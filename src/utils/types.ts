@@ -34,3 +34,9 @@ export interface IIngredientData {
 
 export type IComponentTypeName = "top" | "bottom" | "center";
 
+export interface RIngredientType {
+  ingredients: IIngredientData[],
+  ingredientRequest: boolean,
+  ingredientFailed: boolean,
+}
+

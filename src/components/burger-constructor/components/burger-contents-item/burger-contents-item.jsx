@@ -5,19 +5,14 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { IIngredientData, IComponentTypeName } from "../../../../utils/types";
 import { PTIngredientData } from "../../../../utils/props";
 
 import css from "./burger-contents-item.module.css";
 
-const BurgerContentsItem = (props: {
-  data: IIngredientData;
-  type: IComponentTypeName;
-  index: number;
-}) => {
+const BurgerContentsItem = (props) => {
   //
   let itemClass, extraStyle, extraName, draggable;
-  let itemType: "top" | "bottom" | undefined;
+  let itemType;
 
   switch (props.type) {
     case "top":

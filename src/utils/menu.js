@@ -1,8 +1,4 @@
-import {
-  IMenuItem,
-} from "./types";
-
-const mainMenu: Array<IMenuItem> = [
+const mainMenu = [
   {
     id: 1,
     value: "Конструктор",

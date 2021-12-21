@@ -1,13 +1,7 @@
 import PropTypes from "prop-types";
 import css from "../modal-contents.module.css";
 
-const ContentsOrder = (props: {
-  orderState: {
-    name: string;
-    order: { number: string | number };
-    success: boolean;
-  };
-}) => {
+const ContentsOrder = (props) => {
   // подписываемся на обновления orderState через контекст
   return (
     <div className={css.contents}>
