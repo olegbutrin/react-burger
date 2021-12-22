@@ -17,7 +17,7 @@ const App = () => {
   const dispatch = useDispatch();
   // импорт чистых данных
   const { ingredients, ingredientRequest, ingredientFailed } = useSelector(
-    (state) => state.app
+    (store) => store.app
   );
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера

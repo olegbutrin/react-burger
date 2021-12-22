@@ -12,13 +12,11 @@ const IngredientBox = (props) => {
     <div ref={props.tabRef} className={css.ingrBox + " mb-10"}>
       <p className="text text_type_main-medium">{props.value}</p>
       <div className={css.ingrList}>
-        {props.productsData.map((item, index) => {
-          const itemCount = index === 0 ? 1 : 0;
+        {props.productsData.map((item) => {
           return (
             <IngredientPreview
               key={["Preview", item.type, item._id].join("_")}
               productsData={item}
-              count={itemCount}
               previewCallback={props.previewCallback}
             />
           );

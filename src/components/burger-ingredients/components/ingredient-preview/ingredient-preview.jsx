@@ -1,24 +1,38 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { useDrag } from "react-dnd";
 
 import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { SET_ITEM_DATA } from "../../../../services/actions/ingredient-preview";
+
 import { PTIngredientData } from "../../../../utils/props";
 
 import css from "./ingredient-preview.module.css";
 
+// =================
 // компонент для ингредиента в списке выбора
 const IngredientPreview = (props) => {
-  const showPreview = () => {
-    props.previewCallback(props.productsData);
+  const dispatch = useDispatch();
+
+  const setCurrentData = () => {
+    dispatch({ type: SET_ITEM_DATA, payload: { ...props.productsData } });
   };
 
+  // делаем перетаскиватель
+  const [, dragRef] = useDrag({
+    type: "product",
+    item: { ...props.productsData },
+  });
+
   return (
-    <div className={css.ingrPreview} onClick={showPreview}>
-      {props.count > 0 && <Counter count={props.count} size={"default"} />}
+    <div className={css.ingrPreview} onClick={setCurrentData} ref={dragRef}>
+      {props.productsData.count > 0 && (
+        <Counter count={props.productsData.count} size={"default"} />
+      )}
       <img
         className={css.image + " mr-4 mb-1 ml-4"}
         src={props.productsData.image}
@@ -41,7 +55,6 @@ const IngredientPreview = (props) => {
 
 IngredientPreview.propTypes = {
   productsData: PTIngredientData.isRequired,
-  count: PropTypes.number.isRequired,
 };
 
 export default IngredientPreview;

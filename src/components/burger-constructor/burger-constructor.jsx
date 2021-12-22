@@ -1,28 +1,68 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useDrop } from "react-dnd";
 
 import BurgerContentsItem from "./components/burger-contents-item/burger-contents-item";
 import BurgerOrder from "./components/burger-order/burger-order";
+
+import {
+  SET_BURGER_BUN,
+  ADD_BURGER_PRODUCT,
+  REMOVE_BURGER_PRODUCT,
+} from "../../services/actions/ingredient-constructor";
 
 import css from "./burger-constructor.module.css";
 
 // Основной класс конструктора бургеров
 
 const BurgerConstructor = () => {
+  const dispatch = useDispatch();
+
   const { productsData } = useSelector((state) => ({
     productsData: state.app.ingredients,
   }));
-  // ищем булку
-  const bun = productsData.find((ingr) => {
-    return ingr.type === "bun";
+
+  const { bun, products } = useSelector((state) => state.burger);
+
+  const setBun = (item) => {
+    dispatch({ type: SET_BURGER_BUN, payload: item });
+  };
+
+  const addItem = (item) => {
+    dispatch({ type: ADD_BURGER_PRODUCT, payload: item });
+  };
+
+  const removeItem = (item) => {
+    dispatch({ type: REMOVE_BURGER_PRODUCT, payload: item });
+  };
+
+  const handleDrop = (item) => {
+    if (item.type === "bun") {
+      setBun(item);
+    } else {
+      addItem(item);
+    }
+  };
+
+  const [, dropTarget] = useDrop({
+    accept: "product",
+    drop(item) {
+      handleDrop(item);
+    },
   });
 
-  const products = productsData.filter((ingr) => {
-    return ingr.type !== "bun";
-  });
+  // ищем булку
+  React.useEffect(() => {
+    if (bun === null) {
+      const firstBun = productsData.find((prod) => {
+        return prod.type === "bun";
+      });
+      setBun(firstBun);
+    }
+  }, []);
 
   return (
-    <div className={css.main + " mt-25"}>
+    <div className={css.main + " mt-25"} ref={dropTarget}>
       {/* верхняя булка */}
       {bun && (
         <BurgerContentsItem

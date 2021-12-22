@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -7,19 +7,28 @@ import IngredientBox from "./components/ingredient-box/ingredient-box";
 import Modal from "../modal/modal";
 import ContentsIngredientInfo from "../modal-contents/modal-contents-ingredient-info/modal-contents-ingredient-info";
 
+import { CLEAR_ITEM_DATA } from "../../services/actions/ingredient-preview";
+
 import css from "./burger-ingredients.module.css";
 
-/*
-Декомпозиция по типу ингредиента (Булки, Соусы, Начинки) обусловлена необходимостью прокрутки
-через компонент Tab до начала списка.
-
-*/
-
 const BurgerIngredients = () => {
+  // получаем диспетчера
+  const dispatch = useDispatch();
+  // получаем список ингредиентов из провайдера
   const { productsData } = useSelector((state) => ({
     productsData: state.app.ingredients,
   }));
-  //
+
+  // получаем данные для модального окна
+  const { modalState, modalProduct } = useSelector((state) => ({
+    modalState: state.preview.productData !== null,
+    modalProduct: state.preview.productData,
+  }));
+  const closeModal = () => {
+    dispatch({ type: CLEAR_ITEM_DATA });
+  };
+
+  // устанавливаем значение активного таба
   const [activeType, setActiveType] = React.useState("bun");
 
   // мапим рефы для дальнейшего использования
@@ -87,27 +96,6 @@ const BurgerIngredients = () => {
     return ingr.type === "main";
   });
 
-  const defIngredientState = {
-    product: null,
-  };
-
-  const [ingredientState, setIngredientState] =
-    React.useState(defIngredientState);
-  const [modalState, setModalState] = React.useState(false);
-
-  const showModal = () => {
-    setModalState(true);
-  };
-
-  const closeModal = () => {
-    setModalState(false);
-  };
-
-  const showIngredientInfo = (ingr) => {
-    setIngredientState({ product: ingr });
-    showModal();
-  };
-
   return (
     <div className={css.main}>
       <p className="text text_type_main-large mt-10 mb-5">Соберите бургер</p>
@@ -146,27 +134,24 @@ const BurgerIngredients = () => {
           value="Булки"
           type="bun"
           productsData={buns}
-          previewCallback={showIngredientInfo}
         ></IngredientBox>
         <IngredientBox
           tabRef={itemRefs.get("sauce")}
           value="Соусы"
           type="sauce"
           productsData={sauces}
-          previewCallback={showIngredientInfo}
         ></IngredientBox>
         <IngredientBox
           tabRef={itemRefs.get("main")}
           value="Начинки"
           type="main"
           productsData={mains}
-          previewCallback={showIngredientInfo}
         ></IngredientBox>
       </div>
       {modalState && (
         <Modal closeCallback={closeModal}>
           <ContentsIngredientInfo
-            productsData={ingredientState.product}
+            productsData={modalProduct}
           ></ContentsIngredientInfo>
         </Modal>
       )}
