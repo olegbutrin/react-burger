@@ -27,12 +27,55 @@ const BurgerIngredients = () => {
     ["bun", React.useRef(null)],
     ["sauce", React.useRef(null)],
     ["main", React.useRef(null)],
+    ["scroller", React.useRef(null)],
   ]);
 
   const tabClick = (type) => {
     setActiveType(type);
     itemRefs.get(type).current.scrollIntoView({ behavior: "smooth" });
   };
+
+  React.useEffect(() => {
+    const onScrollerScroll = () => {
+      const scroller = itemRefs.get("scroller").current;
+      const sauceMarg = parseInt(
+        window
+          .getComputedStyle(itemRefs.get("sauce").current, null)
+          .getPropertyValue("margin-bottom")
+      );
+      const bunMarg = parseInt(
+        window
+          .getComputedStyle(itemRefs.get("bun").current, null)
+          .getPropertyValue("margin-bottom")
+      );
+      let active;
+      switch (true) {
+        case scroller.getBoundingClientRect().y >=
+          itemRefs.get("main").current.getBoundingClientRect().y - sauceMarg:
+          active = "main";
+          break;
+        case scroller.getBoundingClientRect().y >=
+          itemRefs.get("sauce").current.getBoundingClientRect().y - bunMarg:
+          active = "sauce";
+          break;
+        case scroller.getBoundingClientRect().y >=
+          itemRefs.get("bun").current.getBoundingClientRect().y:
+          active = "bun";
+          break;
+      }
+      if (active) {
+        setActiveType(active);
+      }
+    };
+    itemRefs
+      .get("scroller")
+      .current.addEventListener("scroll", onScrollerScroll);
+    return () => {
+      itemRefs
+        .get("scroller")
+        .current.removeEventListener("scroll", onScrollerScroll);
+    };
+  }, []);
 
   const buns = productsData.filter((ingr) => {
     return ingr.type === "bun";
@@ -94,7 +137,10 @@ const BurgerIngredients = () => {
           Начинки
         </Tab>
       </div>
-      <div className={css.container + " custom-scroll"}>
+      <div
+        className={css.container + " custom-scroll"}
+        ref={itemRefs.get("scroller")}
+      >
         <IngredientBox
           tabRef={itemRefs.get("bun")}
           value="Булки"
