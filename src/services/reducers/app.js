@@ -4,6 +4,12 @@ import {
   GET_INGREDIENTS_SUCCESS,
 } from "../actions/app";
 
+import {
+  SET_BURGER_BUN,
+  ADD_BURGER_PRODUCT,
+  REMOVE_BURGER_PRODUCT,
+} from "../actions/ingredient-constructor";
+
 const initialState = {
   ingredients: [],
   ingredientRequest: false,
@@ -21,7 +27,7 @@ export const appReducer = (state = initialState, action) => {
       return {
         ...state,
         ingredients: action.payload.map((ingr) => {
-          return { ...ingr, qty: 0 };
+          return { ...ingr, count: 0 };
         }),
         ingredientRequest: false,
         ingredientFailed: false,
@@ -31,6 +37,43 @@ export const appReducer = (state = initialState, action) => {
         ...state,
         ingredientRequest: false,
         ingredientFailed: true,
+      };
+    case SET_BURGER_BUN:
+      return {
+        ...state,
+        ingredients: state.ingredients.map((ingr) => {
+          if (ingr.type !== "bun") {
+            return ingr;
+          } else if (ingr._id === action.payload._id) {
+            return {
+              ...ingr,
+              count: 2,
+            };
+          } else {
+            return {
+              ...ingr,
+              count: 0,
+            };
+          }
+        }),
+      };
+    case ADD_BURGER_PRODUCT:
+      return {
+        ...state,
+        ingredients: state.ingredients.map((ingr) => {
+          return ingr._id === action.payload._id
+            ? { ...ingr, count: ingr.count + 1 }
+            : ingr;
+        }),
+      };
+    case REMOVE_BURGER_PRODUCT:
+      return {
+        ...state,
+        ingredients: state.ingredients.map((ingr) => {
+          return ingr._id === action.payload._id
+            ? { ...ingr, count: ingr.count - 1 }
+            : ingr;
+        }),
       };
     default:
       return { ...state };
