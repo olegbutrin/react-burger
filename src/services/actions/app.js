@@ -5,7 +5,7 @@ export const GET_INGREDIENTS_REQUEST = "GET_INGREDIENTS_REQUEST";
 export const GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS";
 
 // функция  для получения данных с сервера
-export function getRawIngredients() {
+export function getIngredients() {
   return function (dispatch) {
     dispatch({ type: GET_INGREDIENTS_REQUEST });
     fetch(API_URL + "/ingredients")

@@ -10,7 +10,7 @@ import css from "./burger-constructor.module.css";
 
 const BurgerConstructor = () => {
   const { productsData } = useSelector((state) => ({
-    productsData: state.raw.ingredients,
+    productsData: state.app.ingredients,
   }));
   // ищем булку
   const bun = productsData.find((ingr) => {

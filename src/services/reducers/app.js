@@ -10,7 +10,7 @@ const initialState = {
   ingredientFailed: false,
 };
 
-export const rawReducer = (state = initialState, action) => {
+export const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST:
       return {
@@ -20,7 +20,9 @@ export const rawReducer = (state = initialState, action) => {
     case GET_INGREDIENTS_SUCCESS:
       return {
         ...state,
-        ingredients: action.payload,
+        ingredients: action.payload.map((ingr) => {
+          return { ...ingr, qty: 0 };
+        }),
         ingredientRequest: false,
         ingredientFailed: false,
       };

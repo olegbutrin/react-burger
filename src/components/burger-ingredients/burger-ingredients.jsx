@@ -17,7 +17,7 @@ import css from "./burger-ingredients.module.css";
 
 const BurgerIngredients = () => {
   const { productsData } = useSelector((state) => ({
-    productsData: state.raw.ingredients,
+    productsData: state.app.ingredients,
   }));
   //
   const [activeType, setActiveType] = React.useState("bun");
