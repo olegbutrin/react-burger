@@ -11,6 +11,9 @@ import css from "./burger-contents-item.module.css";
 
 const BurgerContentsItem = (props) => {
   //
+  const handleClose = () => {
+    props.onClick(props.data);
+  };
   let itemClass, extraStyle, extraName, draggable;
   let itemType;
 
@@ -37,7 +40,7 @@ const BurgerContentsItem = (props) => {
   }
 
   return (
-    <div draggable={draggable} className={itemClass + extraStyle}>
+    <div className={itemClass + extraStyle}>
       {props.type === "center" && (
         <div className={css.icon}>
           <DragIcon type="primary" />
@@ -49,6 +52,7 @@ const BurgerContentsItem = (props) => {
         thumbnail={props.data.image_mobile}
         isLocked={!draggable}
         type={itemType}
+        handleClose={handleClose}
       />
     </div>
   );
@@ -58,6 +62,7 @@ BurgerContentsItem.propTypes = {
   data: PTIngredientData.isRequired,
   type: PropTypes.oneOf(["top", "bottom", "center"]),
   index: PropTypes.number.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default BurgerContentsItem;

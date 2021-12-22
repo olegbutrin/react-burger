@@ -81,6 +81,7 @@ const BurgerConstructor = () => {
                 data={ingr}
                 type={"center"}
                 index={index}
+                onClick={removeItem}
               />
             )
           );
