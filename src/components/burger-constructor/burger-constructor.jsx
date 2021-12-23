@@ -90,7 +90,7 @@ const BurgerConstructor = () => {
           index={-1}
         />
       )}
-      <BurgerOrder productsData={products} bunData={bun}></BurgerOrder>
+      <BurgerOrder></BurgerOrder>
     </div>
   );
 };

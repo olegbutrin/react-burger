@@ -1,87 +1,60 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  getOrder,
+  clearOrder,
+} from "../../../../services/actions/burger-order";
+
+import Modal from "../../../modal/modal";
+import ContentsOrder from "../../../modal-contents/modal-contents-order/modal-contents-order";
 
 import {
   Button,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { PTIngredientData } from "../../../../utils/props";
-
-import Modal from "../../../modal/modal";
-import ContentsOrder from "../../../modal-contents/modal-contents-order/modal-contents-order";
-import { API_URL } from "../../../../utils/defaults";
+import { CLEAR_ORDER_DATA } from "../../../../services/actions/burger-order";
 
 import css from "./burger-order.module.css";
 
-const BurgerOrder = (props) => {
+const BurgerOrder = () => {
+  const dispatch = useDispatch();
+
+  const { bunData, productsData } = useSelector((state) => ({
+    bunData: state.burger.bun,
+    productsData: state.burger.products,
+  }));
+
+  const { order, orderRequest, orderFailed } = useSelector(
+    (store) => store.order
+  );
+
   // расчет общей стоимости
-  // если сделать возможность, то следует перенести в состояние useReducer
   const summary = (() => {
-    let res = props.productsData.reduce((sum, ingr) => sum + ingr.price, 0);
-    if (props.bunData) {
-      res += props.bunData.price * 2;
+    let res = productsData.reduce((sum, ingr) => sum + ingr.price, 0);
+    if (bunData) {
+      res += bunData.price * 2;
     }
     return res;
   })();
 
   const productsID = (() => {
-    let prods = props.productsData.map((ingr) => {
+    let prods = productsData.map((ingr) => {
       return ingr._id;
     });
-    if (props.bunData) {
-      prods.push(props.bunData._id);
+    if (bunData) {
+      prods.push(bunData._id);
     }
     return prods;
   })();
 
-  // дефолтное состояние заказа
-  const defOrderState = {
-    name: "",
-    order: { number: "****" },
-    success: false,
-  };
-  const [orderState, setOrderState] = React.useState(defOrderState);
-
-  // получаем состояние зкаказа
-  const connectForOrderID = () => {
-    fetch(API_URL + "/orders", {
-      method: "POST",
-      body: JSON.stringify({ ingredients: productsID }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error data receive");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setOrderState(data);
-      })
-      .catch((e) => {
-        setOrderState({
-          ...defOrderState,
-          name: "Ошибка соединения с сервером заказов!",
-        });
-      });
-  };
-
-  const [modalState, setModalState] = React.useState(false);
-
-  const showModal = () => {
-    setModalState(true);
+  const startOrder = () => {
+    dispatch(getOrder(productsID));
   };
 
   const closeModal = () => {
-    setModalState(false);
-  };
-
-  const startOrder = () => {
-    showModal();
-    connectForOrderID();
+    dispatch(clearOrder());
   };
 
   return (
@@ -93,19 +66,14 @@ const BurgerOrder = (props) => {
       <Button type="primary" size="medium" onClick={startOrder}>
         Оформить заказ
       </Button>
-      {modalState && (
+      {!orderRequest && !orderFailed && order && (
         <Modal closeCallback={closeModal}>
           {/* провайдер контекста для модального окна заказа */}
-          <ContentsOrder orderState={orderState} />
+          <ContentsOrder orderState={order} />
         </Modal>
       )}
     </div>
   );
-};
-
-BurgerOrder.propTypes = {
-  bunData: PTIngredientData,
-  productsData: PropTypes.arrayOf(PTIngredientData).isRequired,
 };
 
 export default BurgerOrder;
