@@ -8,7 +8,6 @@ import BurgerOrder from "./components/burger-order/burger-order";
 import {
   SET_BURGER_BUN,
   ADD_BURGER_PRODUCT,
-  REMOVE_BURGER_PRODUCT,
 } from "../../services/actions/ingredient-constructor";
 
 import css from "./burger-constructor.module.css";
@@ -30,10 +29,6 @@ const BurgerConstructor = () => {
 
   const addItem = (item) => {
     dispatch({ type: ADD_BURGER_PRODUCT, payload: item });
-  };
-
-  const removeItem = (item) => {
-    dispatch({ type: REMOVE_BURGER_PRODUCT, payload: item });
   };
 
   const handleDrop = (item) => {
@@ -81,7 +76,6 @@ const BurgerConstructor = () => {
                 data={ingr}
                 type={"center"}
                 index={index}
-                onClick={removeItem}
               />
             )
           );
