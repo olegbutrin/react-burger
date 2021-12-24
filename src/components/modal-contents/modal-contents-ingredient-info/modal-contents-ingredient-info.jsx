@@ -55,7 +55,7 @@ const ContentsIngredientInfo = (props) => {
 };
 
 ContentsIngredientInfo.propTypes = {
-  productsData: PTIngredientData,
+  productsData: PTIngredientData.isRequired,
 };
 
 export default ContentsIngredientInfo;

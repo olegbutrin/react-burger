@@ -32,7 +32,7 @@ ContentsOrder.propTypes = {
       order: PropTypes.string || PropTypes.number,
     }),
     success: PropTypes.bool,
-  }),
+  }).isRequired,
 };
 
 export default ContentsOrder;

@@ -59,7 +59,7 @@ Modal.propTypes = {
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node),
   ]).isRequired,
-  closeCallback: PropTypes.func,
+  closeCallback: PropTypes.func.isRequired,
 };
 
 export default Modal;

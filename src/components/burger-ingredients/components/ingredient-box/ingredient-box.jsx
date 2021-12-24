@@ -30,7 +30,7 @@ IngredientBox.propTypes = {
   tabRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]),
+  ]).isRequired,
   value: PropTypes.string.isRequired,
   type: PTIngrListType.isRequired,
   productsData: PropTypes.arrayOf(PTIngredientData).isRequired,

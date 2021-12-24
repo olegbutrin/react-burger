@@ -62,7 +62,7 @@ MenuButton.propTypes = {
   icon: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   active: PropTypes.bool.isRequired,
-  callback: PropTypes.func,
+  callback: PropTypes.func.isRequired,
 };
 
 export default MenuButton;

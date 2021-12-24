@@ -40,7 +40,7 @@ const AppHeader = (props) => {
 };
 
 AppHeader.propTypes = {
-  menu: PropTypes.arrayOf(PTMenuItem),
+  menu: PropTypes.arrayOf(PTMenuItem).isRequired,
 };
 
 export default AppHeader;

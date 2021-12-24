@@ -1,6 +1,4 @@
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { isPropertySignature } from "typescript";
-
 import css from "../modal-contents.module.css";
 
 const ErrorInfo = () => {
@@ -16,6 +14,5 @@ const ErrorInfo = () => {
     </div>
   );
 };
-
 
 export default ErrorInfo;

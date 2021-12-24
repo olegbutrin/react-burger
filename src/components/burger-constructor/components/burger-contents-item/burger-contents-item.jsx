@@ -133,7 +133,7 @@ const BurgerContentsItem = (props) => {
 
 BurgerContentsItem.propTypes = {
   data: PTIngredientData.isRequired,
-  type: PropTypes.oneOf(["top", "bottom", "center"]),
+  type: PropTypes.oneOf(["top", "bottom", "center"]).isRequired,
   index: PropTypes.number.isRequired,
 };
 
