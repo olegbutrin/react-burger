@@ -34,31 +34,28 @@ const BurgerContentsItem = (props) => {
         return;
       }
 
-      const hoverIndex = item.index;
-      const dropIndex = props.data.index;
+      const hoverIndex = item.id;
+      const dropIndex = props.data.id;
 
       if (hoverIndex === dropIndex) {
         return;
       }
 
-      const itemBounds = itemRef.current?.getBoundingClientRect();
-      const itemCenter = (itemBounds.bottom - itemBounds.top) / 2;
-      const monitorOffset = monitor.getClientOffset();
-      const itemY = monitorOffset.y - itemBounds.top;
+      // const itemBounds = itemRef.current?.getBoundingClientRect();
+      // const itemCenter = (itemBounds.bottom - itemBounds.top) / 2;
+      // const monitorOffset = monitor.getClientOffset();
+      // const itemY = monitorOffset.y - itemBounds.top;
 
-      if (hoverIndex > dropIndex && itemY > itemCenter) {
-        return;
-      }
-      if (hoverIndex < dropIndex && itemY < itemCenter) {
-        return;
-      }
+      // if (hoverIndex > dropIndex && itemY > itemCenter) {
+      //   return;
+      // }
+      // if (hoverIndex < dropIndex && itemY < itemCenter) {
+      //   return;
+      // }
 
-      // перехватываем возможную ошибку DnD (Uncaught Invariant Violation: Expected to find a valid target)
-      setTimeout(() => {
-        dispatch({
-          type: SWAP_BURGER_PRODUCTS,
-          payload: { source: props.data, dest: item },
-        });
+      dispatch({
+        type: SWAP_BURGER_PRODUCTS,
+        payload: { source: { ...props.data }, dest: { ...item } },
       });
     },
   });
@@ -76,7 +73,10 @@ const BurgerContentsItem = (props) => {
   };
 
   // переменные для настроек
-  let itemClass, extraStyle, extraName, draggable;
+  let itemClass;
+  let extraStyle;
+  let extraName;
+  let draggable;
   let itemType;
 
   switch (props.type) {
@@ -105,7 +105,11 @@ const BurgerContentsItem = (props) => {
   }
 
   return draggable ? (
-    <div className={itemClass + extraStyle} ref={itemRef}>
+    <div
+      className={itemClass + extraStyle}
+      ref={itemRef}
+      id={"DBI_" + props.data.id}
+    >
       <div className={css.icon}>
         <DragIcon type="primary" />
       </div>
@@ -134,7 +138,6 @@ const BurgerContentsItem = (props) => {
 BurgerContentsItem.propTypes = {
   data: PTIngredientData.isRequired,
   type: PropTypes.oneOf(["top", "bottom", "center"]).isRequired,
-  index: PropTypes.number.isRequired,
 };
 
 export default BurgerContentsItem;

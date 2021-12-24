@@ -27,13 +27,13 @@ export const orderReducer = (state = initialState, action) => {
       };
     case GET_ORDER_FAILED:
       return {
-        ...state,
+        order: null,
         orderRequest: false,
         orderFailed: true,
       };
     case CLEAR_ORDER_DATA:
       return initialState;
     default:
-      return initialState;
+      return { ...state };
   }
 };

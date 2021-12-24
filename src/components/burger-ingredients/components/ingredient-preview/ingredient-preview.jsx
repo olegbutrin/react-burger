@@ -30,9 +30,7 @@ const IngredientPreview = (props) => {
 
   return (
     <div className={css.ingrPreview} onClick={setCurrentData} ref={dragRef}>
-      {props.productsData.count > 0 && (
-        <Counter count={props.productsData.count} size={"default"} />
-      )}
+      {false && <Counter count={props.productsData.count} size={"default"} />}
       <img
         className={css.image + " mr-4 mb-1 ml-4"}
         src={props.productsData.image}

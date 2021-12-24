@@ -82,7 +82,7 @@ const BurgerIngredients = () => {
     return () => {
       itemRefs
         .get("scroller")
-        .current.removeEventListener("scroll", onScrollerScroll);
+        .current?.removeEventListener("scroll", onScrollerScroll);
     };
   }, []);
 

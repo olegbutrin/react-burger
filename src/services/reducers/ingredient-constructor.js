@@ -8,38 +8,38 @@ import {
 const initialState = {
   bun: null,
   products: [],
+  currentIndex: 0,
+  isEmpty: true,
 };
-
-const getIndex = (() => {
-  let index = 0;
-  return () => {
-    return ++index;
-  };
-})();
 
 export const constructorReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_BURGER_BUN:
-      return { ...state, bun: action.payload };
+      return { ...state, bun: action.payload, isEmpty: false };
     case ADD_BURGER_PRODUCT:
       return {
         ...state,
-        products: [{ ...action.payload, index: getIndex() }, ...state.products],
+        products: [
+          { ...action.payload.item, id: action.payload.id },
+          ...state.products,
+        ],
+        currentIndex: action.payload.id,
+        isEmpty: false,
       };
     case REMOVE_BURGER_PRODUCT:
       return {
         ...state,
         products: state.products.filter((prod) => {
-          return prod.index != action.payload.index;
+          return prod.id != action.payload.id;
         }),
       };
     case SWAP_BURGER_PRODUCTS:
       const nextState = {
         ...state,
         products: state.products.map((prod) => {
-          if (prod.index === action.payload.dest.index)
+          if (prod.id === action.payload.dest.id)
             return { ...action.payload.source };
-          else if (prod.index === action.payload.source.index)
+          else if (prod.id === action.payload.source.id)
             return { ...action.payload.dest };
           else {
             return prod;
