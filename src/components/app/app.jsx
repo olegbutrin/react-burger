@@ -22,9 +22,7 @@ const App = () => {
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера
   React.useEffect(() => {
-    if (!ingredients.length) {
-      dispatch(getIngredients());
-    }
+    dispatch(getIngredients());
   }, [dispatch]);
 
   return (

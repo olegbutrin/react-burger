@@ -99,6 +99,9 @@ const BurgerContentsItem = (props) => {
       extraStyle = " m-2";
       extraName = "";
       draggable = true;
+      break;
+    default:
+      break;
   }
 
   return draggable ? (

@@ -8,6 +8,7 @@ import {
 
 import Modal from "../../../modal/modal";
 import ContentsOrder from "../../../modal-contents/modal-contents-order/modal-contents-order";
+import ErrorInfo from "../../../modal-contents/modal-contents-error/modal-contents-error";
 
 import {
   Button,
@@ -66,6 +67,11 @@ const BurgerOrder = () => {
       <Button type="primary" size="medium" onClick={startOrder}>
         Оформить заказ
       </Button>
+      {orderFailed && (
+        <Modal closeCallback={closeModal}>
+        <ErrorInfo/>
+      </Modal>
+      )}
       {!orderRequest && !orderFailed && order && (
         <Modal closeCallback={closeModal}>
           {/* провайдер контекста для модального окна заказа */}
