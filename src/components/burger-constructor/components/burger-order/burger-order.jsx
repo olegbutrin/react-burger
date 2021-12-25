@@ -32,13 +32,13 @@ const BurgerOrder = () => {
   );
 
   // расчет общей стоимости
-  const summary = (() => {
+  const summary = React.useMemo(() => {
     let res = productsData.reduce((sum, ingr) => sum + ingr.price, 0);
     if (bunData) {
       res += bunData.price * 2;
     }
     return res;
-  })();
+  }, [bunData, productsData]);
 
   const productsID = (() => {
     let prods = productsData.map((ingr) => {
@@ -60,8 +60,8 @@ const BurgerOrder = () => {
 
   const closeModalClearBurger = () => {
     dispatch(clearOrder());
-    dispatch({type: CLEAR_BURGER_PRODUCTS});
-  }
+    dispatch({ type: CLEAR_BURGER_PRODUCTS });
+  };
 
   return (
     <div className={css.orderContainer + " mt-10 mr-4"}>
@@ -74,8 +74,8 @@ const BurgerOrder = () => {
       </Button>
       {orderFailed && (
         <Modal closeCallback={closeModal}>
-        <ErrorInfo/>
-      </Modal>
+          <ErrorInfo />
+        </Modal>
       )}
       {!orderRequest && !orderFailed && order && (
         <Modal closeCallback={closeModalClearBurger}>
