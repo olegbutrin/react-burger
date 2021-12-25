@@ -45,7 +45,7 @@ const Modal = (props) => {
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [props.closeCallback]);
+  }, [props, props.closeCallback]);
 
   const contents = (
     <ModalOverlay closeCallback={closeModal}>
