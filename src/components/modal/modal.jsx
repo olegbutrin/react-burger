@@ -18,7 +18,6 @@ const Modal = (props) => {
       e.preventDefault();
       e.stopPropagation();
       document.removeEventListener("keydown", handleEscape);
-      console.log("esc")
       props.closeCallback();
     }
   };
