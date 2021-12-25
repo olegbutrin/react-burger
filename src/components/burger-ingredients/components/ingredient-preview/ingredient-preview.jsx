@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
 
 import {
@@ -22,6 +22,11 @@ const IngredientPreview = (props) => {
     dispatch({ type: SET_ITEM_DATA, payload: { ...props.productsData } });
   };
 
+  const {bun, products } = useSelector((store) =>(store.burger));
+  const count = props.productsData.type === "bun" ? 
+    (bun && bun._id === props.productsData._id ? 2 : 0) : 
+    products.filter((ingr)=>{ return ingr._id === props.productsData._id}).length; 
+
   // делаем перетаскиватель
   const [, dragRef] = useDrag({
     type: "product",
@@ -30,7 +35,7 @@ const IngredientPreview = (props) => {
 
   return (
     <div className={css.ingrPreview} onClick={setCurrentData} ref={dragRef}>
-      {false && <Counter count={props.productsData.count} size={"default"} />}
+      {count > 0 && <Counter count={count} size={"default"} />}
       <img
         className={css.image + " mr-4 mb-1 ml-4"}
         src={props.productsData.image}
