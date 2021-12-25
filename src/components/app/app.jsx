@@ -8,7 +8,7 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./app.module.css";
-import { getIngredients } from "../../services/actions/app";
+import { getIngredients } from "../../services/actions/ingredient-list";
 import mainMenu from "../../utils/menu";
 
 // APP component
@@ -17,7 +17,7 @@ const App = () => {
   const dispatch = useDispatch();
   // импорт чистых данных
   const { ingredients, ingredientRequest, ingredientFailed } = useSelector(
-    (store) => store.app
+    (store) => store.list
   );
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера

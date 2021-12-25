@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
-import { appReducer } from "./app";
+import { ingredientsReducer } from "./ingredient-list";
 import { ingrPreviewReducer } from "./ingredient-preview";
 import { constructorReducer } from "./ingredient-constructor";
 import { orderReducer } from "./burger-order";
 
 export const rootReducer = combineReducers({
-  app: appReducer,
+  list: ingredientsReducer,
   preview: ingrPreviewReducer,
   burger: constructorReducer,
   order: orderReducer,

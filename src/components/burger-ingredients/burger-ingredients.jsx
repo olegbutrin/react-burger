@@ -16,7 +16,7 @@ const BurgerIngredients = () => {
   const dispatch = useDispatch();
   // получаем список ингредиентов из провайдера
   const { productsData } = useSelector((state) => ({
-    productsData: state.app.ingredients,
+    productsData: state.list.ingredients,
   }));
 
   // получаем данные для модального окна

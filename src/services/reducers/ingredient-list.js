@@ -2,7 +2,7 @@ import {
   GET_INGREDIENTS_FAILED,
   GET_INGREDIENTS_REQUEST,
   GET_INGREDIENTS_SUCCESS,
-} from "../actions/app";
+} from "../actions/ingredient-list";
 
 const initialState = {
   ingredients: [],
@@ -10,7 +10,7 @@ const initialState = {
   ingredientFailed: false,
 };
 
-export const appReducer = (state = initialState, action) => {
+export const ingredientsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST:
       return {
