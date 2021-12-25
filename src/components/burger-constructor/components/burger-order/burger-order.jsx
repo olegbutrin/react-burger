@@ -6,6 +6,8 @@ import {
   clearOrder,
 } from "../../../../services/actions/burger-order";
 
+import { CLEAR_BURGER_PRODUCTS } from "../../../../services/actions/ingredient-constructor";
+
 import Modal from "../../../modal/modal";
 import ContentsOrder from "../../../modal-contents/modal-contents-order/modal-contents-order";
 import ErrorInfo from "../../../modal-contents/modal-contents-error/modal-contents-error";
@@ -56,6 +58,11 @@ const BurgerOrder = () => {
     dispatch(clearOrder());
   };
 
+  const closeModalClearBurger = () => {
+    dispatch(clearOrder());
+    dispatch({type: CLEAR_BURGER_PRODUCTS});
+  }
+
   return (
     <div className={css.orderContainer + " mt-10 mr-4"}>
       <div className={css.priceValue + " mr-10"}>
@@ -71,7 +78,7 @@ const BurgerOrder = () => {
       </Modal>
       )}
       {!orderRequest && !orderFailed && order && (
-        <Modal closeCallback={closeModal}>
+        <Modal closeCallback={closeModalClearBurger}>
           {/* провайдер контекста для модального окна заказа */}
           <ContentsOrder orderState={order} />
         </Modal>
