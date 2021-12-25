@@ -21,41 +21,44 @@ const BurgerContentsItem = (props) => {
   const dispatch = useDispatch();
   const itemRef = useRef(null);
 
-  // определяем драг для
+  // определяем драг для генерируемого элемента
+  // в item передается объект - данные продукта
   const [, drag] = useDrag({
     type: "constructor",
     item: props.data,
   });
 
+  // определяем дроп для генерируемого элемента
+  // если в ховер придет объект с другими данными, произойдет замена продуктов в store
   const [, drop] = useDrop({
     accept: "constructor",
     hover(item, monitor) {
       if (!itemRef.current) {
         return;
       }
-
-      const hoverIndex = item.id;
-      const dropIndex = props.data.id;
+      // сравниваем
+      const hoverIndex = item.index;
+      const dropIndex = props.data.index;
 
       if (hoverIndex === dropIndex) {
         return;
       }
 
-      // const itemBounds = itemRef.current?.getBoundingClientRect();
-      // const itemCenter = (itemBounds.bottom - itemBounds.top) / 2;
-      // const monitorOffset = monitor.getClientOffset();
-      // const itemY = monitorOffset.y - itemBounds.top;
+      const itemBounds = itemRef.current?.getBoundingClientRect();
+      const itemCenter = (itemBounds.bottom - itemBounds.top) / 2;
+      const monitorOffset = monitor.getClientOffset();
+      const itemY = monitorOffset.y - itemBounds.top;
 
-      // if (hoverIndex > dropIndex && itemY > itemCenter) {
-      //   return;
-      // }
-      // if (hoverIndex < dropIndex && itemY < itemCenter) {
-      //   return;
-      // }
+      if (hoverIndex > dropIndex && itemY > itemCenter) {
+        return;
+      }
+      if (hoverIndex < dropIndex && itemY < itemCenter) {
+        return;
+      }
 
       dispatch({
         type: SWAP_BURGER_PRODUCTS,
-        payload: { source: { ...props.data }, dest: { ...item } },
+        payload: { source: props.data, dest: item },
       });
     },
   });
@@ -108,7 +111,6 @@ const BurgerContentsItem = (props) => {
     <div
       className={itemClass + extraStyle}
       ref={itemRef}
-      id={"DBI_" + props.data.id}
     >
       <div className={css.icon}>
         <DragIcon type="primary" />

@@ -29,7 +29,7 @@ const BurgerConstructor = () => {
   const addItem = (item) => {
     dispatch({
       type: ADD_BURGER_PRODUCT,
-      payload: { item: item, id: currentIndex + 1 },
+      payload: { item: item, index: currentIndex + 1 },
     });
   };
 
@@ -48,7 +48,9 @@ const BurgerConstructor = () => {
     },
   });
 
-  console.log("render");
+  // логика для генерации уникальных ключей построена на использовании в стейте счетчика currentIndex
+  // при каждом добавлении нового ингредиента счетчик увеличивается на единицу
+  // в поле index в данные ингредиента прописывается значение при добавлении
   return (
     <div className={css.main + " mt-25"} ref={dropTarget}>
       {/* верхняя булка */}
@@ -57,7 +59,7 @@ const BurgerConstructor = () => {
         {products.map((ingr) => {
           return (
             <BurgerContentsItem
-              key={["BurgIngr", ingr.id].join("_")}
+              key={["BurgIngr", ingr.index].join("_")}
               data={ingr}
               type={"center"}
             />
@@ -66,6 +68,7 @@ const BurgerConstructor = () => {
       </div>
       {/* нижняя булка */}
       {bun && <BurgerContentsItem data={bun} type="bottom" />}
+      {/* в зависимости от состояния выводим кнопку заказа или заглушку */}
       {!isEmpty && bun ? (
         <BurgerOrder />
       ) : (

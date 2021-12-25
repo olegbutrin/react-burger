@@ -15,8 +15,6 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { CLEAR_ORDER_DATA } from "../../../../services/actions/burger-order";
-
 import css from "./burger-order.module.css";
 
 const BurgerOrder = () => {

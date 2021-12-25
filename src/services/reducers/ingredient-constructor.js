@@ -3,6 +3,7 @@ import {
   ADD_BURGER_PRODUCT,
   REMOVE_BURGER_PRODUCT,
   SWAP_BURGER_PRODUCTS,
+  CLEAR_BURGER_PRODUCTS,
 } from "../actions/ingredient-constructor";
 
 const initialState = {
@@ -20,26 +21,26 @@ export const constructorReducer = (state = initialState, action) => {
       return {
         ...state,
         products: [
-          { ...action.payload.item, id: action.payload.id },
+          { ...action.payload.item, index: action.payload.index },
           ...state.products,
         ],
-        currentIndex: action.payload.id,
+        currentIndex: action.payload.index,
         isEmpty: false,
       };
     case REMOVE_BURGER_PRODUCT:
       return {
         ...state,
         products: state.products.filter((prod) => {
-          return prod.id != action.payload.id;
+          return prod.index !== action.payload.index;
         }),
       };
     case SWAP_BURGER_PRODUCTS:
       const nextState = {
         ...state,
         products: state.products.map((prod) => {
-          if (prod.id === action.payload.dest.id)
+          if (prod.index === action.payload.dest.index)
             return { ...action.payload.source };
-          else if (prod.id === action.payload.source.id)
+          else if (prod.index === action.payload.source.index)
             return { ...action.payload.dest };
           else {
             return prod;
@@ -47,6 +48,8 @@ export const constructorReducer = (state = initialState, action) => {
         }),
       };
       return nextState;
+    case CLEAR_BURGER_PRODUCTS:
+      return initialState;
     default:
       return { ...state };
   }
