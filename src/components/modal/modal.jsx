@@ -17,7 +17,6 @@ const Modal = (props) => {
     if (e.key === "Escape") {
       e.preventDefault();
       e.stopPropagation();
-      console.log("esc");
       props.closeCallback();
     }
   }

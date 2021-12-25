@@ -2,7 +2,7 @@ import { PTIngredientData } from "../../utils/props";
 
 import css from "../order-details/order-details.module.css";
 
-const ContentsIngredientInfo = (props) => {
+const IngredientDetails = (props) => {
   return (
     <div className={css.contents}>
       <img
@@ -51,8 +51,8 @@ const ContentsIngredientInfo = (props) => {
   );
 };
 
-ContentsIngredientInfo.propTypes = {
+IngredientDetails.propTypes = {
   productsData: PTIngredientData.isRequired,
 };
 
-export default ContentsIngredientInfo;
+export default IngredientDetails;

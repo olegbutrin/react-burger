@@ -5,7 +5,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import IngredientBox from "./components/ingredient-box/ingredient-box";
 import Modal from "../modal/modal";
-import ContentsIngredientInfo from "../ingredient-details/ingredient-details";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 
 import { CLEAR_ITEM_DATA } from "../../services/actions/ingredient-preview";
 
@@ -152,9 +152,7 @@ const BurgerIngredients = () => {
       </div>
       {modalState && (
         <Modal closeCallback={closeModal} header={"Детали ингредиента"}>
-          <ContentsIngredientInfo
-            productsData={modalProduct}
-          ></ContentsIngredientInfo>
+          <IngredientDetails productsData={modalProduct}></IngredientDetails>
         </Modal>
       )}
     </div>
