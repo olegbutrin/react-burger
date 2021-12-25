@@ -27,9 +27,7 @@ export const orderReducer = (state = initialState, action) => {
       };
     case GET_ORDER_FAILED:
       return {
-        order: null,
-        orderRequest: false,
-        orderFailed: true,
+        ...initialState, orderFailed: true
       };
     case CLEAR_ORDER_DATA:
       return initialState;
