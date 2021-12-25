@@ -5,9 +5,6 @@ import css from "../order-details/order-details.module.css";
 const ContentsIngredientInfo = (props) => {
   return (
     <div className={css.contents}>
-      <p className="text text_type_main-large" style={{ textAlign: "left" }}>
-        Детали ингредиента
-      </p>
       <img
         className={css.ingrImage + " mr-4 mb-1 ml-4"}
         src={props.productsData.image_large}

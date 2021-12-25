@@ -47,6 +47,9 @@ const Modal = (props) => {
           <CloseIcon type="primary" />
           <span tabIndex={0} ref={spanRef} onKeyDown={handleEscape}></span>
         </div>
+      {props.header && (<><p className="text text_type_main-large mt-10" style={{ textAlign: "left" }}>
+        {props.header}
+      </p></>)}
         {props.children}
       </div>
     </ModalOverlay>
@@ -60,6 +63,7 @@ Modal.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
   ]).isRequired,
   closeCallback: PropTypes.func.isRequired,
+  header: PropTypes.string,
 };
 
 export default Modal;

@@ -151,7 +151,7 @@ const BurgerIngredients = () => {
         ></IngredientBox>
       </div>
       {modalState && (
-        <Modal closeCallback={closeModal}>
+        <Modal closeCallback={closeModal} header={"Детали ингредиента"}>
           <ContentsIngredientInfo
             productsData={modalProduct}
           ></ContentsIngredientInfo>
