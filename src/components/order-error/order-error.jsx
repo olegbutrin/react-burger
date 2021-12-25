@@ -1,7 +1,7 @@
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import css from "../modal-contents.module.css";
+import css from "../order-details/order-details.module.css";
 
-const ErrorInfo = () => {
+const OrderError = () => {
   return (
     <div className={css.contents}>
       <InfoIcon type="error" />
@@ -15,4 +15,4 @@ const ErrorInfo = () => {
   );
 };
 
-export default ErrorInfo;
+export default OrderError;

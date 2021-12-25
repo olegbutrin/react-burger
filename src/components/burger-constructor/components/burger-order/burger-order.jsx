@@ -9,8 +9,8 @@ import {
 import { CLEAR_BURGER_PRODUCTS } from "../../../../services/actions/ingredient-constructor";
 
 import Modal from "../../../modal/modal";
-import ContentsOrder from "../../../modal-contents/modal-contents-order/modal-contents-order";
-import ErrorInfo from "../../../modal-contents/modal-contents-error/modal-contents-error";
+import OrderDetails from "../../../order-details/order-details";
+import ErrorInfo from "../../../order-error/order-error";
 
 import {
   Button,
@@ -80,7 +80,7 @@ const BurgerOrder = () => {
       {!orderRequest && !orderFailed && order && (
         <Modal closeCallback={closeModalClearBurger}>
           {/* провайдер контекста для модального окна заказа */}
-          <ContentsOrder orderState={order} />
+          <OrderDetails orderState={order} />
         </Modal>
       )}
     </div>

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import css from "../modal-contents.module.css";
+import css from "../order-details/order-details.module.css";
 
-const ContentsOrder = (props) => {
+const OrderDetails = (props) => {
   //
   return (
     <div className={css.contents}>
@@ -25,7 +25,7 @@ const ContentsOrder = (props) => {
   );
 };
 
-ContentsOrder.propTypes = {
+OrderDetails.propTypes = {
   orderState: PropTypes.shape({
     name: PropTypes.string,
     order: PropTypes.shape({
@@ -35,4 +35,4 @@ ContentsOrder.propTypes = {
   }).isRequired,
 };
 
-export default ContentsOrder;
+export default OrderDetails;

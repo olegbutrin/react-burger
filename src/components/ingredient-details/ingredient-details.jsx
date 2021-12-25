@@ -1,6 +1,6 @@
-import { PTIngredientData } from "../../../utils/props";
+import { PTIngredientData } from "../../utils/props";
 
-import css from "../modal-contents.module.css";
+import css from "../order-details/order-details.module.css";
 
 const ContentsIngredientInfo = (props) => {
   return (

@@ -5,7 +5,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import IngredientBox from "./components/ingredient-box/ingredient-box";
 import Modal from "../modal/modal";
-import ContentsIngredientInfo from "../modal-contents/modal-contents-ingredient-info/modal-contents-ingredient-info";
+import ContentsIngredientInfo from "../ingredient-details/ingredient-details";
 
 import { CLEAR_ITEM_DATA } from "../../services/actions/ingredient-preview";
 
@@ -71,6 +71,8 @@ const BurgerIngredients = () => {
           itemRefs.get("bun").current.getBoundingClientRect().y:
           active = "bun";
           break;
+        default:
+          break;
       }
       if (active) {
         setActiveType(active);
@@ -84,7 +86,7 @@ const BurgerIngredients = () => {
         .get("scroller")
         .current?.removeEventListener("scroll", onScrollerScroll);
     };
-  }, []);
+  });
 
   const buns = productsData.filter((ingr) => {
     return ingr.type === "bun";
