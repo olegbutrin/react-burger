@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
+import { v4 as UUID } from "uuid";
 
 import BurgerContentsItem from "./components/burger-contents-item/burger-contents-item";
 import BurgerOrder from "./components/burger-order/burger-order";
@@ -18,9 +19,9 @@ import css from "./burger-constructor.module.css";
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
 
-  const { bun, products, currentIndex, isEmpty } = useSelector(
-    (state) => state.burger
-  );
+  const { bun, products } = useSelector((state) => state.burger);
+
+  const isEmpty = !bun && products.length === 0;
 
   const setBun = (item) => {
     dispatch({ type: SET_BURGER_BUN, payload: item });
@@ -29,7 +30,7 @@ const BurgerConstructor = () => {
   const addItem = (item) => {
     dispatch({
       type: ADD_BURGER_PRODUCT,
-      payload: { item: item, index: currentIndex + 1 },
+      payload: { item: item, index: UUID() },
     });
   };
 
@@ -48,9 +49,6 @@ const BurgerConstructor = () => {
     },
   });
 
-  // логика для генерации уникальных ключей построена на использовании в стейте счетчика currentIndex
-  // при каждом добавлении нового ингредиента счетчик увеличивается на единицу
-  // в поле index в данные ингредиента прописывается значение при добавлении
   return (
     <div className={css.main + " mt-25"} ref={dropTarget}>
       {/* верхняя булка */}

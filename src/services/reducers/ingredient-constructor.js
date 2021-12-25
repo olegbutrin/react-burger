@@ -9,14 +9,12 @@ import {
 const initialState = {
   bun: null,
   products: [],
-  currentIndex: 0,
-  isEmpty: true,
 };
 
 export const constructorReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_BURGER_BUN:
-      return { ...state, bun: action.payload, isEmpty: false };
+      return { ...state, bun: action.payload };
     case ADD_BURGER_PRODUCT:
       return {
         ...state,
@@ -24,8 +22,6 @@ export const constructorReducer = (state = initialState, action) => {
           { ...action.payload.item, index: action.payload.index },
           ...state.products,
         ],
-        currentIndex: action.payload.index,
-        isEmpty: false,
       };
     case REMOVE_BURGER_PRODUCT:
       return {
