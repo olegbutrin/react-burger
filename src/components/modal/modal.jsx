@@ -12,6 +12,7 @@ const modalRoot = document.getElementById("react-modals") || document.body;
 
 // модальное окно через портал
 const Modal = (props) => {
+  const closeCallback = props.closeCallback;
   const closeModal = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -37,7 +38,7 @@ const Modal = (props) => {
       if (e.key === "Escape") {
         e.preventDefault();
         e.stopPropagation();
-        props.closeCallback();
+        closeCallback();
       }
     };
 
@@ -45,7 +46,7 @@ const Modal = (props) => {
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [props, props.closeCallback]);
+  }, [closeCallback]);
 
   const contents = (
     <ModalOverlay closeCallback={closeModal}>
