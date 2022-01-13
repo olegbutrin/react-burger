@@ -9,13 +9,12 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import pages from "../pages.module.css";
-import css from "./register.module.css";
+import css from "../pages.module.css";
 
 const RegisterPage = () => {
   return (
-    <div className={pages.wrapper}>
-      <div className={pages.container}>
+    <div className={css.wrapper}>
+      <div className={css.container}>
         <div className={css.header + " pb-6"}>
           <p className="text text_type_main-medium">Регистрация</p>
         </div>
