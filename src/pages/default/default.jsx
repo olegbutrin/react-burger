@@ -1,8 +1,8 @@
 import React from "react";
 import css from "./default.module.css"
 
-const DefaultPage = () => {
-    return <></>
+const DefaultPage = (props) => {
+    return <>{props.children}</>
 }
 
 export default DefaultPage;

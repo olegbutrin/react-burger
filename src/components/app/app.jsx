@@ -1,9 +1,21 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
+
+import {
+  DefaultPage,
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  ProfilePage,
+  IngredientPreviewPage,
+  NotFoundPage
+} from "../../pages";
 
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -52,14 +64,43 @@ const App = () => {
         {!ingredientRequest && !ingredientFailed && ingredients.length && (
           <>
             <AppHeader menu={mainMenu} />
-            <div className={css.contents}>
-              <section className={css.sectionLeft + " mr-5 ml-5"}>
-                <BurgerIngredients />
-              </section>
-              <section className={css.sectionRight + " mr-5 ml-5"}>
-                <BurgerConstructor />
-              </section>
-            </div>
+            <Router>
+              <Switch>
+                <Route path="/" exact={true}>
+                  <DefaultPage>
+                    <div className={css.contents}>
+                      <section className={css.sectionLeft + " mr-5 ml-5"}>
+                        <BurgerIngredients />
+                      </section>
+                      <section className={css.sectionRight + " mr-5 ml-5"}>
+                        <BurgerConstructor />
+                      </section>
+                    </div>
+                  </DefaultPage>
+                </Route>
+                <Route path="/login" exact={true}>
+                  <LoginPage />
+                </Route>
+                <Route path="/register" exact={true}>
+                  <RegisterPage />
+                </Route>
+                <Route path="/forgot-password" exact={true}>
+                  <ForgotPasswordPage />
+                </Route>
+                <Route path="/reset-password" exact={true}>
+                  <ResetPasswordPage />
+                </Route>
+                <Route path="/profile" exact={true}>
+                  <ProfilePage />
+                </Route>
+                <Route path="/ingredient:id" exact={true}>
+                  <IngredientPreviewPage />
+                </Route>
+                <Route>
+                  <NotFoundPage/>
+                </Route>
+              </Switch>
+            </Router>
           </>
         )}
       </main>
