@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
@@ -11,31 +11,20 @@ import css from "./modal.module.css";
 const modalRoot = document.getElementById("react-modals") || document.body;
 
 // модальное окно через портал
-const Modal = (props: {
-  children: ReactElement | ReactElement[] | Symbol;
-  closeCallback: () => void;
-}) => {
-  // escape press
-  const handleEscape = (e: any) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      e.stopPropagation();
-      props.closeCallback();
-    }
-  };
-
-  const closeModal = (e: any) => {
+const Modal = (props) => {
+  const closeCallback = props.closeCallback;
+  const closeModal = (e) => {
     e.preventDefault();
     e.stopPropagation();
     props.closeCallback();
   };
 
-  const stopEvent = (e: any) => {
+  const stopEvent = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const spanRef: any = React.useRef(null);
+  const spanRef = React.useRef(null);
 
   React.useEffect(() => {
     if (spanRef != null && spanRef.current) {
@@ -43,13 +32,38 @@ const Modal = (props: {
     }
   }, []);
 
+  React.useEffect(() => {
+    // escape press
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        closeCallback();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [closeCallback]);
+
   const contents = (
     <ModalOverlay closeCallback={closeModal}>
       <div tabIndex={0} className={css.container} onClick={stopEvent}>
-        <div className={css.closeButton} onClick={closeModal}>
+        <div className={css.closeButton} onClick={closeModal} ref={spanRef}>
           <CloseIcon type="primary" />
-          <span tabIndex={0} ref={spanRef} onKeyDown={handleEscape}></span>
         </div>
+        {props.header && (
+          <>
+            <p
+              className="text text_type_main-large mt-10"
+              style={{ textAlign: "left" }}
+            >
+              {props.header}
+            </p>
+          </>
+        )}
         {props.children}
       </div>
     </ModalOverlay>
@@ -62,7 +76,8 @@ Modal.propTypes = {
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node),
   ]).isRequired,
-  closeCallback: PropTypes.func,
+  closeCallback: PropTypes.func.isRequired,
+  header: PropTypes.string,
 };
 
 export default Modal;

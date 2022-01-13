@@ -8,13 +8,7 @@ import {
 
 import css from "./menu-button.module.css";
 
-const MenuButton = (props: {
-  id: number;
-  icon: string;
-  value: string;
-  active: boolean;
-  callback: (id: number) => void;
-}) => {
+const MenuButton = (props) => {
   // тип иконки зависит от значения active
   const iconType = props.active ? "primary" : "secondary";
 
@@ -68,7 +62,7 @@ MenuButton.propTypes = {
   icon: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   active: PropTypes.bool.isRequired,
-  callback: PropTypes.func,
+  callback: PropTypes.func.isRequired,
 };
 
 export default MenuButton;

@@ -1,14 +1,8 @@
 import PropTypes from "prop-types";
-import css from "../modal-contents.module.css";
+import css from "../order-details/order-details.module.css";
 
-const ContentsOrder = (props: {
-  orderState: {
-    name: string;
-    order: { number: string | number };
-    success: boolean;
-  };
-}) => {
-  // подписываемся на обновления orderState через контекст
+const OrderDetails = (props) => {
+  //
   return (
     <div className={css.contents}>
       <p className="text text_type_digits-large mt-10 mr-8 ml-8">
@@ -31,14 +25,14 @@ const ContentsOrder = (props: {
   );
 };
 
-ContentsOrder.propTypes = {
+OrderDetails.propTypes = {
   orderState: PropTypes.shape({
     name: PropTypes.string,
     order: PropTypes.shape({
       order: PropTypes.string || PropTypes.number,
     }),
     success: PropTypes.bool,
-  }),
+  }).isRequired,
 };
 
-export default ContentsOrder;
+export default OrderDetails;

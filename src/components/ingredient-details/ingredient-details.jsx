@@ -1,14 +1,10 @@
-import { IIngredientData } from "../../../utils/types";
-import { PTIngredientData } from "../../../utils/props";
+import { PTIngredientData } from "../../utils/props";
 
-import css from "../modal-contents.module.css";
+import css from "../order-details/order-details.module.css";
 
-const ContentsIngredientInfo = (props: { productsData: IIngredientData }) => {
+const IngredientDetails = (props) => {
   return (
     <div className={css.contents}>
-      <p className="text text_type_main-large" style={{ textAlign: "left" }}>
-        Детали ингредиента
-      </p>
       <img
         className={css.ingrImage + " mr-4 mb-1 ml-4"}
         src={props.productsData.image_large}
@@ -55,8 +51,8 @@ const ContentsIngredientInfo = (props: { productsData: IIngredientData }) => {
   );
 };
 
-ContentsIngredientInfo.propTypes = {
-  productsData: PTIngredientData,
+IngredientDetails.propTypes = {
+  productsData: PTIngredientData.isRequired,
 };
 
-export default ContentsIngredientInfo;
+export default IngredientDetails;

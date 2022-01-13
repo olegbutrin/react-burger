@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 600px;
+}
+
+.burger {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  width: 300px;
+  height: 300px;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+.burger > * {
+  width: 100%;
+  height: 100%;
+  opacity: 20%;
+}
