@@ -1,4 +1,9 @@
-import { REGISTER_SUCCESS } from "../actions/auth";
+import {
+  REGISTER_SUCCESS,
+  REGISTER_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
+} from "../actions/auth";
 
 const initialState = {
   user: {
@@ -18,7 +23,24 @@ export const authReducer = (state = initialState, action) => {
         user: action.payload.user,
         accessToken: action.payload.accessToken,
       };
+    case REGISTER_ERROR:
+      return {
+        ...state,
+        isLogged: false,
+      };
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        isLogged: true,
+        user: action.payload.user,
+        accessToken: action.payload.accessToken,
+      };
+    case LOGIN_ERROR:
+      return {
+        ...state,
+        isLogged: false,
+      };
     default:
-      return {...state};
+      return { ...state };
   }
 };

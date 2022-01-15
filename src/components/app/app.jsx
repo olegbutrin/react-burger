@@ -7,7 +7,7 @@ import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 
 import {
-  DefaultPage,
+  MainPage,
   LoginPage,
   RegisterPage,
   ForgotPasswordPage,
@@ -68,7 +68,7 @@ const App = () => {
               <Router>
                 <Switch>
                   <Route path="/" exact={true}>
-                    <DefaultPage>
+                    <MainPage>
                       <>
                         <section className={css.sectionLeft + " mr-5 ml-5"}>
                           <BurgerIngredients />
@@ -77,7 +77,7 @@ const App = () => {
                           <BurgerConstructor />
                         </section>
                       </>
-                    </DefaultPage>
+                    </MainPage>
                   </Route>
                   <Route path="/login" exact={true}>
                     <LoginPage />

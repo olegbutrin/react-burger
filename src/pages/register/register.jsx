@@ -16,26 +16,26 @@ import { registerUser } from "../../services/actions/auth";
 import css from "../pages.module.css";
 
 const RegisterPage = () => {
-  const history = useHistory()
+  const history = useHistory();
 
-  const [ user, setUser ] = useState("");
-  const [ email, setEmail ]  = useState("");
-  const  [password, setPassword] = useState("");
+  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const { isLogged } = useSelector(store => store.auth);
-
-  useEffect(() => {
-      if(isLogged) {
-          history.push("/")
-      }
-  }, [isLogged, history]);
+  const { isLogged } = useSelector((store) => store.auth);
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (isLogged) {
+      history.push("/");
+    }
+  }, [isLogged, history]);
+
   const onSubmitRegistration = (event) => {
-    event.preventDefault()
-    dispatch(registerUser(user, email, password))
-}
+    event.preventDefault();
+    dispatch(registerUser(user, email, password));
+  };
 
   const changeState = (event) => {
     const input = event.target;

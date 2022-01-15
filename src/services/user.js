@@ -23,11 +23,6 @@ export const getUserEmail = () => {
   return data ? data.user.email : null; 
 }
 
-export const getUserAccessToken = () => {
-  const data = getUserData();
-  return data ? data.accessToken : null; 
-}
-
 export const getUserRefreshToken = () => {
   const data = getUserData();
   return data ? data.refreshToken : null; 

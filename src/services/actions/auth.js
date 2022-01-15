@@ -85,3 +85,40 @@ export function registerUser(user, email, password) {
       });
   };
 }
+
+export function loginUser(email, password) {
+  return function (dispatch) {
+    dispatch({ type: LOGIN_REQUEST });
+    apiRequest("/auth/login", { email: email, password: password })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("User Login Error: " + response.statusText);
+        }
+      })
+      .then((result) => {
+        console.log(result)
+        if (result.success) {
+          const userData = (({ success, accessToken, ...data }) => data)({
+            ...result,
+          });
+          setUserData(userData);
+          const authData = (({ success, refreshToken, ...data }) => data)({
+            ...result,
+          });
+          dispatch({
+            type: LOGIN_SUCCESS,
+            payload: authData,
+          });
+        } else {
+          throw new Error("User Login JSON Error!");
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: LOGIN_ERROR });
+        dispatch({ type: SET_ERROR_MESSAGE, payload: error });
+        dispatch({ type: SET_ERROR_SOURCE, payload: "User Login" });
+      });
+  };
+}

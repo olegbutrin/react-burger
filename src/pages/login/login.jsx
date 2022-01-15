@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+import { getUserEmail } from "../../services/user";
+import { loginUser } from "../../services/actions/auth";
 
 import LoginLink from "../../components/login-link/login-link";
 
@@ -11,20 +16,59 @@ import {
 import css from "../pages.module.css";
 
 const LoginPage = () => {
-  const {email, setEmail} = useState("");
-  const {password, setPassword} = useState("");
+  const history = useHistory();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { isLogged } = useSelector((store) => store.auth);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isLogged) {
+      history.push("/");
+    } else {
+      setEmail(getUserEmail());
+    }
+  }, [isLogged, history]);
+
+  const onSubmitLogin = (event) => {
+    event.preventDefault();
+    dispatch(loginUser(email, password));
+  };
+
+  const changeState = (event) => {
+    const input = event.target;
+    switch (input.name) {
+      case "email":
+        setEmail(input.value);
+        break;
+      case "password":
+        setPassword(input.value);
+        break;
+    }
+  };
 
   return (
     <div className={css.wrapper}>
-      <div className={css.container}>
+      <form className={css.container} onSubmit={onSubmitLogin}>
         <div className={css.header + " pb-6"}>
           <p className="text text_type_main-medium">Вход</p>
         </div>
         <div className="pb-6">
-          <EmailInput onChange={setEmail} value={email} name={"email"} />
+          <EmailInput
+            onChange={changeState}
+            value={email}
+            name={"email"}
+          />
         </div>
         <div className="pb-6">
-          <PasswordInput onChange={setPassword} value={password} name={"password"} />
+          <PasswordInput
+            onChange={changeState}
+            value={password}
+            name={"password"}
+          />
         </div>
         <Button type="primary" size="medium">
           Войти
@@ -45,7 +89,7 @@ const LoginPage = () => {
             />
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
