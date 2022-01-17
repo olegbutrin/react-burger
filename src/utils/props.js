@@ -42,6 +42,7 @@ export const PTMenuItem = PropTypes.shape({
   id: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
+  route: PropTypes.string.isRequired,
 });
 
 export const PTRef = PropTypes.any;

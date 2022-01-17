@@ -49,6 +49,8 @@ const RegisterPage = () => {
       case "password":
         setPassword(input.value);
         break;
+      default:
+        break;
     }
   };
 

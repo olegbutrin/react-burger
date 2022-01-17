@@ -1,2 +1,1 @@
-export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
-export const SET_ERROR_SOURCE = "SET_ERROR_SOURCE";
+export const SET_ERROR = "SET_ERROR";

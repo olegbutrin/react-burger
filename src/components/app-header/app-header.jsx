@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useLocation } from "react-router-dom";
 
 import { PTMenuItem } from "../../utils/props";
 
@@ -12,11 +13,7 @@ import css from "./app-header.module.css";
 // Основной компонент, реализующий заголовок
 
 const AppHeader = (props) => {
-  const [activeItem, setActiveItem] = React.useState(1);
-
-  const callbackMenu = (id) => {
-    setActiveItem(id);
-  };
+  const { pathname } = useLocation();
 
   return (
     <header className={css.header}>
@@ -30,8 +27,8 @@ const AppHeader = (props) => {
             id={button.id}
             icon={button.icon}
             value={button.value}
-            active={button.id === activeItem}
-            callback={callbackMenu}
+            route={button.route}
+            active={button.route === pathname}
           />
         ))}
       </nav>

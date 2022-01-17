@@ -62,48 +62,49 @@ const App = () => {
         )}
         {/* основной блок при загрузке данных */}
         {!ingredientRequest && !ingredientFailed && ingredients.length && (
-          <>
+          <Router>
             <AppHeader menu={mainMenu} />
             <div className={css.contents}>
-              <Router>
-                <Switch>
-                  <Route path="/" exact={true}>
-                    <MainPage>
-                      <>
-                        <section className={css.sectionLeft + " mr-5 ml-5"}>
-                          <BurgerIngredients />
-                        </section>
-                        <section className={css.sectionRight + " mr-5 ml-5"}>
-                          <BurgerConstructor />
-                        </section>
-                      </>
-                    </MainPage>
-                  </Route>
-                  <Route path="/login" exact={true}>
-                    <LoginPage />
-                  </Route>
-                  <Route path="/register" exact={true}>
-                    <RegisterPage />
-                  </Route>
-                  <Route path="/forgot-password" exact={true}>
-                    <ForgotPasswordPage />
-                  </Route>
-                  <Route path="/reset-password" exact={true}>
-                    <ResetPasswordPage />
-                  </Route>
-                  <Route path="/profile" exact={true}>
-                    <ProfilePage />
-                  </Route>
-                  <Route path="/ingredient:id" exact={true}>
-                    <IngredientPreviewPage />
-                  </Route>
-                  <Route>
-                    <NotFoundPage />
-                  </Route>
-                </Switch>
-              </Router>
+              <Switch>
+                <Route path="/" exact={true}>
+                  <MainPage>
+                    <>
+                      <section className={css.sectionLeft + " mr-5 ml-5"}>
+                        <BurgerIngredients />
+                      </section>
+                      <section className={css.sectionRight + " mr-5 ml-5"}>
+                        <BurgerConstructor />
+                      </section>
+                    </>
+                  </MainPage>
+                </Route>
+                <Route path="/login" exact={true}>
+                  <LoginPage />
+                </Route>
+                <Route path="/register" exact={true}>
+                  <RegisterPage />
+                </Route>
+                <Route path="/forgot-password" exact={true}>
+                  <ForgotPasswordPage />
+                </Route>
+                <Route path="/reset-password" exact={true}>
+                  <ResetPasswordPage />
+                </Route>
+                <Route path="/profile" exact={true}>
+                  <ProfilePage />
+                </Route>
+                <Route path="/profile/orders" exact={true}>
+                  <ProfilePage />
+                </Route>
+                <Route path="/ingredient:id" exact={true}>
+                  <IngredientPreviewPage />
+                </Route>
+                <Route>
+                  <NotFoundPage />
+                </Route>
+              </Switch>
             </div>
-          </>
+          </Router>
         )}
       </main>
     </div>

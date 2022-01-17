@@ -39,6 +39,7 @@ const LoginPage = () => {
   };
 
   const changeState = (event) => {
+    event.preventDefault();
     const input = event.target;
     switch (input.name) {
       case "email":
@@ -46,6 +47,8 @@ const LoginPage = () => {
         break;
       case "password":
         setPassword(input.value);
+        break;
+      default:
         break;
     }
   };
@@ -57,11 +60,7 @@ const LoginPage = () => {
           <p className="text text_type_main-medium">Вход</p>
         </div>
         <div className="pb-6">
-          <EmailInput
-            onChange={changeState}
-            value={email}
-            name={"email"}
-          />
+          <EmailInput onChange={changeState} value={email} name={"email"} />
         </div>
         <div className="pb-6">
           <PasswordInput

@@ -4,6 +4,7 @@ import { ingrPreviewReducer } from "./ingredient-preview";
 import { constructorReducer } from "./ingredient-constructor";
 import { orderReducer } from "./burger-order";
 import { authReducer } from "./auth";
+import { errorReducer } from "./error";
 
 export const rootReducer = combineReducers({
   list: ingredientsReducer,
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
   burger: constructorReducer,
   order: orderReducer,
   auth: authReducer,
+  error: errorReducer,
 });
