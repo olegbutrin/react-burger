@@ -1,32 +1,17 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React  from "react";
+import { useSelector } from "react-redux";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import IngredientBox from "./components/ingredient-box/ingredient-box";
-import Modal from "../modal/modal";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-
-import { CLEAR_ITEM_DATA } from "../../services/actions/ingredient-preview";
 
 import css from "./burger-ingredients.module.css";
 
 const BurgerIngredients = () => {
-  // получаем диспетчера
-  const dispatch = useDispatch();
   // получаем список ингредиентов из провайдера
   const { productsData } = useSelector((state) => ({
     productsData: state.list.ingredients,
   }));
-
-  // получаем данные для модального окна
-  const { modalState, modalProduct } = useSelector((state) => ({
-    modalState: state.preview.productData !== null,
-    modalProduct: state.preview.productData,
-  }));
-  const closeModal = () => {
-    dispatch({ type: CLEAR_ITEM_DATA });
-  };
 
   // устанавливаем значение активного таба
   const [activeType, setActiveType] = React.useState("bun");
@@ -43,6 +28,7 @@ const BurgerIngredients = () => {
     setActiveType(type);
     itemRefs.get(type).current.scrollIntoView({ behavior: "smooth" });
   };
+
 
   React.useEffect(() => {
     const onScrollerScroll = () => {
@@ -98,6 +84,7 @@ const BurgerIngredients = () => {
     return ingr.type === "main";
   });
 
+
   return (
     <div className={css.main}>
       <p className="text text_type_main-large mt-10 mb-5">Соберите бургер</p>
@@ -150,13 +137,10 @@ const BurgerIngredients = () => {
           productsData={mains}
         ></IngredientBox>
       </div>
-      {modalState && (
-        <Modal closeCallback={closeModal} header={"Детали ингредиента"}>
-          <IngredientDetails productsData={modalProduct}></IngredientDetails>
-        </Modal>
-      )}
     </div>
   );
 };
 
 export default BurgerIngredients;
+
+
