@@ -96,7 +96,7 @@ const App = () => {
                 <Route path="/profile/orders" exact={true}>
                   <ProfilePage />
                 </Route>
-                <Route path="/ingredient:id" exact={true}>
+                <Route path="/ingredient/:id" exact={true}>
                   <IngredientPreviewPage />
                 </Route>
                 <Route>
