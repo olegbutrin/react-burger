@@ -6,6 +6,11 @@ import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 
+import ErrorNotifier from "../error-notifier/error-notifier";
+import { clearError } from "../../services/actions/error";
+
+import Modal from "../modal/modal";
+
 import {
   MainPage,
   LoginPage,
@@ -36,6 +41,14 @@ const App = () => {
   React.useEffect(() => {
     dispatch(getIngredients());
   }, [dispatch]);
+
+  // читаем возможную ошибку перед очередным рендером
+  const { source, message } = useSelector((store) => store.error);
+
+  // функция для очистки ошибки при закрытии модального окна с ошибкой
+  const closeModal = () => {
+    dispatch(clearError());
+  };
 
   return (
     <div className={css.page}>
@@ -103,6 +116,13 @@ const App = () => {
                   <NotFoundPage />
                 </Route>
               </Switch>
+              {/* если на предыдущем шаге зарегистрирована ошибка, 
+              то после роутинга открываем модальное окно с информацией об ошибке */}
+              {message && (
+                <Modal closeCallback={closeModal} header={"Ошибка!"}>
+                  <ErrorNotifier source={source} message={message} />
+                </Modal>
+              )}
             </div>
           </Router>
         )}

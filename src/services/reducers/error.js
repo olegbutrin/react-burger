@@ -8,6 +8,8 @@ import {
   RESET_PASS_ERROR,
 } from "../actions/auth";
 
+import {SET_ERROR, CLEAR_ERROR } from "../actions/error";
+
 const initialState = {
   source: "",
   message: "",
@@ -22,11 +24,14 @@ export const errorReducer = (state = initialState, action) => {
     case UPDATE_PROFILE_ERROR:
     case FORGOT_PASS_ERROR:
     case RESET_PASS_ERROR:
+    case SET_ERROR:
       return {
         ...state,
         source: action.payload.source,
         message: action.payload.message,
       };
+    case CLEAR_ERROR:
+      return {...initialState};
     default:
       return { ...state };
   }
