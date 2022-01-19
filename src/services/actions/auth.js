@@ -13,6 +13,10 @@ export const LOGOUT_REQUEST = "LOGOUT_REQUEST";
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const LOGOUT_ERROR = "LOGOUT_ERROR";
 
+export const UPDATE_TOKEN_REQUEST = "UPDATE_TOKEN_REQUEST";
+export const UPDATE_TOKEN_SUCCESS = "UPDATE_TOKEN_REQUEST";
+export const UPDATE_TOKEN_ERROR = "UPDATE_TOKEN_REQUEST";
+
 export const PROFILE_REQUEST = "PROFILE_REQUEST";
 export const PROFILE_SUCCESS = "PROFILE_SUCCESS";
 export const PROFILE_ERROR = "PROFILE_ERROR";
@@ -178,7 +182,6 @@ export function resetPassword(email, password, token) {
     dispatch({ type: RESET_PASS_REQUEST });
     apiRequest("/password-reset", { password: password, token: token })
       .then((response) => {
-        console.log(response);
         if (response.ok) {
           return response.json();
         } else {
@@ -199,6 +202,39 @@ export function resetPassword(email, password, token) {
         dispatch({
           type: RESET_PASS_ERROR,
           payload: { source: "Reset Password", message: error },
+        });
+      });
+  };
+}
+
+export function updateToken(refreshToken) {
+  return function (dispatch) {
+    dispatch({ type: UPDATE_TOKEN_REQUEST });
+    apiRequest("/auth/token", { token: refreshToken })
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Update token request: " + response.statusText);
+        }
+      })
+      .then((result) => {
+        if (result.success) {
+          const expired = new Date().getTime() + TOKEN_EXPIRED;
+          const authData = setAuthData(result);
+          dispatch({
+            type: UPDATE_TOKEN_SUCCESS,
+            payload: { ...authData, expired: expired },
+          });
+        } else {
+          throw new Error("User Update Token JSON Error!");
+        }
+      })
+      .catch((error) => {
+        dispatch({
+          type: UPDATE_TOKEN_ERROR,
+          payload: { source: "Update token", message: error },
         });
       });
   };

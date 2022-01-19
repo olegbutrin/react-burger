@@ -6,6 +6,7 @@ import {
   UPDATE_PROFILE_ERROR,
   FORGOT_PASS_ERROR,
   RESET_PASS_ERROR,
+  UPDATE_TOKEN_ERROR
 } from "../actions/auth";
 
 import {SET_ERROR, CLEAR_ERROR } from "../actions/error";
@@ -24,6 +25,7 @@ export const errorReducer = (state = initialState, action) => {
     case UPDATE_PROFILE_ERROR:
     case FORGOT_PASS_ERROR:
     case RESET_PASS_ERROR:
+    case UPDATE_TOKEN_ERROR:
     case SET_ERROR:
       return {
         ...state,

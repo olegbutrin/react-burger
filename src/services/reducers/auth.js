@@ -6,6 +6,10 @@ import {
   LOGOUT_SUCCESS,
   FORGOT_PASS_SUCCESS,
   RESET_PASS_SUCCESS,
+  UPDATE_TOKEN_SUCCESS,
+  UPDATE_PROFILE_ERROR,
+  UPDATE_TOKEN_ERROR,
+  UPDATE_PROFILE_SUCCESS,
 } from "../actions/auth";
 
 const initialState = {
@@ -68,6 +72,34 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         isForgot: false,
       };
+    case UPDATE_TOKEN_SUCCESS:
+      return {
+        ...state,
+        isLogged: true,
+        accessToken: action.payload.accessToken,
+        expired: action.payload.expired,
+      };
+    case UPDATE_TOKEN_ERROR:
+      return {
+        ...state,
+        isLogged: initialState.isLogged,
+        accessToken: initialState.accessToken,
+        expired: initialState.expired,
+      };
+      case UPDATE_PROFILE_SUCCESS:
+        return {
+          ...state,
+          isLogged: true,
+          accessToken: action.payload.accessToken,
+          expired: action.payload.expired,
+        };
+      case UPDATE_PROFILE_ERROR:
+        return {
+          ...state,
+          isLogged: initialState.isLogged,
+          accessToken: initialState.accessToken,
+          expired: initialState.expired,
+        };
     default:
       return { ...state };
   }

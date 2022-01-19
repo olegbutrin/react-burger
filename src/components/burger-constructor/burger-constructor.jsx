@@ -20,6 +20,7 @@ const BurgerConstructor = () => {
   const dispatch = useDispatch();
 
   const { bun, products } = useSelector((state) => state.burger);
+  console.log(products)
 
   const isEmpty = !bun && products.length === 0;
 
