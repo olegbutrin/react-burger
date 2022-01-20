@@ -54,7 +54,7 @@ const OrderButton = (props) => {
 
   return (
     <Button type="primary" size="medium" onClick={callback}>
-      Оформить заказ
+      {isConnected ? "Оформить заказ" : "Войти и заказать"}
     </Button>
   );
 };

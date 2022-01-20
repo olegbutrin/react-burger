@@ -7,7 +7,7 @@ import { PTUserLevel } from "../../utils/props";
 // защищенный маршрутизатор
 const ProtectedRoute = (props) => {
   const { isConnected, isNotConnected, isNotRegister } = useUserStatus();
-  const from = props?.location?.state?.from || null;
+  const from = props?.location?.state?.from || "/";
 
   return (
     <>
