@@ -10,6 +10,7 @@ import {
 
 import AppHeader from "../app-header/app-header";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import ProtectedRoute from "../protected-route/protected-route";
 
 import ErrorNotifier from "../error-notifier/error-notifier";
 import { clearError } from "../../services/actions/error";
@@ -53,24 +54,39 @@ const RoutedContent = () => {
           <Route path="/" exact={true}>
             <MainPage />
           </Route>
-          <Route path="/login" exact={true}>
+          <ProtectedRoute path="/login" level={"registered"} exact={true}>
             <LoginPage />
-          </Route>
-          <Route path="/register" exact={true}>
+          </ProtectedRoute>
+          <ProtectedRoute path="/register" level={"registered"} exact={true}>
             <RegisterPage />
-          </Route>
-          <Route path="/forgot-password" exact={true}>
+          </ProtectedRoute>
+          <ProtectedRoute
+            path="/forgot-password"
+            level={"registered"}
+            exact={true}
+          >
             <ForgotPasswordPage />
-          </Route>
-          <Route path="/reset-password" exact={true}>
+          </ProtectedRoute>
+          <ProtectedRoute
+            path="/reset-password"
+            level={"registered"}
+            exact={true}
+          >
             <ResetPasswordPage />
-          </Route>
-          <Route path="/profile" exact={true}>
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile" level={"authorized"} exact={true}>
             <ProfilePage />
-          </Route>
-          <Route path="/profile/orders" exact={true}>
+          </ProtectedRoute>
+          <ProtectedRoute
+            path="/profile/orders"
+            level={"authorized"}
+            exact={true}
+          >
             <ProfilePage />
-          </Route>
+          </ProtectedRoute>
+          <ProtectedRoute path="/logout" level={"authorized"} exact={true}>
+            <ProfilePage />
+          </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPreviewPage />
           </Route>
@@ -102,9 +118,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   // импорт чистых данных
-  const { ingredients, ingredientRequest } = useSelector(
-    (store) => store.list
-  );
+  const { ingredients, ingredientRequest } = useSelector((store) => store.list);
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера
   React.useEffect(() => {

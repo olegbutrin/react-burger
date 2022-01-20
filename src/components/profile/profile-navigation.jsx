@@ -35,7 +35,9 @@ const ProfileNavigation = () => {
         </Link>
       </div>
       <p className="text text_type_main-medium text_color_inactive mb-6 mt-2">
-        Выход
+        <Link className={css.profileLink} to={"/logout"}>
+          Выход
+        </Link>
       </p>
       {isProfile() === "" && (
         <p className="text text_type_main-small text_color_inactive pt-20">

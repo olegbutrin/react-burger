@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-import { getUserData } from "../../services/user";
+import { getUserEmail, getUserName, getUserRefreshToken } from "../../services/user";
+import { getProfile, setProfile } from "../../services/actions/auth";
 
-import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Input,
+  Button,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./profile.module.css";
 
 const UserSettings = () => {
-  const  { user } = getUserData();
+  const dispatch = useDispatch();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const refreshToken = getUserRefreshToken();
+
+  useEffect(() => {
+    dispatch(getProfile(refreshToken));
+  }, [dispatch, refreshToken]);
+
+  const [name, setName] = useState(getUserName());
+  const [email, setEmail] = useState(getUserEmail());
   const [password, setPassword] = useState("");
-
-  useEffect(()=>{
-    if (user) {
-      setName(user.name);
-      setEmail(user.email);
-    } 
-  }, [user])
 
   const changeState = (event) => {
     const input = event.target;
@@ -37,9 +41,13 @@ const UserSettings = () => {
     }
   };
 
+  const onSubmitChange = (event) => {
+    event.preventDefault();
+    dispatch(setProfile(email, name, password));
+  };
 
   return (
-    <form className={css.profileForm}>
+    <form className={css.profileForm} onSubmit={onSubmitChange}>
       <div className="pb-6">
         <Input
           type={"text"}
@@ -78,6 +86,11 @@ const UserSettings = () => {
           errorText={"Ошибка"}
           size={"default"}
         />
+      </div>
+      <div className="pb-6">
+        <Button type="primary" size="medium">
+          Сохранить
+        </Button>
       </div>
     </form>
   );

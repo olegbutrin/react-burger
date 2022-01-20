@@ -17,26 +17,20 @@ import css from "../pages.module.css";
 
 const LoginPage = () => {
   const history = useHistory();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const { isLogged } = useSelector((store) => store.auth);
-
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isLogged) {
-      history.push("/");
-    } else {
-      setEmail(getUserEmail());
-    }
-  }, [isLogged, history]);
+  const [email, setEmail] = useState(getUserEmail());
+  const [password, setPassword] = useState("");
 
-  const onSubmitLogin = (event) => {
-    event.preventDefault();
-    dispatch(loginUser(email, password));
-  };
+  const { isLogged, expired } = useSelector((store) => store.auth);
+  const dest = history?.location?.state?.from || "/";
+
+  useEffect(() => {
+    const now = new Date().getTime();
+    if (isLogged && now < expired) {
+      history.replace({pathname: dest, state: {after: "login"}});
+    }
+  }, [isLogged, expired, history, dest]);
 
   const changeState = (event) => {
     event.preventDefault();
@@ -51,6 +45,11 @@ const LoginPage = () => {
       default:
         break;
     }
+  };
+
+  const onSubmitLogin = (event) => {
+    event.preventDefault();
+    dispatch(loginUser(email, password));
   };
 
   return (

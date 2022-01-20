@@ -21,7 +21,6 @@ const ResetPasswordPage = () => {
   const [code, setCode] = useState("");
 
   const { isLogged, isForgot } = useSelector((store) => store.auth);
-  console.log(isLogged, isForgot)
 
   const dispatch = useDispatch();
 

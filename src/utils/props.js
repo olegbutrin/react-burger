@@ -46,3 +46,8 @@ export const PTMenuItem = PropTypes.shape({
 });
 
 export const PTRef = PropTypes.any;
+
+export const PTUserLevel = PropTypes.oneOf([
+  "authorized",
+  "registered",
+]);

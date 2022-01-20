@@ -1,5 +1,11 @@
 import { API_URL, TOKEN_EXPIRED } from "../../utils/defaults";
-import { setUserData } from "../user";
+import {
+  getUserAccessToken,
+  getUserRefreshToken,
+  setUserData,
+  setUserProfile,
+  updateUserRefreshToken,
+} from "../user";
 
 export const REGISTER_REQUEST = "REGISTER_REQUEST";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
@@ -14,8 +20,8 @@ export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const LOGOUT_ERROR = "LOGOUT_ERROR";
 
 export const UPDATE_TOKEN_REQUEST = "UPDATE_TOKEN_REQUEST";
-export const UPDATE_TOKEN_SUCCESS = "UPDATE_TOKEN_REQUEST";
-export const UPDATE_TOKEN_ERROR = "UPDATE_TOKEN_REQUEST";
+export const UPDATE_TOKEN_SUCCESS = "UPDATE_TOKEN_SUCCESS";
+export const UPDATE_TOKEN_ERROR = "UPDATE_TOKEN_ERROR";
 
 export const PROFILE_REQUEST = "PROFILE_REQUEST";
 export const PROFILE_SUCCESS = "PROFILE_SUCCESS";
@@ -33,9 +39,9 @@ export const RESET_PASS_REQUEST = "RESET_PASS_REQUEST";
 export const RESET_PASS_SUCCESS = "RESET_PASS_SUCCESS";
 export const RESET_PASS_ERROR = "RESET_PASS_ERROR";
 
-const apiRequest = (endpoint, data) => {
+const apiRequest = (endpoint, data, method) => {
   const options = {
-    method: "POST",
+    method: method || "POST",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
@@ -46,11 +52,12 @@ const apiRequest = (endpoint, data) => {
     referrerPolicy: "no-referrer",
     body: JSON.stringify(data),
   };
+  
   return fetch(API_URL + endpoint, options);
 };
 
 const setAuthData = (serverData) => {
-  const userData = (({ success, accessToken, ...data }) => data)({
+  const userData = (({ success, ...data }) => data)({
     ...serverData,
   });
   setUserData(userData);
@@ -128,7 +135,8 @@ export function loginUser(email, password) {
   };
 }
 
-export function logoutUser(refreshToken) {
+export function logoutUser() {
+  const refreshToken = getUserRefreshToken();
   return function (dispatch) {
     dispatch({ type: LOGOUT_REQUEST });
     apiRequest("/auth/logout", { token: refreshToken })
@@ -162,7 +170,7 @@ export function forgotPassword(email) {
       .then((result) => {
         if (result.success) {
           dispatch({
-            type: FORGOT_PASS_SUCCESS
+            type: FORGOT_PASS_SUCCESS,
           });
         } else {
           throw new Error("Forgot Password JSON Error!");
@@ -191,7 +199,7 @@ export function resetPassword(email, password, token) {
       .then((result) => {
         if (result.success) {
           dispatch({
-            type: RESET_PASS_SUCCESS
+            type: RESET_PASS_SUCCESS,
           });
           loginUser(email, password);
         } else {
@@ -207,12 +215,12 @@ export function resetPassword(email, password, token) {
   };
 }
 
-export function updateToken(refreshToken) {
+export function updateAllTokens() {
+  const refreshToken = getUserRefreshToken();
   return function (dispatch) {
     dispatch({ type: UPDATE_TOKEN_REQUEST });
     apiRequest("/auth/token", { token: refreshToken })
       .then((response) => {
-        console.log(response);
         if (response.ok) {
           return response.json();
         } else {
@@ -221,11 +229,11 @@ export function updateToken(refreshToken) {
       })
       .then((result) => {
         if (result.success) {
+          updateUserRefreshToken(result.refreshToken);
           const expired = new Date().getTime() + TOKEN_EXPIRED;
-          const authData = setAuthData(result);
           dispatch({
             type: UPDATE_TOKEN_SUCCESS,
-            payload: { ...authData, expired: expired },
+            payload: { accessToken: result.accessToken, expired: expired },
           });
         } else {
           throw new Error("User Update Token JSON Error!");
@@ -235,6 +243,89 @@ export function updateToken(refreshToken) {
         dispatch({
           type: UPDATE_TOKEN_ERROR,
           payload: { source: "Update token", message: error },
+        });
+      });
+  };
+}
+
+export function getProfile() {
+  return function (dispatch) {
+    dispatch({ type: PROFILE_REQUEST });
+    const url = `${API_URL}/auth/user`;
+    const options = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: getUserAccessToken(),
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+    };
+    fetch(url, options)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error(
+            "Update user profile request: " + response.statusText
+          );
+        }
+      })
+      .then((result) => {
+        if (result.success) {
+          dispatch({ type: PROFILE_SUCCESS, payload: result.user });
+          setUserProfile(result.user);
+        } else {
+          throw new Error("User Profile JSON Error!");
+        }
+      })
+      .catch((error) => {
+        dispatch({
+          type: PROFILE_ERROR,
+          payload: { source: "Get User Error", message: error.message },
+        });
+      });
+  };
+}
+
+export function setProfile(email, name, password) {
+  return function (dispatch) {
+    dispatch({ type: UPDATE_PROFILE_REQUEST });
+    const url = `${API_URL}/auth/user`;
+    const options = {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: getUserAccessToken(),
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify({email, name, password})
+    };
+    fetch(url, options)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error(
+            "Update user profile request: " + response.statusText
+          );
+        }
+      })
+      .then((result) => {
+        if (result.success) {
+          dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: result.user });
+          setUserProfile(result.user);
+        } else {
+          throw new Error("User Profile JSON Error!");
+        }
+      })
+      .catch((error) => {
+        dispatch({
+          type: UPDATE_PROFILE_ERROR,
+          payload: { source: "Set User Error", message: error.message },
         });
       });
   };
