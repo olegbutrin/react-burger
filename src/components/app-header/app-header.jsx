@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { PTMenuItem } from "../../utils/props";
 
@@ -19,7 +19,7 @@ const AppHeader = (props) => {
     <header className={css.header}>
       <nav className={css.navigation}>
         <div className={css.logo}>
-          <Logo />
+          <Link to="/"><Logo /></Link>
         </div>
         {props.menu.map((button) => (
           <MenuButton

@@ -30,6 +30,6 @@ export const ingredientsReducer = (state = initialState, action) => {
         ingredientFailed: true,
       };
     default:
-      return { ...state };
+      return state;
   }
 };

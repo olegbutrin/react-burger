@@ -11,6 +11,6 @@ export const ingrPreviewReducer = (state = initialState, action) => {
     case CLEAR_ITEM_DATA:
       return { ...initialState };
     default:
-      return { ...state };
+      return state;
   }
 };

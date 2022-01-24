@@ -54,37 +54,28 @@ const RoutedContent = () => {
           <Route path="/" exact={true}>
             <MainPage />
           </Route>
-          <ProtectedRoute path="/login" level={"registered"} exact={true}>
+          <Route path="/login" exact={true}>
             <LoginPage />
-          </ProtectedRoute>
-          <ProtectedRoute path="/register" level={"registered"} exact={true}>
+          </Route>
+          <Route path="/register" exact={true}>
             <RegisterPage />
-          </ProtectedRoute>
-          <ProtectedRoute
-            path="/forgot-password"
-            level={"registered"}
-            exact={true}
-          >
+          </Route>
+          <Route path="/forgot-password" exact={true}>
             <ForgotPasswordPage />
-          </ProtectedRoute>
-          <ProtectedRoute
-            path="/reset-password"
-            level={"registered"}
-            exact={true}
-          >
+          </Route>
+          <Route path="/reset-password" exact={true}>
             <ResetPasswordPage />
-          </ProtectedRoute>
-          <ProtectedRoute path="/profile" level={"authorized"} exact={true}>
+          </Route>
+          {/* профиль только для авторизованного */}
+          <ProtectedRoute path="/profile" exact={true}>
             <ProfilePage />
           </ProtectedRoute>
-          <ProtectedRoute
-            path="/profile/orders"
-            level={"authorized"}
-            exact={true}
-          >
+          {/* список заказов только для авторизованного */}
+          <ProtectedRoute path="/profile/orders" exact={true}>
             <ProfilePage />
           </ProtectedRoute>
-          <ProtectedRoute path="/logout" level={"authorized"} exact={true}>
+          {/* выход только для авторизованного (неавторизованному неоткуда выходить) */}
+          <ProtectedRoute path="/logout" exact={true}>
             <ProfilePage />
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>

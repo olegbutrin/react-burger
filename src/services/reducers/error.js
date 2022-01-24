@@ -6,14 +6,25 @@ import {
   UPDATE_PROFILE_ERROR,
   FORGOT_PASS_ERROR,
   RESET_PASS_ERROR,
-  UPDATE_TOKEN_ERROR
+  UPDATE_TOKEN_ERROR,
 } from "../actions/auth";
 
-import {SET_ERROR, CLEAR_ERROR } from "../actions/error";
+import { SET_ERROR, CLEAR_ERROR } from "../actions/error";
 
 const initialState = {
   source: "",
   message: "",
+};
+
+const errorMessage = (message) => {
+  switch (message.constructor.name) {
+    case "String":
+      return message;
+    case "Error":
+      return message.message;
+    default:
+      return String(message);
+  }
 };
 
 export const errorReducer = (state = initialState, action) => {
@@ -30,11 +41,11 @@ export const errorReducer = (state = initialState, action) => {
       return {
         ...state,
         source: action.payload.source,
-        message: action.payload.message,
+        message: errorMessage(action.payload.message),
       };
     case CLEAR_ERROR:
-      return {...initialState};
+      return { ...initialState };
     default:
-      return { ...state };
+      return state;
   }
 };

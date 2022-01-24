@@ -54,8 +54,7 @@ export const getUserAccessToken = () => {
 export const useUserStatus = () => {
   const timeNow = new Date().getTime();
   const { isLogged, expired } = useSelector((store) => store.auth);
-  const isNotConnected = !isLogged || timeNow > expired;
-  const isNotRegister = !getUserRefreshToken();
-  const isConnected = !isNotConnected && !isNotRegister;
-  return {isConnected: isConnected, isNotConnected: isNotConnected, isNotRegister: isNotRegister}
+  const isAuthenticated = isLogged && timeNow < expired;
+
+  return { isAuthenticated: isAuthenticated };
 };

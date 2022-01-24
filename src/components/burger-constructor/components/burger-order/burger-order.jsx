@@ -29,22 +29,22 @@ import css from "./burger-order.module.css";
 const OrderButton = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { isConnected } = useUserStatus();
+  const { isAuthenticated } = useUserStatus();
   const [btnClicked, setBtnClicked] = useState(false);
 
   useEffect(() => {
     if (btnClicked) {
       setBtnClicked(false);
-      if (isConnected) {
+      if (isAuthenticated) {
         dispatch(getOrder(props.productsID));
       } else {
         history.push({
           pathname: "/login",
-          state: { ...history.location.state, isorder: "isorder" },
+          state: { from: history.location.pathname},
         });
       }
     }
-  }, [btnClicked, isConnected, history, dispatch, props.productsID]);
+  }, [btnClicked, isAuthenticated, history, dispatch, props.productsID]);
 
   const callback = (event) => {
     event.preventDefault();
@@ -54,7 +54,7 @@ const OrderButton = (props) => {
 
   return (
     <Button type="primary" size="medium" onClick={callback}>
-      {isConnected ? "Оформить заказ" : "Войти и заказать"}
+      {isAuthenticated ? "Оформить заказ" : "Войти и заказать"}
     </Button>
   );
 };

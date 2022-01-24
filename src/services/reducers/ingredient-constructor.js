@@ -47,6 +47,6 @@ export const constructorReducer = (state = initialState, action) => {
     case CLEAR_BURGER_PRODUCTS:
       return initialState;
     default:
-      return { ...state };
+      return state;
   }
 };

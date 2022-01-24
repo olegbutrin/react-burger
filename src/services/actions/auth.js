@@ -52,9 +52,16 @@ const apiRequest = (endpoint, data, method) => {
     referrerPolicy: "no-referrer",
     body: JSON.stringify(data),
   };
-  
   return fetch(API_URL + endpoint, options);
 };
+
+const checkResponse = (response) => {
+  if (response.ok) {
+    return response.json();
+  } else {
+    return Promise.reject(`Ошибка ${response.status}`);
+  }
+}
 
 const setAuthData = (serverData) => {
   const userData = (({ success, ...data }) => data)({
@@ -103,17 +110,11 @@ export function registerUser(user, email, password) {
   };
 }
 
-export function loginUser(email, password) {
+export function loginUser(email, password, callback) {
   return function (dispatch) {
     dispatch({ type: LOGIN_REQUEST });
     apiRequest("/auth/login", { email: email, password: password })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("User Login Error: " + response.statusText);
-        }
-      })
+      .then(checkResponse)
       .then((result) => {
         if (result.success) {
           const expired = new Date().getTime() + TOKEN_EXPIRED;
@@ -122,6 +123,7 @@ export function loginUser(email, password) {
             type: LOGIN_SUCCESS,
             payload: { ...authData, expired: expired },
           });
+          callback();
         } else {
           throw new Error("User Login JSON Error!");
         }
@@ -135,17 +137,15 @@ export function loginUser(email, password) {
   };
 }
 
-export function logoutUser() {
+export function logoutUser(callback) {
   const refreshToken = getUserRefreshToken();
   return function (dispatch) {
     dispatch({ type: LOGOUT_REQUEST });
     apiRequest("/auth/logout", { token: refreshToken })
-      .then((response) => {
-        if (response.ok) {
-          dispatch({ type: LOGOUT_SUCCESS });
-        } else {
-          throw new Error("User Logout Error!");
-        }
+      .then(checkResponse)
+      .then(()=> {
+        dispatch({type: LOGOUT_SUCCESS});
+        callback();
       })
       .catch((error) => {
         dispatch({
@@ -160,13 +160,7 @@ export function forgotPassword(email) {
   return function (dispatch) {
     dispatch({ type: FORGOT_PASS_REQUEST });
     apiRequest("/password-reset", { email: email })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Forgot password request: " + response.statusText);
-        }
-      })
+      .then(checkResponse)
       .then((result) => {
         if (result.success) {
           dispatch({
@@ -220,13 +214,7 @@ export function updateAllTokens() {
   return function (dispatch) {
     dispatch({ type: UPDATE_TOKEN_REQUEST });
     apiRequest("/auth/token", { token: refreshToken })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Update token request: " + response.statusText);
-        }
-      })
+      .then(checkResponse)
       .then((result) => {
         if (result.success) {
           updateUserRefreshToken(result.refreshToken);

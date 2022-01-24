@@ -22,15 +22,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState(getUserEmail());
   const [password, setPassword] = useState("");
 
-  const { isLogged, expired } = useSelector((store) => store.auth);
   const dest = history?.location?.state?.from || "/";
-
-  useEffect(() => {
-    const now = new Date().getTime();
-    if (isLogged && now < expired) {
-      history.replace({pathname: dest, state: {after: "login"}});
-    }
-  }, [isLogged, expired, history, dest]);
 
   const changeState = (event) => {
     event.preventDefault();
@@ -49,7 +41,18 @@ const LoginPage = () => {
 
   const onSubmitLogin = (event) => {
     event.preventDefault();
-    dispatch(loginUser(email, password));
+    // поскольку вход пользователя зависит от асинхронной функции 
+    // и потенциально неверных данных пользователя,
+    // перенаправление на нужную страницу передаем в диспатчер в виде колбека, 
+    // (3-й аргумент) который выполнится только при успешном завершении входа
+    dispatch(
+      loginUser(email, password, () => {
+        history.push({
+          pathname: dest,
+          state: { from: history.location.pathname },
+        });
+      })
+    );
   };
 
   return (
