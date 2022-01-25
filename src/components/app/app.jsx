@@ -8,6 +8,9 @@ import {
   useHistory,
 } from "react-router-dom";
 
+import { getLocalStorageAuth } from "../../services/user";
+import { restoreUser } from "../../services/actions/auth";
+
 import AppHeader from "../app-header/app-header";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import ProtectedRoute from "../protected-route/protected-route";
@@ -107,6 +110,14 @@ const RoutedContent = () => {
 const App = () => {
   // диспетчер для выполнения экшенов редакс
   const dispatch = useDispatch();
+
+  // восстанавливаем пользователя из local storage
+  const userData = getLocalStorageAuth();
+
+  React.useEffect(()=>{
+    dispatch(restoreUser(userData));
+  }, [dispatch, userData]);
+
 
   // импорт чистых данных
   const { ingredients, ingredientRequest } = useSelector((store) => store.list);

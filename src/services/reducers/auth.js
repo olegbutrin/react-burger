@@ -12,7 +12,9 @@ import {
   UPDATE_PROFILE_ERROR,
   UPDATE_TOKEN_ERROR,
   UPDATE_PROFILE_SUCCESS,
+  RESTORE_USER,
 } from "../actions/auth";
+import { store } from "../store";
 
 const initialState = {
   user: {
@@ -43,7 +45,7 @@ const authSuccess = (state, action) => {
 
 // Не менять параметры user во время выхода можно, если пользователь один или несколько
 // Для приложения с публичным доступом затираем данные предыдущего пользователя,
-// чтобы при входе в форму не попали данные из прошлой сессии 
+// чтобы при входе в форму не попали данные из прошлой сессии
 const authError = (state) => {
   return {
     ...state,
@@ -91,6 +93,14 @@ export const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isForgot: forgotState(action),
+      };
+    case RESTORE_USER:
+      return {
+        ...store,
+        isLogged: action.payload.isLogged,
+        user: action.payload.user,
+        accessToken: action.payload.accessToken,
+        expired: action.payload.expired,
       };
     default:
       return state;

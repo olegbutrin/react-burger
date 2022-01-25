@@ -5,6 +5,7 @@ import {
   setUserData,
   setUserProfile,
   updateUserRefreshToken,
+  setUserIsLogged,
 } from "../user";
 
 export const REGISTER_REQUEST = "REGISTER_REQUEST";
@@ -39,6 +40,8 @@ export const RESET_PASS_REQUEST = "RESET_PASS_REQUEST";
 export const RESET_PASS_SUCCESS = "RESET_PASS_SUCCESS";
 export const RESET_PASS_ERROR = "RESET_PASS_ERROR";
 
+export const RESTORE_USER = "RESTORE_USER";
+
 const apiRequest = (endpoint, data, method) => {
   const options = {
     method: method || "POST",
@@ -61,10 +64,12 @@ const checkResponse = (response) => {
   } else {
     return Promise.reject(`Ошибка ${response.status}`);
   }
-}
+};
 
-const setAuthData = (serverData) => {
-  const userData = (({ success, ...data }) => data)({
+const setAuthData = (serverData, expired) => {
+  const userData = (({ success, ...data }) => {
+    return { ...data, expired: expired };
+  })({
     ...serverData,
   });
   setUserData(userData);
@@ -92,11 +97,12 @@ export function registerUser(user, email, password) {
       .then((result) => {
         if (result.success) {
           const expired = new Date().getTime() + TOKEN_EXPIRED;
-          const authData = setAuthData(result);
+          const authData = setAuthData(result, expired);
           dispatch({
             type: REGISTER_SUCCESS,
             payload: { ...authData, expired: expired },
           });
+          setUserIsLogged(true);
         } else {
           throw new Error("User Register JSON Error!");
         }
@@ -110,7 +116,7 @@ export function registerUser(user, email, password) {
   };
 }
 
-export function loginUser(email, password, callback) {
+export function loginUser(email, password) {
   return function (dispatch) {
     dispatch({ type: LOGIN_REQUEST });
     apiRequest("/auth/login", { email: email, password: password })
@@ -118,12 +124,12 @@ export function loginUser(email, password, callback) {
       .then((result) => {
         if (result.success) {
           const expired = new Date().getTime() + TOKEN_EXPIRED;
-          const authData = setAuthData(result);
+          const authData = setAuthData(result, expired);
           dispatch({
             type: LOGIN_SUCCESS,
             payload: { ...authData, expired: expired },
           });
-          callback();
+          setUserIsLogged(true);
         } else {
           throw new Error("User Login JSON Error!");
         }
@@ -137,15 +143,15 @@ export function loginUser(email, password, callback) {
   };
 }
 
-export function logoutUser(callback) {
+export function logoutUser() {
   const refreshToken = getUserRefreshToken();
   return function (dispatch) {
     dispatch({ type: LOGOUT_REQUEST });
     apiRequest("/auth/logout", { token: refreshToken })
       .then(checkResponse)
-      .then(()=> {
-        dispatch({type: LOGOUT_SUCCESS});
-        callback();
+      .then(() => {
+        dispatch({ type: LOGOUT_SUCCESS });
+        setUserIsLogged(false);
       })
       .catch((error) => {
         dispatch({
@@ -154,6 +160,12 @@ export function logoutUser(callback) {
         });
       });
   };
+}
+
+export function restoreUser(userData) {
+  return function (dispatch) {
+    dispatch({type: RESTORE_USER, payload: userData});
+  }
 }
 
 export function forgotPassword(email) {
@@ -290,7 +302,7 @@ export function setProfile(email, name, password) {
       },
       redirect: "follow",
       referrerPolicy: "no-referrer",
-      body: JSON.stringify({email, name, password})
+      body: JSON.stringify({ email, name, password }),
     };
     fetch(url, options)
       .then((response) => {

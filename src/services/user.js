@@ -1,4 +1,5 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { restoreUser } from "./actions/auth";
 
 const storageKey = "_StellarBurgersUser_";
 
@@ -15,6 +16,11 @@ export const clearUserData = () => {
   localStorage.setItem(storageKey, "");
 };
 
+export const setUserIsLogged = (isLogged) => {
+  const data = getUserData();
+  setUserData({ ...data, isLogged: isLogged });
+};
+
 export const getUserProfile = () => {
   const data = getUserData();
   return data && data.user ? data.user : { email: "", name: "" };
@@ -22,8 +28,8 @@ export const getUserProfile = () => {
 
 export const setUserProfile = (user) => {
   const data = getUserData();
-  setUserData({...data, user:user})
-}
+  setUserData({ ...data, user: user });
+};
 
 export const getUserName = () => {
   const data = getUserData();
@@ -48,7 +54,23 @@ export const updateUserRefreshToken = (refreshToken) => {
 export const getUserAccessToken = () => {
   const data = getUserData();
   return data && data.accessToken ? data.accessToken : "";
-}
+};
+
+export const getUserExpired = () => {
+  const data = getUserData();
+  return data && data.expired ? data.expired : "";
+};
+
+export const getLocalStorageAuth = () => {
+  const timeNow = new Date().getTime();
+  const data = getUserData();
+  return {
+    isLogged: data.isLogged && timeNow < data.expired,
+    user: data.user,
+    accessToken: data.accessToken,
+    expired: data.expired,
+  };
+};
 
 // хук для получения статуса пользователя на конкретный момент
 export const useUserStatus = () => {

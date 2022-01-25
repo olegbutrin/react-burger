@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { useUserStatus } from "../../../../services/user";
 
 import {
   BurgerIcon,
@@ -10,6 +11,7 @@ import {
 import css from "./menu-button.module.css";
 
 const MenuButton = (props) => {
+  const { isAuthenticated } = useUserStatus();
   // тип иконки зависит от значения active
   const iconType = props.active ? "primary" : "secondary";
 
@@ -20,7 +22,7 @@ const MenuButton = (props) => {
       case "list":
         return <ListIcon type={iconType} />;
       case "profile":
-        return <ProfileIcon type={iconType} />;
+        return <ProfileIcon type={isAuthenticated ? "success" : iconType} />;
       default:
         return <></>;
     }

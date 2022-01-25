@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Redirect, useHistory } from "react-router-dom";
 
-import { getUserEmail } from "../../services/user";
+import { getUserEmail, useUserStatus } from "../../services/user";
+
 import { loginUser } from "../../services/actions/auth";
 
 import LoginLink from "../../components/login-link/login-link";
@@ -18,6 +19,8 @@ import css from "../pages.module.css";
 const LoginPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const { isAuthenticated } = useUserStatus();
 
   const [email, setEmail] = useState(getUserEmail());
   const [password, setPassword] = useState("");
@@ -41,21 +44,12 @@ const LoginPage = () => {
 
   const onSubmitLogin = (event) => {
     event.preventDefault();
-    // поскольку вход пользователя зависит от асинхронной функции 
-    // и потенциально неверных данных пользователя,
-    // перенаправление на нужную страницу передаем в диспатчер в виде колбека, 
-    // (3-й аргумент) который выполнится только при успешном завершении входа
-    dispatch(
-      loginUser(email, password, () => {
-        history.push({
-          pathname: dest,
-          state: { from: history.location.pathname },
-        });
-      })
-    );
+    dispatch(loginUser(email, password));
   };
 
-  return (
+  return isAuthenticated ? (
+    <Redirect to={dest}/>
+  ) : (
     <div className={css.wrapper}>
       <form className={css.container} onSubmit={onSubmitLogin}>
         <div className={css.header + " pb-6"}>

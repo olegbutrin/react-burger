@@ -1,31 +1,24 @@
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import {Redirect } from "react-router-dom";
 import { logoutUser } from "../../services/actions/auth";
+import { useUserStatus } from "../../services/user";
 
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "../../pages/pages.module.css";
 
 const UserLogout = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
+
+  const { isAuthenticated } = useUserStatus();
 
   const logout = (event) => {
     event.preventDefault();
-    // перенаправление после успешного выхода
-    // передается в виде колбека
-    dispatch(
-      logoutUser(() => {
-        history.push({
-          pathname: "/",
-          state: { from: history.location.pathname },
-        });
-      })
-    );
+    dispatch(logoutUser());
   };
 
-  return (
-    <div>
+  return ( isAuthenticated ? 
+    (<div>
       <form className={css.container} onSubmit={logout}>
         <div className={css.header + " pb-6"}>
           <p className="text text_type_main-medium">Выход из системы</p>
@@ -34,7 +27,7 @@ const UserLogout = () => {
           Выход
         </Button>
       </form>
-    </div>
+    </div>) : (<Redirect to={"/"} />)
   );
 };
 
