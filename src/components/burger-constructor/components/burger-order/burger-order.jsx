@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+import { useUserStatus } from "../../../../services/user";
 
 import {
   getOrder,
@@ -18,6 +22,46 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./burger-order.module.css";
+
+// выносим кнопку запроса заказа в отдельный компонент потому,
+// что нужно использовать хук проверки статуса пользователя
+// непосредственно в момент нажатия, а не рендера родителя
+const OrderButton = (props) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useUserStatus();
+  const [btnClicked, setBtnClicked] = useState(false);
+
+  useEffect(() => {
+    if (btnClicked) {
+      setBtnClicked(false);
+      if (isAuthenticated) {
+        dispatch(getOrder(props.productsID));
+      } else {
+        history.push({
+          pathname: "/login",
+          state: { from: history.location.pathname},
+        });
+      }
+    }
+  }, [btnClicked, isAuthenticated, history, dispatch, props.productsID]);
+
+  const callback = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setBtnClicked(true);
+  };
+
+  return (
+    <Button type="primary" size="medium" onClick={callback}>
+      {isAuthenticated ? "Оформить заказ" : "Войти и заказать"}
+    </Button>
+  );
+};
+
+OrderButton.propTypes = {
+  productsID: PropTypes.arrayOf(PropTypes.string),
+};
 
 const BurgerOrder = () => {
   const dispatch = useDispatch();
@@ -50,10 +94,6 @@ const BurgerOrder = () => {
     return prods;
   })();
 
-  const startOrder = () => {
-    dispatch(getOrder(productsID));
-  };
-
   const closeModal = () => {
     dispatch(clearOrder());
   };
@@ -69,9 +109,7 @@ const BurgerOrder = () => {
         <p className="text text_type_digits-medium mr-3">{summary}</p>
         <CurrencyIcon type="primary" />
       </div>
-      <Button type="primary" size="medium" onClick={startOrder}>
-        Оформить заказ
-      </Button>
+      <OrderButton productsID={productsID}></OrderButton>
       {orderFailed && (
         <Modal closeCallback={closeModal}>
           <ErrorInfo />

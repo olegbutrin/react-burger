@@ -1,0 +1,16 @@
+.profileLink {
+  color: unset;
+  text-decoration: none;
+}
+
+.profileForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25%;
+}
+
+.profileOrders {
+  width: 25%;
+  text-align: center;
+}

@@ -1,4 +1,6 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { useUserStatus } from "../../../../services/user";
 
 import {
   BurgerIcon,
@@ -9,6 +11,7 @@ import {
 import css from "./menu-button.module.css";
 
 const MenuButton = (props) => {
+  const { isAuthenticated } = useUserStatus();
   // тип иконки зависит от значения active
   const iconType = props.active ? "primary" : "secondary";
 
@@ -19,7 +22,7 @@ const MenuButton = (props) => {
       case "list":
         return <ListIcon type={iconType} />;
       case "profile":
-        return <ProfileIcon type={iconType} />;
+        return <ProfileIcon type={isAuthenticated ? "success" : iconType} />;
       default:
         return <></>;
     }
@@ -42,17 +45,14 @@ const MenuButton = (props) => {
     ? "text text_type_main-default"
     : "text text_type_main-default text_color_inactive";
 
-  const setActive = () => {
-    props.callback(props.id);
-  };
-
   return (
     <div
       className={css.menuButton + " " + extraCSS + " mt-4 mr-2 mb-4 ml-2 p-4"}
-      onClick={setActive}
     >
-      <div className="mr-2">{itemIcon}</div>
-      <span className={className}>{props.value}</span>
+      <Link to={props.route} className={css.menuLink}>
+        <div className="mr-2">{itemIcon}</div>
+        <span className={className}>{props.value}</span>
+      </Link>
     </div>
   );
 };
@@ -62,7 +62,7 @@ MenuButton.propTypes = {
   icon: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   active: PropTypes.bool.isRequired,
-  callback: PropTypes.func.isRequired,
+  route: PropTypes.string.isRequired,
 };
 
 export default MenuButton;

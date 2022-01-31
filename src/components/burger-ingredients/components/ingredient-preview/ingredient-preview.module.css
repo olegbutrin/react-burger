@@ -29,3 +29,8 @@
   max-height: 48px;
   text-align: center;
 }
+
+.routeLink {
+  color: unset;
+  text-decoration: unset;
+}

@@ -1,10 +1,17 @@
 .menuButton {
   display: flex;
   cursor: pointer;
+  flex-direction: column;
+}
+
+.menuLink {
+  display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
   flex-shrink: 4;
+  text-decoration: none;
+  color: unset;
 }
 
 .order1 {

@@ -1,25 +1,32 @@
-import { PTIngredientData } from "../../utils/props";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
 
 import css from "../order-details/order-details.module.css";
 
-const IngredientDetails = (props) => {
-  return (
+const IngredientDetails = () => {
+  const history = useHistory;
+
+  const { ingredients } = useSelector((store) => store.list);
+  const { id } = useParams();
+  const data = ingredients.find((item) => {
+    return item._id === id;
+  });
+  return ingredients.length && data ? (
     <div className={css.contents}>
       <img
         className={css.ingrImage + " mr-4 mb-1 ml-4"}
-        src={props.productsData.image_large}
-        alt={props.productsData.name}
+        src={data.image_large}
+        alt={data.name}
       />
-      <p className="text text_type_main-medium mt-4">
-        {props.productsData.name}
-      </p>
+      <p className="text text_type_main-medium mt-4">{data.name}</p>
       <div className={css.ingrInfoContainer + " mt-8"}>
         <div className={css.ingrInfoItem}>
           <p className="text text_type_main-default text_color_inactive">
             Калории, ккал
           </p>
           <p className="text text_type_digits-default  text_color_inactive">
-            {props.productsData.calories}
+            {data.calories}
           </p>
         </div>
         <div className={css.ingrInfoItem + " ml-5"}>
@@ -27,7 +34,7 @@ const IngredientDetails = (props) => {
             Белки, г
           </p>
           <p className="text text_type_digits-default  text_color_inactive">
-            {props.productsData.proteins}
+            {data.proteins}
           </p>
         </div>
         <div className={css.ingrInfoItem + " ml-5"}>
@@ -35,7 +42,7 @@ const IngredientDetails = (props) => {
             Жиры, г
           </p>
           <p className="text text_type_digits-default  text_color_inactive">
-            {props.productsData.fat}
+            {data.fat}
           </p>
         </div>
         <div className={css.ingrInfoItem + " ml-5"}>
@@ -43,16 +50,18 @@ const IngredientDetails = (props) => {
             Углеводы, г
           </p>
           <p className="text text_type_digits-default  text_color_inactive">
-            {props.productsData.carbohydrates}
+            {data.carbohydrates}
           </p>
         </div>
       </div>
     </div>
+  ) : (
+    <div className={css.contents}>
+      <p className="text text_type_main-default text_color_inactive pt-6">
+        Данные загружаются
+      </p>
+    </div>
   );
-};
-
-IngredientDetails.propTypes = {
-  productsData: PTIngredientData.isRequired,
 };
 
 export default IngredientDetails;

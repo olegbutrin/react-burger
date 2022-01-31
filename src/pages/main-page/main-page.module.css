@@ -1,0 +1,27 @@
+.preload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.sectionRight,
+.sectionLeft {
+  display: flex;
+  justify-content: stretch;
+  align-content: stretch;
+  flex-shrink: 4;
+}
+
+.sectionLeft {
+  max-width: 600px;
+}
+
+@media screen and (max-width: 1200px) {
+  
+  .sectionLeft,
+  .sectionRight {
+    max-height: none;
+  }
+
+}

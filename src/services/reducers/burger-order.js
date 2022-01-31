@@ -32,6 +32,6 @@ export const orderReducer = (state = initialState, action) => {
     case CLEAR_ORDER_DATA:
       return initialState;
     default:
-      return { ...state };
+      return state;
   }
 };
