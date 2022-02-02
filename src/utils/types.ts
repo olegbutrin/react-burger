@@ -22,26 +22,34 @@ export interface IIngredientData {
   readonly __v: number;
 }
 
-export interface IIngredientListStore {
+export type TIngredientListStore = {
   ingredients: IIngredientData[];
   ingredientRequest: boolean;
   ingredientFailed: boolean;
-}
+};
 
-export interface IUserAuthStore {
-  readonly user: { readonly name: string; readonly email: string };
+export type TUserPair = { readonly name: string; readonly email: string };
+
+export type TUserAuthStore = {
+  readonly user: TUserPair;
   readonly isLogged: boolean;
   readonly accessToken: string;
   readonly expired: number;
   readonly isForgot: boolean;
-}
+};
+
+export type TStorageUserData = Omit<TUserAuthStore, "isForgot"> & {
+  readonly refreshToken: string;
+};
 
 // Типизация для отдельного набора данных из store
 // Логика: мы не знаем всех полей в глобальном хранилище,
 // но знаем, что конкретное поле соответствует определенному типу.
-// В результате при докомпозиции объекта store константы будут типизированы
-export type TListStore = { [key: string]: any } & { list: IIngredientListStore };
-export type TAuthStore = { [key: string]: any } & { auth: IUserAuthStore };
+// В результате при декомпозиции объекта store константы будут типизированы
+export type TListStore = { [key: string]: any } & {
+  list: TIngredientListStore;
+};
+export type TAuthStore = { [key: string]: any } & { auth: TUserAuthStore };
 
 // Расширяем тип History для использования стейта и поля from
-export type TCustomHystory = History & { from?: string};
+export type TCustomHystory = History & { from?: string };
