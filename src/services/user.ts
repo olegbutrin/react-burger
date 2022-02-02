@@ -1,18 +1,20 @@
 import { useSelector } from "react-redux";
 
-import { TStorageUserData, TUserPair, TAuthStore, TUserAuthStats } from "../utils/types";
-// Используем тип UserData с необязательными полями потому,
-// что не localStrorage не всегда содержит данные пользователя
-type TUserData = Partial<TStorageUserData>;
+import {
+  TStorageUserData,
+  TUserPair,
+  TAuthStore,
+  TUserAuthStats,
+} from "../utils/types";
 
 const storageKey: string = "_StellarBurgersUser_";
 
-export const getUserData: () => TUserData = () => {
+export const getUserData: () => TStorageUserData | null = () => {
   const localData = localStorage.getItem(storageKey);
   return localData ? JSON.parse(localData) : null;
 };
 
-export const setUserData: (data: TUserData) => void = (data) => {
+export const setUserData: (data: TStorageUserData) => void = (data) => {
   localStorage.setItem(storageKey, JSON.stringify(data));
 };
 
@@ -22,7 +24,9 @@ export const clearUserData: () => void = () => {
 
 export const setUserIsLogged: (isLogged: boolean) => void = (isLogged) => {
   const data = getUserData();
-  setUserData({ ...data, isLogged: isLogged });
+  if (data !== null) {
+    setUserData({ ...data, isLogged: isLogged });
+  }
 };
 
 export const getUserProfile: () => TUserPair = () => {
@@ -32,7 +36,9 @@ export const getUserProfile: () => TUserPair = () => {
 
 export const setUserProfile: (user: TUserPair) => void = (user) => {
   const data = getUserData();
-  setUserData({ ...data, user: user });
+  if (data != null) {
+    setUserData({ ...data, user: user });
+  }
 };
 
 export const getUserName: () => string = () => {
@@ -67,15 +73,19 @@ export const getUserExpired: () => number = () => {
   return data && data.expired ? data.expired : 0;
 };
 
-export const getLocalStorageAuth: () => Partial<TUserAuthStats> = () => {
+export const getLocalStorageAuth: () => TUserAuthStats | null = () => {
   const timeNow = new Date().getTime();
   const data = getUserData();
-  return {
-    isLogged: !!(data.isLogged && data.expired && timeNow < data.expired),
-    user: data.user,
-    accessToken: data.accessToken,
-    expired: data.expired,
-  };
+  if (data !== null) {
+    return {
+      isLogged: !!(data.isLogged && data.expired && timeNow < data.expired),
+      user: data.user,
+      accessToken: data.accessToken,
+      expired: data.expired,
+    };
+  } else {
+    return null;
+  }
 };
 
 // хук для получения статуса пользователя на конкретный момент
