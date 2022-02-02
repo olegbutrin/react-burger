@@ -4,9 +4,10 @@ export const ingrTypeNames: IIngredientTypeName[] = ["bun", "sauce", "main"];
 export type IIngredientTypeName = 'bun' | 'sauce' | 'main';
 
 export interface IMenuItem {
-  id: number,
-  value: string,
-  icon: string,
+  readonly id: number,
+  readonly value: string,
+  readonly icon: string,
+  readonly route: string
 }
 
 export interface IIngredientListType {
