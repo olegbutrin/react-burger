@@ -28,8 +28,10 @@ export type TIngredientListStore = {
   ingredientFailed: boolean;
 };
 
+// Пара данных пользователь-емайл
 export type TUserPair = { readonly name: string; readonly email: string };
 
+// Тип для хранилища auth
 export type TUserAuthStore = {
   readonly user: TUserPair;
   readonly isLogged: boolean;
@@ -38,7 +40,13 @@ export type TUserAuthStore = {
   readonly isForgot: boolean;
 };
 
-export type TStorageUserData = Omit<TUserAuthStore, "isForgot"> & {
+// Тип для набора данных для определения текущего статуса пользователя
+// То же самое, что в хранилище, минус временный статус isForgot
+export type TUserAuthStats = Omit<TUserAuthStore, "isForgot">
+
+// Тип для хранения пользовательских данных в localStorage
+// То же самое, что и для статуса, плюс токен обновления
+export type TStorageUserData = TUserAuthStats & {
   readonly refreshToken: string;
 };
 

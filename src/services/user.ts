@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-import { TStorageUserData, TUserPair, TAuthStore } from "../utils/types";
+import { TStorageUserData, TUserPair, TAuthStore, TUserAuthStats } from "../utils/types";
 // Используем тип UserData с необязательными полями потому,
 // что не localStrorage не всегда содержит данные пользователя
 type TUserData = Partial<TStorageUserData>;
@@ -67,11 +67,11 @@ export const getUserExpired: () => number = () => {
   return data && data.expired ? data.expired : 0;
 };
 
-export const getLocalStorageAuth = () => {
+export const getLocalStorageAuth: () => Partial<TUserAuthStats> = () => {
   const timeNow = new Date().getTime();
   const data = getUserData();
   return {
-    isLogged: data.isLogged && data.expired && timeNow < data.expired,
+    isLogged: !!(data.isLogged && data.expired && timeNow < data.expired),
     user: data.user,
     accessToken: data.accessToken,
     expired: data.expired,
