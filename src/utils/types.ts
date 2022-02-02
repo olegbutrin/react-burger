@@ -1,43 +1,47 @@
-
-export const ingrTypeNames: IIngredientTypeName[] = ["bun", "sauce", "main"];
-
-export type IIngredientTypeName = 'bun' | 'sauce' | 'main';
+type IIngredientTypeName = "bun" | "sauce" | "main";
 
 export interface IMenuItem {
-  readonly id: number,
-  readonly value: string,
-  readonly icon: string,
-  readonly route: string
-}
-
-export interface IIngredientListType {
-  value: string,
-  max: number,
-  type:IIngredientTypeName,
-  unique: boolean,
-  initial: boolean,
+  readonly id: number;
+  readonly value: string;
+  readonly icon: string;
+  readonly route: string;
 }
 
 export interface IIngredientData {
-  _id: string,
-  name: string,
-  type: IIngredientTypeName,
-  proteins: number,
-  fat: number,
-  carbohydrates: number,
-  calories: number,
-  price: number,
-  image: string,
-  image_mobile: string,
-  image_large: string,
-  __v: number
+  readonly _id: string;
+  readonly name: string;
+  readonly type: IIngredientTypeName;
+  readonly proteins: number;
+  readonly fat: number;
+  readonly carbohydrates: number;
+  readonly calories: number;
+  readonly price: number;
+  readonly image: string;
+  readonly image_mobile: string;
+  readonly image_large: string;
+  readonly __v: number;
 }
 
-export type IComponentTypeName = "top" | "bottom" | "center";
-
-export interface RIngredientType {
-  ingredients: IIngredientData[],
-  ingredientRequest: boolean,
-  ingredientFailed: boolean,
+export interface IIngredientListStore {
+  ingredients: IIngredientData[];
+  ingredientRequest: boolean;
+  ingredientFailed: boolean;
 }
 
+export interface IUserAuthStore {
+  readonly user: { readonly name: string; readonly email: string };
+  readonly isLogged: boolean;
+  readonly accessToken: string;
+  readonly expired: number;
+  readonly isForgot: boolean;
+}
+
+// Типизация для отдельного набора данных из store
+// Логика: мы не знаем всех полей в глобальном хранилище,
+// но знаем, что конкретное поле соответствует определенному типу.
+// В результате при докомпозиции объекта store константы будут типизированы
+export type TListStore = { [key: string]: any } & { list: IIngredientListStore };
+export type TAuthStore = { [key: string]: any } & { auth: IUserAuthStore };
+
+// Расширяем тип History для использования стейта и поля from
+export type TCustomHystory = History & { from?: string};

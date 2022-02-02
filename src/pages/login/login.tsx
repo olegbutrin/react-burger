@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 
@@ -16,8 +16,11 @@ import {
 
 import css from "../pages.module.css";
 
+import { TCustomHystory } from "../../utils/types";
+
+
 const LoginPage = () => {
-  const history = useHistory();
+  const history = useHistory<TCustomHystory>();
   const dispatch = useDispatch();
 
   const { isAuthenticated } = useUserStatus();
@@ -25,9 +28,10 @@ const LoginPage = () => {
   const [email, setEmail] = useState(getUserEmail());
   const [password, setPassword] = useState("");
 
-  const dest = history?.location?.state?.from || "/";
+  // 
+  const dest: string = history.location.state.from || "/";
 
-  const changeState = (event) => {
+  const changeState = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const input = event.target;
     switch (input.name) {
@@ -42,7 +46,7 @@ const LoginPage = () => {
     }
   };
 
-  const onSubmitLogin = (event) => {
+  const onSubmitLogin = (event:FormEvent) => {
     event.preventDefault();
     dispatch(loginUser(email, password));
   };

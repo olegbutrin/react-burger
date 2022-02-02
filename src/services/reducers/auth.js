@@ -14,7 +14,6 @@ import {
   UPDATE_PROFILE_SUCCESS,
   RESTORE_USER,
 } from "../actions/auth";
-import { store } from "../store";
 
 const initialState = {
   user: {
@@ -96,7 +95,7 @@ export const authReducer = (state = initialState, action) => {
       };
     case RESTORE_USER:
       return {
-        ...store,
+        ...state,
         isLogged: action.payload.isLogged,
         user: action.payload.user,
         accessToken: action.payload.accessToken,
