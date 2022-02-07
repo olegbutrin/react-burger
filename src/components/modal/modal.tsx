@@ -1,6 +1,5 @@
-import React from "react";
+import React, { MutableRefObject, UIEvent } from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -8,23 +7,26 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 
 import css from "./modal.module.css";
 
-const modalRoot = document.getElementById("react-modals") || document.body;
+import { TModalWindowType } from "../../utils/types";
+
+const modalRoot:HTMLElement = document.getElementById("react-modals") || document.body;
 
 // модальное окно через портал
-const Modal = (props) => {
+const Modal = (props:TModalWindowType) => {
   const closeCallback = props.closeCallback;
-  const closeModal = (e) => {
+
+  const closeModal = (e:UIEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
     props.closeCallback();
   };
 
-  const stopEvent = (e) => {
+  const stopEvent = (e:React.UIEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const spanRef = React.useRef(null);
+  const spanRef: MutableRefObject<any> = React.useRef(null);
 
   React.useEffect(() => {
     if (spanRef != null && spanRef.current) {
@@ -34,7 +36,7 @@ const Modal = (props) => {
 
   React.useEffect(() => {
     // escape press
-    const handleEscape = (e) => {
+    const handleEscape = (e:KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
         e.stopPropagation();
@@ -69,15 +71,6 @@ const Modal = (props) => {
     </ModalOverlay>
   );
   return ReactDOM.createPortal(contents, modalRoot);
-};
-
-Modal.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node),
-  ]).isRequired,
-  closeCallback: PropTypes.func.isRequired,
-  header: PropTypes.string,
 };
 
 export default Modal;

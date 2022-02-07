@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, FC, ReactElement } from "react";
 
 type IIngredientTypeName = "bun" | "sauce" | "main";
 
@@ -44,7 +44,7 @@ export type TUserAuthStore = {
 
 // Тип для набора данных для определения текущего статуса пользователя
 // То же самое, что в хранилище, минус временный статус isForgot
-export type TUserAuthStats = Omit<TUserAuthStore, "isForgot">
+export type TUserAuthStats = Omit<TUserAuthStore, "isForgot">;
 
 // Тип для хранения пользовательских данных в localStorage
 // То же самое, что и для статуса, плюс токен обновления
@@ -68,4 +68,25 @@ export type TProtectedRoute = {
   children: ReactNode;
   rest: string;
   exact?: boolean;
+};
+
+export type TOrderType = {
+  orderState: {
+    name: string;
+    order: {
+      number: string | number;
+    };
+    success: boolean;
+  };
+};
+
+export type TModalOverlayType = {
+  children?: ReactElement;
+  closeCallback: (e:React.UIEvent<HTMLElement>) => void;
+};
+
+export type TModalWindowType = {
+  children: ReactNode;
+  header: string;
+  closeCallback: () => void;
 };
