@@ -1,3 +1,4 @@
+import { FormEvent } from "react";
 import { useDispatch } from "react-redux";
 import {Redirect } from "react-router-dom";
 import { logoutUser } from "../../services/actions/auth";
@@ -12,7 +13,7 @@ const UserLogout = () => {
 
   const { isAuthenticated } = useUserStatus();
 
-  const logout = (event) => {
+  const logout = (event:FormEvent) => {
     event.preventDefault();
     dispatch(logoutUser());
   };

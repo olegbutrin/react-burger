@@ -1,8 +1,11 @@
-import { Redirect, Route } from "react-router";
+import { FC } from "react";
+import { Redirect, Route, } from "react-router";
 import { useUserStatus } from "../../services/user";
 
+import { TProtectedRoute } from "../../utils/types";
+
 // защищенный маршрутизатор
-function ProtectedRoute({ children, ...rest }) {
+const  ProtectedRoute: FC<TProtectedRoute> = ({ children, ...rest }) => {
   const { isAuthenticated } = useUserStatus();
   return (
     <Route

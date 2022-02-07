@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 type IIngredientTypeName = "bun" | "sauce" | "main";
 
 export interface IMenuItem {
@@ -61,3 +63,9 @@ export type TAuthStore = { [key: string]: any } & { auth: TUserAuthStore };
 
 // Расширяем тип History для использования стейта и поля from
 export type TCustomHystory = History & { from?: string };
+
+export type TProtectedRoute = {
+  children: ReactNode;
+  rest: string;
+  exact?: boolean;
+};

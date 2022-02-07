@@ -25,8 +25,8 @@ const LoginPage = () => {
 
   const { isAuthenticated } = useUserStatus();
 
-  const [email, setEmail] = useState(getUserEmail());
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>(getUserEmail());
+  const [password, setPassword] = useState<string>("");
 
   // 
   const dest: string = history.location.state.from || "/";
