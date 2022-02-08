@@ -1,6 +1,6 @@
 import { ReactNode, FC, ReactElement } from "react";
 
-type IIngredientTypeName = "bun" | "sauce" | "main";
+export type IIngredientTypeName = "bun" | "sauce" | "main";
 
 export interface IMenuItem {
   readonly id: number;
@@ -59,7 +59,11 @@ export type TStorageUserData = TUserAuthStats & {
 export type TListStore = { [key: string]: any } & {
   list: TIngredientListStore;
 };
+
 export type TAuthStore = { [key: string]: any } & { auth: TUserAuthStore };
+
+export type TBurger = { bun: IIngredientData | null; products: Array<IIngredientData> };
+export type TBurgerStore = { [key: string]: any } & { burger: TBurger };
 
 // Расширяем тип History для использования стейта и поля from
 export type TCustomHystory = History & { from?: string };
@@ -82,7 +86,7 @@ export type TOrderType = {
 
 export type TModalOverlayType = {
   children?: ReactElement;
-  closeCallback: (e:React.UIEvent<HTMLElement>) => void;
+  closeCallback: (e: React.UIEvent<HTMLElement>) => void;
 };
 
 export type TModalWindowType = {

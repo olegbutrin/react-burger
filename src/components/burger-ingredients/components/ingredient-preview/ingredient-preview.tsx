@@ -8,17 +8,19 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { PTIngredientData } from "../../../../utils/props";
-
 import css from "./ingredient-preview.module.css";
+
+import { TBurgerStore, IIngredientData } from "../../../../utils/types";
 
 // =================
 // компонент для ингредиента в списке выбора
-const IngredientPreview = (props) => {
+const IngredientPreview: (props: {
+  productsData: IIngredientData;
+}) => JSX.Element = (props) => {
   const location = useLocation();
 
   const prodID = props.productsData._id;
-  const { bun, products } = useSelector((store) => store.burger);
+  const { bun, products } = useSelector((store: TBurgerStore) => store.burger);
   const count =
     props.productsData.type === "bun"
       ? bun && bun._id === prodID
@@ -35,11 +37,13 @@ const IngredientPreview = (props) => {
   });
 
   return (
-    <Link key={prodID}
+    <Link
+      key={prodID}
       to={{
         pathname: `/ingredients/${prodID}`,
         state: { background: location },
-      }} className={css.routeLink}
+      }}
+      className={css.routeLink}
     >
       <div className={css.ingrPreview} ref={dragRef}>
         {count > 0 && <Counter count={count} size={"default"} />}
@@ -62,10 +66,6 @@ const IngredientPreview = (props) => {
       </div>
     </Link>
   );
-};
-
-IngredientPreview.propTypes = {
-  productsData: PTIngredientData.isRequired,
 };
 
 export default IngredientPreview;

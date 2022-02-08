@@ -1,12 +1,15 @@
-import PropTypes from "prop-types";
-
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import css from "../order-details/order-details.module.css";
 
-const ErrorNotifier = (props) => {
+const ErrorNotifier: (props: {
+  source?: string;
+  message: string;
+}) => JSX.Element = (props) => {
   return (
     <div className={css.contents + " mt-10"}>
-      <div className="mt-2 mb-6"><InfoIcon type="error" /></div>
+      <div className="mt-2 mb-6">
+        <InfoIcon type="error" />
+      </div>
       {props.source && (
         <p className="text text_type_main-default text_color_inactive">
           {props.source}
@@ -17,11 +20,6 @@ const ErrorNotifier = (props) => {
       </p>
     </div>
   );
-};
-
-ErrorNotifier.propTypes = {
-  source: PropTypes.string,
-  message: PropTypes.string.isRequired,
 };
 
 export default ErrorNotifier;
