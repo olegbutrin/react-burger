@@ -13,28 +13,29 @@ import {
 } from "../../services/actions/ingredient-constructor";
 
 import css from "./burger-constructor.module.css";
+import { TBurgerStore, IBurgerIngredientData } from "../../utils/types";
 
 // Основной класс конструктора бургеров
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
 
-  const { bun, products } = useSelector((state) => state.burger);
+  const { bun, products } = useSelector((state:TBurgerStore) => state.burger);
 
   const isEmpty = !bun && products.length === 0;
 
-  const setBun = (item) => {
+  const setBun = (item:IBurgerIngredientData) => {
     dispatch({ type: SET_BURGER_BUN, payload: item });
   };
 
-  const addItem = (item) => {
+  const addItem = (item:IBurgerIngredientData) => {
     dispatch({
       type: ADD_BURGER_PRODUCT,
       payload: { item: item, index: UUID() },
     });
   };
 
-  const handleDrop = (item) => {
+  const handleDrop = (item:IBurgerIngredientData) => {
     if (item.type === "bun") {
       setBun(item);
     } else {
@@ -44,7 +45,7 @@ const BurgerConstructor = () => {
 
   const [, dropTarget] = useDrop({
     accept: "product",
-    drop(item) {
+    drop(item:IBurgerIngredientData) {
       handleDrop(item);
     },
   });

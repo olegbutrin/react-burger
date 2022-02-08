@@ -2,7 +2,7 @@ import css from "../order-details/order-details.module.css";
 
 import { TOrderType } from "../../utils/types";
 
-const OrderDetails = (props: TOrderType) => {
+const OrderDetails = (props: {orderState: TOrderType}) => {
   //
   return (
     <div className={css.contents}>

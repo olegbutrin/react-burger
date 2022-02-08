@@ -21,7 +21,7 @@ const Modal = (props:TModalWindowType) => {
     props.closeCallback();
   };
 
-  const stopEvent = (e:React.UIEvent<HTMLElement>) => {
+  const stopEvent = (e:UIEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };

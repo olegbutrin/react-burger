@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -23,10 +22,12 @@ import {
 
 import css from "./burger-order.module.css";
 
+import { TBurgerStore, TOrderStore } from "../../../../utils/types";
+
 // выносим кнопку запроса заказа в отдельный компонент потому,
 // что нужно использовать хук проверки статуса пользователя
 // непосредственно в момент нажатия, а не рендера родителя
-const OrderButton = (props) => {
+const OrderButton: React.FC<{ productsID: string[] }> = ({ productsID }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { isAuthenticated } = useUserStatus();
@@ -36,17 +37,17 @@ const OrderButton = (props) => {
     if (btnClicked) {
       setBtnClicked(false);
       if (isAuthenticated) {
-        dispatch(getOrder(props.productsID));
+        dispatch(getOrder(productsID));
       } else {
         history.push({
           pathname: "/login",
-          state: { from: history.location.pathname},
+          state: { from: history.location.pathname },
         });
       }
     }
-  }, [btnClicked, isAuthenticated, history, dispatch, props.productsID]);
+  }, [btnClicked, isAuthenticated, history, dispatch, productsID]);
 
-  const callback = (event) => {
+  const callback = (event: SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
     setBtnClicked(true);
@@ -59,20 +60,17 @@ const OrderButton = (props) => {
   );
 };
 
-OrderButton.propTypes = {
-  productsID: PropTypes.arrayOf(PropTypes.string),
-};
-
+// Основной компонент
 const BurgerOrder = () => {
   const dispatch = useDispatch();
 
-  const { bunData, productsData } = useSelector((state) => ({
-    bunData: state.burger.bun,
-    productsData: state.burger.products,
+  const { bunData, productsData } = useSelector((store: TBurgerStore) => ({
+    bunData: store.burger.bun,
+    productsData: store.burger.products,
   }));
 
   const { order, orderRequest, orderFailed } = useSelector(
-    (store) => store.order
+    (store: TOrderStore) => store.order
   );
 
   // расчет общей стоимости

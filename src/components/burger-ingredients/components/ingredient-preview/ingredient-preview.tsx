@@ -14,15 +14,15 @@ import { TBurgerStore, IIngredientData } from "../../../../utils/types";
 
 // =================
 // компонент для ингредиента в списке выбора
-const IngredientPreview: (props: {
+const IngredientPreview: React.FC<{
   productsData: IIngredientData;
-}) => JSX.Element = (props) => {
+}> = ({ productsData }) => {
   const location = useLocation();
 
-  const prodID = props.productsData._id;
+  const prodID = productsData._id;
   const { bun, products } = useSelector((store: TBurgerStore) => store.burger);
   const count =
-    props.productsData.type === "bun"
+    productsData.type === "bun"
       ? bun && bun._id === prodID
         ? 2
         : 0
@@ -33,7 +33,7 @@ const IngredientPreview: (props: {
   // делаем перетаскиватель
   const [, dragRef] = useDrag({
     type: "product",
-    item: { ...props.productsData },
+    item: { ...productsData },
   });
 
   return (
@@ -49,19 +49,17 @@ const IngredientPreview: (props: {
         {count > 0 && <Counter count={count} size={"default"} />}
         <img
           className={css.image + " mr-4 mb-1 ml-4"}
-          src={props.productsData.image}
-          alt={props.productsData.name}
+          src={productsData.image}
+          alt={productsData.name}
         />
         <div className={css.price}>
-          <p className="text text_type_digits-default">
-            {props.productsData.price}
-          </p>
+          <p className="text text_type_digits-default">{productsData.price}</p>
           <div className={"ml-2"}>
             <CurrencyIcon type="primary" />
           </div>
         </div>
         <div className={css.name + " mt-1"}>
-          <p className="text text_type_main-small">{props.productsData.name}</p>
+          <p className="text text_type_main-small">{productsData.name}</p>
         </div>
       </div>
     </Link>

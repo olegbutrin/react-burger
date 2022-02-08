@@ -24,6 +24,10 @@ export interface IIngredientData {
   readonly __v: number;
 }
 
+export interface IBurgerIngredientData extends IIngredientData {
+  index?: string;
+}
+
 export type TIngredientListStore = {
   ingredients: IIngredientData[];
   ingredientRequest: boolean;
@@ -62,8 +66,28 @@ export type TListStore = { [key: string]: any } & {
 
 export type TAuthStore = { [key: string]: any } & { auth: TUserAuthStore };
 
-export type TBurger = { bun: IIngredientData | null; products: Array<IIngredientData> };
+export type TBurger = {
+  bun: IIngredientData | null;
+  products: Array<IBurgerIngredientData>;
+};
+
 export type TBurgerStore = { [key: string]: any } & { burger: TBurger };
+
+export type TOrderType = {
+  name: string;
+  order: {
+    number: string | number;
+  };
+  success: boolean;
+};
+
+export type TOrder = {
+  order: TOrderType | null;
+  orderRequest: boolean;
+  orderFailed: boolean;
+};
+
+export type TOrderStore = { [key: string]: any } & { order: TOrder };
 
 // Расширяем тип History для использования стейта и поля from
 export type TCustomHystory = History & { from?: string };
@@ -74,16 +98,6 @@ export type TProtectedRoute = {
   exact?: boolean;
 };
 
-export type TOrderType = {
-  orderState: {
-    name: string;
-    order: {
-      number: string | number;
-    };
-    success: boolean;
-  };
-};
-
 export type TModalOverlayType = {
   children?: ReactElement;
   closeCallback: (e: React.UIEvent<HTMLElement>) => void;
@@ -91,6 +105,6 @@ export type TModalOverlayType = {
 
 export type TModalWindowType = {
   children: ReactNode;
-  header: string;
+  header?: string;
   closeCallback: () => void;
 };
