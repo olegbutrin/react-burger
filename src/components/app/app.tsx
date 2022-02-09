@@ -35,14 +35,18 @@ import css from "./app.module.css";
 import { getIngredients } from "../../services/actions/ingredient-list";
 import mainMenu from "../../utils/menu";
 
+import { TCustomHystory } from "../../utils/types";
+
+import { TListStore, TErrorStore } from "../../utils/types";
+
 // ================================
 // выносим роутированный контент в отдельный компонент
 // для использования хуков
 const RoutedContent = () => {
   // получаем доступ к истории
-  const history = useHistory();
+  const history = useHistory<TCustomHystory>();
   // читаем состояние location для получения модального превью
-  const location = useLocation();
+  const location = useLocation<any>();
   const background = location.state && location.state.background;
 
   const closeModalPreview = () => {
@@ -114,13 +118,14 @@ const App = () => {
   // восстанавливаем пользователя из local storage
   const userData = getLocalStorageAuth();
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     dispatch(restoreUser(userData));
   }, [dispatch, userData]);
 
-
   // импорт чистых данных
-  const { ingredients, ingredientRequest } = useSelector((store) => store.list);
+  const { ingredients, ingredientRequest } = useSelector(
+    (store: TListStore) => store.list
+  );
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера
   React.useEffect(() => {
@@ -130,7 +135,7 @@ const App = () => {
   }, [dispatch, ingredients, ingredientRequest]);
 
   // читаем возможную ошибку перед очередным рендером
-  const { source, message } = useSelector((store) => store.error);
+  const { source, message } = useSelector((store: TErrorStore) => store.error);
 
   // функция для очистки ошибки при закрытии модального окна с ошибкой
   const closeErrorModal = () => {

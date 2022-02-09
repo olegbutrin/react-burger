@@ -5,11 +5,11 @@ import { useUserStatus } from "../../services/user";
 import { TProtectedRoute } from "../../utils/types";
 
 // защищенный маршрутизатор
-const  ProtectedRoute: FC<TProtectedRoute> = ({ children, ...rest }) => {
+const  ProtectedRoute: FC<TProtectedRoute> = ({ children, ...path }) => {
   const { isAuthenticated } = useUserStatus();
   return (
     <Route
-      {...rest}
+      {...path}
       render={({ location }) => {
         return isAuthenticated === true ? (
           children

@@ -1,4 +1,4 @@
-import { ReactNode, FC, ReactElement } from "react";
+import { ReactNode, ReactElement } from "react";
 
 export type IIngredientTypeName = "bun" | "sauce" | "main";
 
@@ -90,12 +90,20 @@ export type TOrder = {
 
 export type TOrderStore = { [key: string]: any } & { order: TOrder };
 
+export type TErrorStore = { [key: string]: any } & {
+  error: { source: string; message: string };
+};
+
 // Расширяем тип History для использования стейта и поля from
 export type TCustomHystory = History & { from?: string };
 
+export type TCustomLocation = {
+  background?: string;
+};
+
 export type TProtectedRoute = {
   children: ReactNode;
-  rest: string;
+  path: string;
   exact?: boolean;
 };
 
