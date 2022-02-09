@@ -119,7 +119,9 @@ const App = () => {
   const userData = getLocalStorageAuth();
 
   React.useEffect(() => {
-    dispatch(restoreUser(userData));
+    if (userData != null) {
+      dispatch(restoreUser(userData));
+    }
   }, [dispatch, userData]);
 
   // импорт чистых данных
