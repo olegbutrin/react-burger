@@ -5,6 +5,7 @@ export type IIngredientTypeName = "bun" | "sauce" | "main";
 export interface IMenuItem {
   readonly id: number;
   readonly value: string;
+  readonly active?: boolean;
   readonly icon: string;
   readonly route: string;
 }
