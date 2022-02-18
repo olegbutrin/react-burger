@@ -29,7 +29,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState<string>("");
 
   // 
-  const dest: string = history.location.state.from || "/";
+  const dest: string = history.location.state?.from || "/";
 
   const changeState = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
