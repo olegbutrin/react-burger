@@ -1,4 +1,4 @@
-import React  from "react";
+import React, { RefObject } from "react";
 import { useSelector } from "react-redux";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -7,9 +7,13 @@ import IngredientBox from "./components/ingredient-box/ingredient-box";
 
 import css from "./burger-ingredients.module.css";
 
+import { TListStore } from "../../utils/types";
+
+type TRefsType = Map<string, RefObject<HTMLDivElement | null | undefined>> 
+
 const BurgerIngredients = () => {
   // получаем список ингредиентов из провайдера
-  const { productsData } = useSelector((state) => ({
+  const { productsData } = useSelector((state: TListStore) => ({
     productsData: state.list.ingredients,
   }));
 
@@ -17,44 +21,51 @@ const BurgerIngredients = () => {
   const [activeType, setActiveType] = React.useState("bun");
 
   // мапим рефы для дальнейшего использования
-  const itemRefs = new Map([
-    ["bun", React.useRef(null)],
-    ["sauce", React.useRef(null)],
-    ["main", React.useRef(null)],
-    ["scroller", React.useRef(null)],
+  const itemRefs:TRefsType = new Map([
+    ["bun", React.useRef()],
+    ["sauce", React.useRef()],
+    ["main", React.useRef()],
+    ["scroller", React.useRef()],
   ]);
 
-  const tabClick = (type) => {
+  const tabClick: (type: string) => void = (type) => {
     setActiveType(type);
-    itemRefs.get(type).current.scrollIntoView({ behavior: "smooth" });
+    const ref = itemRefs.get(type)?.current;
+    if (ref) {
+      ref.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-
   React.useEffect(() => {
+    const scroller = itemRefs.get("scroller")?.current;
+
     const onScrollerScroll = () => {
-      const scroller = itemRefs.get("scroller").current;
+      const sauceDiv = itemRefs.get("sauce")?.current;
+      const bunDiv = itemRefs.get("bun")?.current;
+      const mainDiv = itemRefs.get("main")?.current;
+      if (!scroller || !sauceDiv || !bunDiv || !mainDiv) {
+        return;
+      }
       const sauceMarg = parseInt(
         window
-          .getComputedStyle(itemRefs.get("sauce").current, null)
+          .getComputedStyle(sauceDiv, null)
           .getPropertyValue("margin-bottom")
       );
       const bunMarg = parseInt(
-        window
-          .getComputedStyle(itemRefs.get("bun").current, null)
-          .getPropertyValue("margin-bottom")
+        window.getComputedStyle(bunDiv, null).getPropertyValue("margin-bottom")
       );
       let active;
       switch (true) {
         case scroller.getBoundingClientRect().y >=
-          itemRefs.get("main").current.getBoundingClientRect().y - sauceMarg:
+          mainDiv.getBoundingClientRect().y - sauceMarg:
           active = "main";
           break;
         case scroller.getBoundingClientRect().y >=
-          itemRefs.get("sauce").current.getBoundingClientRect().y - bunMarg:
+          sauceDiv.getBoundingClientRect().y - bunMarg:
           active = "sauce";
           break;
         case scroller.getBoundingClientRect().y >=
-          itemRefs.get("bun").current.getBoundingClientRect().y:
+          bunDiv.getBoundingClientRect().y:
           active = "bun";
           break;
         default:
@@ -64,14 +75,12 @@ const BurgerIngredients = () => {
         setActiveType(active);
       }
     };
-    itemRefs
-      .get("scroller")
-      .current.addEventListener("scroll", onScrollerScroll);
-    return () => {
-      itemRefs
-        .get("scroller")
-        .current?.removeEventListener("scroll", onScrollerScroll);
-    };
+    if (scroller) {
+      scroller.addEventListener("scroll", onScrollerScroll);
+      return () => {
+        scroller.removeEventListener("scroll", onScrollerScroll);
+      };
+    }
   });
 
   const buns = productsData.filter((ingr) => {
@@ -83,7 +92,6 @@ const BurgerIngredients = () => {
   const mains = productsData.filter((ingr) => {
     return ingr.type === "main";
   });
-
 
   return (
     <div className={css.main}>
@@ -116,22 +124,22 @@ const BurgerIngredients = () => {
       </div>
       <div
         className={css.container + " custom-scroll"}
-        ref={itemRefs.get("scroller")}
+        ref={itemRefs.get("scroller")  as RefObject<HTMLDivElement>}
       >
         <IngredientBox
-          tabRef={itemRefs.get("bun")}
+          tabRef={itemRefs.get("bun") as RefObject<HTMLDivElement>}
           value="Булки"
           type="bun"
           productsData={buns}
         ></IngredientBox>
         <IngredientBox
-          tabRef={itemRefs.get("sauce")}
+          tabRef={itemRefs.get("sauce") as RefObject<HTMLDivElement>}
           value="Соусы"
           type="sauce"
           productsData={sauces}
         ></IngredientBox>
         <IngredientBox
-          tabRef={itemRefs.get("main")}
+          tabRef={itemRefs.get("main") as RefObject<HTMLDivElement>}
           value="Начинки"
           type="main"
           productsData={mains}
@@ -142,5 +150,3 @@ const BurgerIngredients = () => {
 };
 
 export default BurgerIngredients;
-
-

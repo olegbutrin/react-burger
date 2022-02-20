@@ -1,7 +1,8 @@
-import PropTypes from "prop-types";
 import css from "../order-details/order-details.module.css";
 
-const OrderDetails = (props) => {
+import { TOrderType } from "../../utils/types";
+
+const OrderDetails = (props: {orderState: TOrderType}) => {
   //
   return (
     <div className={css.contents}>
@@ -23,16 +24,6 @@ const OrderDetails = (props) => {
       )}
     </div>
   );
-};
-
-OrderDetails.propTypes = {
-  orderState: PropTypes.shape({
-    name: PropTypes.string,
-    order: PropTypes.shape({
-      order: PropTypes.string || PropTypes.number,
-    }),
-    success: PropTypes.bool,
-  }).isRequired,
 };
 
 export default OrderDetails;

@@ -7,11 +7,12 @@ import BurgerConstructor from "../../components/burger-constructor/burger-constr
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./main-page.module.css";
+import { TListStore } from "../../utils/types";
 
 const MainPage = () => {
   // получаем состояние для рендера
   const { ingredients, ingredientRequest, ingredientFailed } = useSelector(
-    (store) => store.list
+    (store: TListStore) => store.list
   );
   return (
     <>

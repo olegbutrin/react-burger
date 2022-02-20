@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useDispatch } from "react-redux";
 
 import { getUserEmail, getUserName, getUserRefreshToken } from "../../services/user";
@@ -17,14 +17,14 @@ const UserSettings = () => {
   const refreshToken = getUserRefreshToken();
 
   useEffect(() => {
-    dispatch(getProfile(refreshToken));
+    dispatch(getProfile());
   }, [dispatch, refreshToken]);
 
-  const [name, setName] = useState(getUserName());
-  const [email, setEmail] = useState(getUserEmail());
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState<string>(getUserName());
+  const [email, setEmail] = useState<string>(getUserEmail());
+  const [password, setPassword] = useState<string>("");
 
-  const changeState = (event) => {
+  const changeState = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target;
     switch (input.name) {
       case "name":
@@ -41,7 +41,7 @@ const UserSettings = () => {
     }
   };
 
-  const onSubmitChange = (event) => {
+  const onSubmitChange = (event:FormEvent) => {
     event.preventDefault();
     dispatch(setProfile(email, name, password));
   };

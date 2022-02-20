@@ -10,9 +10,9 @@ import css from "../pages.module.css";
 
 const ProfilePage = () => {
   const { pathname } = useLocation();
-  const isProfile = pathname === "/profile"
-  const isOrders = pathname.indexOf("/profile/orders") !== -1;
-  const isLogout = pathname === "/logout";
+  const isProfile:boolean = pathname === "/profile"
+  const isOrders:boolean = pathname.indexOf("/profile/orders") !== -1;
+  const isLogout:boolean = pathname === "/logout";
 
   return (
     <div className={css.hwrapper + " pt-30"}>

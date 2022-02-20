@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -15,14 +15,16 @@ import { registerUser } from "../../services/actions/auth";
 
 import css from "../pages.module.css";
 
+import { TAuthStore } from "../../utils/types";
+
 const RegisterPage = () => {
   const history = useHistory();
 
-  const [user, setUser] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const { isLogged } = useSelector((store) => store.auth);
+  const { isLogged } = useSelector((store: TAuthStore) => store.auth);
 
   const dispatch = useDispatch();
 
@@ -32,12 +34,12 @@ const RegisterPage = () => {
     }
   }, [isLogged, history]);
 
-  const onSubmitRegistration = (event) => {
+  const onSubmitRegistration = (event: FormEvent) => {
     event.preventDefault();
     dispatch(registerUser(user, email, password));
   };
 
-  const changeState = (event) => {
+  const changeState = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target;
     switch (input.name) {
       case "user":

@@ -1,11 +1,10 @@
-import PropTypes from "prop-types";
 import { BurgerIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import css from "./burger-empty.module.css";
 
-const BurgerEmpty = (props) => {
+const BurgerEmpty: React.FC<{ missingBun: boolean }> = ({ missingBun }) => {
   return (
     <div className={css.container}>
-      {!props.missingBun && (
+      {!missingBun && (
         <>
           <div className={css.burger + " mb-10"}>
             <BurgerIcon type="primary"></BurgerIcon>
@@ -18,17 +17,13 @@ const BurgerEmpty = (props) => {
           </p>
         </>
       )}
-      {props.missingBun && (
+      {missingBun && (
         <p className="text text_type_main-medium text_color_inactive mt-10">
           без булки все развалится!
         </p>
       )}
     </div>
   );
-};
-
-BurgerEmpty.propTypes = {
-  missingBun: PropTypes.bool.isRequired,
 };
 
 export default BurgerEmpty;

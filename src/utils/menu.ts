@@ -1,4 +1,6 @@
-const mainMenu = [
+import { IMenuItem } from "./types";
+
+const mainMenu: IMenuItem[] = [
   {
     id: 1,
     value: "Конструктор",

@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { useDrop, useDrag } from "react-dnd";
 
@@ -13,52 +12,59 @@ import {
   REMOVE_BURGER_PRODUCT,
 } from "../../../../services/actions/ingredient-constructor";
 
-import { PTIngredientData } from "../../../../utils/props";
+import { IBurgerIngredientData } from "../../../../utils/types";
 
 import css from "./burger-contents-item.module.css";
 
-const BurgerContentsItem = (props) => {
+type TIgredientPos = "top" | "bottom" | "center";
+
+const BurgerContentsItem: React.FC<{
+  data: IBurgerIngredientData;
+  type: TIgredientPos;
+}> = ({ data, type }) => {
   const dispatch = useDispatch();
-  const itemRef = useRef(null);
+  const itemRef = useRef<HTMLInputElement>(null);
 
   // определяем драг для генерируемого элемента
   // в item передается объект - данные продукта
   const [, drag] = useDrag({
     type: "constructor",
-    item: props.data,
+    item: data,
   });
 
   // определяем дроп для генерируемого элемента
   // если в ховер придет объект с другими данными, произойдет замена продуктов в store
   const [, drop] = useDrop({
     accept: "constructor",
-    hover(item, monitor) {
+    hover(item: IBurgerIngredientData, monitor) {
       if (!itemRef.current) {
         return;
       }
       // сравниваем
       const hoverIndex = item.index;
-      const dropIndex = props.data.index;
+      const dropIndex = data.index;
 
       if (hoverIndex === dropIndex) {
         return;
       }
 
-      const itemBounds = itemRef.current?.getBoundingClientRect();
+      const itemBounds = itemRef.current.getBoundingClientRect();
       const itemCenter = (itemBounds.bottom - itemBounds.top) / 2;
       const monitorOffset = monitor.getClientOffset();
-      const itemY = monitorOffset.y - itemBounds.top;
+      if (monitorOffset && hoverIndex && dropIndex) {
+        const itemY = monitorOffset.y - itemBounds.top;
 
-      if (hoverIndex > dropIndex && itemY > itemCenter) {
-        return;
-      }
-      if (hoverIndex < dropIndex && itemY < itemCenter) {
-        return;
+        if (hoverIndex > dropIndex && itemY > itemCenter) {
+          return;
+        }
+        if (hoverIndex < dropIndex && itemY < itemCenter) {
+          return;
+        }
       }
 
       dispatch({
         type: SWAP_BURGER_PRODUCTS,
-        payload: { source: props.data, dest: item },
+        payload: { source: data, dest: item },
       });
     },
   });
@@ -66,23 +72,23 @@ const BurgerContentsItem = (props) => {
   drag(drop(itemRef));
 
   // диспатчер удаления
-  const removeItem = (item) => {
+  const removeItem = (item: IBurgerIngredientData) => {
     dispatch({ type: REMOVE_BURGER_PRODUCT, payload: item });
   };
 
   // колбек для удаления продукта из бургера
   const handleClose = () => {
-    removeItem(props.data);
+    removeItem(data);
   };
 
   // переменные для настроек
-  let itemClass;
-  let extraStyle;
-  let extraName;
-  let draggable;
-  let itemType;
+  let itemClass: string;
+  let extraStyle: string;
+  let extraName: string;
+  let draggable: boolean;
+  let itemType: "top" | "bottom" | undefined;
 
-  switch (props.type) {
+  switch (type) {
     case "top":
       itemClass = css.itemPin;
       extraStyle = " m-2 pl-9 pr-3";
@@ -103,22 +109,17 @@ const BurgerContentsItem = (props) => {
       extraName = "";
       draggable = true;
       break;
-    default:
-      break;
   }
 
   return draggable ? (
-    <div
-      className={itemClass + extraStyle}
-      ref={itemRef}
-    >
+    <div className={itemClass + extraStyle} ref={itemRef}>
       <div className={css.icon}>
         <DragIcon type="primary" />
       </div>
       <ConstructorElement
-        text={props.data.name + extraName}
-        price={props.data.price}
-        thumbnail={props.data.image_mobile}
+        text={data.name + extraName}
+        price={data.price}
+        thumbnail={data.image_mobile}
         isLocked={!draggable}
         type={itemType}
         handleClose={handleClose}
@@ -127,19 +128,14 @@ const BurgerContentsItem = (props) => {
   ) : (
     <div className={itemClass + extraStyle}>
       <ConstructorElement
-        text={props.data.name + extraName}
-        price={props.data.price}
-        thumbnail={props.data.image_mobile}
-        isLocked="true"
+        text={data.name + extraName}
+        price={data.price}
+        thumbnail={data.image_mobile}
+        isLocked={true}
         type={itemType}
       />
     </div>
   );
-};
-
-BurgerContentsItem.propTypes = {
-  data: PTIngredientData.isRequired,
-  type: PropTypes.oneOf(["top", "bottom", "center"]).isRequired,
 };
 
 export default BurgerContentsItem;

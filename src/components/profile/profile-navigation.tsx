@@ -6,7 +6,7 @@ import css from "./profile.module.css";
 const ProfileNavigation = () => {
   const { pathname } = useLocation();
 
-  const isProfile = () => {
+  const isProfile: () => string = () => {
     if (pathname === "/profile") {
       return "";
     } else {
@@ -14,7 +14,7 @@ const ProfileNavigation = () => {
     }
   };
 
-  const isOrders = () => {
+  const isOrders: () => string =  () => {
     if (pathname.indexOf("/profile/orders") === 0) {
       return "";
     } else {
