@@ -4,14 +4,17 @@ import {
   REMOVE_BURGER_PRODUCT,
   SWAP_BURGER_PRODUCTS,
   CLEAR_BURGER_PRODUCTS,
+  TBurgerActions,
 } from "../actions/ingredient-constructor";
 
-const initialState = {
+import { TBurger } from "../../utils/types";
+
+const initialState:TBurger = {
   bun: null,
   products: [],
 };
 
-export const constructorReducer = (state = initialState, action) => {
+export const constructorReducer = (state = initialState, action:TBurgerActions) => {
   switch (action.type) {
     case SET_BURGER_BUN:
       return { ...state, bun: action.payload };

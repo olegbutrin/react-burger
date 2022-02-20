@@ -90,8 +90,13 @@ export type TOrder = {
 
 export type TOrderStore = { [key: string]: any } & { order: TOrder };
 
+export type TError = {
+  source: string;
+  message: string;
+};
+
 export type TErrorStore = { [key: string]: any } & {
-  error: { source: string; message: string };
+  error: TError;
 };
 
 // Расширяем тип History для использования стейта и поля from
@@ -116,4 +121,13 @@ export type TModalWindowType = {
   children: ReactNode;
   header?: string;
   closeCallback: () => void;
+};
+
+// ACTIONS and REDUCERS
+
+export type TServerData = {
+  accessToken: string;
+  refreshToken: string;
+  success: boolean;
+  user: TUserPair;
 };

@@ -13,9 +13,13 @@ import {
   UPDATE_TOKEN_ERROR,
   UPDATE_PROFILE_SUCCESS,
   RESTORE_USER,
-} from "../actions/auth";
+} from "../constants/auth";
 
-const initialState = {
+import { TAuthSuccess, TAuthError, TAuthUserData } from "../actions/auth";
+
+import { TUserAuthStore } from "../../utils/types";
+
+const initialState: TUserAuthStore = {
   user: {
     name: "",
     email: "",
@@ -30,7 +34,7 @@ const initialState = {
 // аутенификация пройдена - состояние содержит актуальные данные статуса, токена и времени годности
 // аутенификация провалена - состояние содержит исходные данные статуса, токена и времени годности
 
-const authSuccess = (state, action) => {
+const authSuccess = (state: TUserAuthStore, action: TAuthUserData) => {
   return {
     ...state,
     isLogged: true,
@@ -45,7 +49,7 @@ const authSuccess = (state, action) => {
 // Не менять параметры user во время выхода можно, если пользователь один или несколько
 // Для приложения с публичным доступом затираем данные предыдущего пользователя,
 // чтобы при входе в форму не попали данные из прошлой сессии
-const authError = (state) => {
+const authError = (state: TUserAuthStore) => {
   return {
     ...state,
     isLogged: false,
@@ -58,7 +62,7 @@ const authError = (state) => {
 // isForgot определяет доступ к странице восстановления пароля
 // и бывает только в двух значениях: true - если запрос на восстановление
 // был обработан правильно или false - в любых других случаях (не послан, ошибка, тд)
-const forgotState = (action) => {
+const forgotState = (action: TAuthSuccess | TAuthError) => {
   switch (action.type) {
     case FORGOT_PASS_SUCCESS:
       return true;
@@ -67,7 +71,7 @@ const forgotState = (action) => {
   }
 };
 
-export const authReducer = (state = initialState, action) => {
+export const authReducer = (state = initialState, action: TAuthSuccess | TAuthError) => {
   switch (action.type) {
     case REGISTER_SUCCESS:
       return authSuccess(state, action);

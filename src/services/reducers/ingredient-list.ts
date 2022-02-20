@@ -1,16 +1,22 @@
+import { TIngredientListStore } from "../../utils/types";
+
 import {
   GET_INGREDIENTS_FAILED,
   GET_INGREDIENTS_REQUEST,
   GET_INGREDIENTS_SUCCESS,
+  TGetIngredientsActions,
 } from "../actions/ingredient-list";
 
-const initialState = {
+const initialState: TIngredientListStore = {
   ingredients: [],
   ingredientRequest: false,
   ingredientFailed: false,
 };
 
-export const ingredientsReducer = (state = initialState, action) => {
+export const ingredientsReducer = (
+  state = initialState,
+  action: TGetIngredientsActions
+) => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST:
       return {
