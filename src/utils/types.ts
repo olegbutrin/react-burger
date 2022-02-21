@@ -1,4 +1,19 @@
 import { ReactNode, ReactElement } from "react";
+import { ThunkAction } from "redux-thunk";
+import { Action, ActionCreator, Dispatch } from "redux";
+
+import { rootReducer } from "../services/reducers";
+
+import {
+  TAuthRequests,
+  TAuthSuccess,
+  TAuthError,
+} from "../services/actions/auth";
+import { TOrderActions } from "../services/actions/burger-order";
+import { IClearError } from "../services/actions/error";
+import { TBurgerActions } from "../services/actions/ingredient-constructor";
+import { TGetIngredientsActions } from "../services/actions/ingredient-list";
+import { TItemPreviewActions } from "../services/actions/ingredient-preview";
 
 export type IIngredientTypeName = "bun" | "sauce" | "main";
 
@@ -37,6 +52,14 @@ export type TIngredientListStore = {
 
 // Пара данных пользователь-емайл
 export type TUserPair = { readonly name: string; readonly email: string };
+
+// Общий тип данных приходящих при работе с учеткой пользователя
+export type TServerData = {
+  accessToken: string;
+  refreshToken: string;
+  success: boolean;
+  user: TUserPair;
+};
 
 // Тип для хранилища auth
 export type TUserAuthStore = {
@@ -125,9 +148,24 @@ export type TModalWindowType = {
 
 // ACTIONS and REDUCERS
 
-export type TServerData = {
-  accessToken: string;
-  refreshToken: string;
-  success: boolean;
-  user: TUserPair;
-};
+// В качестве RootState берем возвращаемый тип основного редюсера
+export type RootState = ReturnType<typeof rootReducer>;
+
+// Собираем все доступные экшены в один тип
+export type TApplicationActions =
+  | TAuthRequests
+  | TAuthSuccess
+  | TAuthError
+  | TOrderActions
+  | IClearError
+  | TBurgerActions
+  | TGetIngredientsActions
+  | TItemPreviewActions;
+
+// Определяем Thunk
+export type AppThunk<TReturn = void> = ActionCreator<
+  ThunkAction<TReturn, Action, RootState, TApplicationActions>
+>;
+
+// Определяем тип диспетчера через дженерик из редакс и экшены
+export type AppDispatch = Dispatch<TApplicationActions>; 
