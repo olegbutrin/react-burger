@@ -2,24 +2,19 @@ import { Dispatch } from "redux";
 import { API_URL } from "../../utils/defaults";
 import { IIngredientData } from "../../utils/types";
 
-export const GET_INGREDIENTS_REQUEST: "GET_INGREDIENTS_REQUEST" =
-  "GET_INGREDIENTS_REQUEST";
-export const GET_INGREDIENTS_SUCCESS: "GET_INGREDIENTS_SUCCESS" =
-  "GET_INGREDIENTS_SUCCESS";
-export const GET_INGREDIENTS_FAILED: "GET_INGREDIENTS_FAILED" =
-  "GET_INGREDIENTS_FAILED";
+import * as constants from "../constants/ingredient-list";
 
 export interface IGetIngredientsRequest {
-  readonly type: typeof GET_INGREDIENTS_REQUEST;
+  readonly type: typeof constants.GET_INGREDIENTS_REQUEST;
 }
 
 export interface IGetIngredientsSuccess {
-  readonly type: typeof GET_INGREDIENTS_SUCCESS;
+  readonly type: typeof constants.GET_INGREDIENTS_SUCCESS;
   readonly payload: IIngredientData[];
 }
 
 export interface IGetIngredientsFailed {
-  readonly type: typeof GET_INGREDIENTS_FAILED;
+  readonly type: typeof constants.GET_INGREDIENTS_FAILED;
 }
 
 export type TGetIngredientsActions =
@@ -30,7 +25,7 @@ export type TGetIngredientsActions =
 // функция  для получения данных с сервера
 export function getIngredients() {
   return function (dispatch: Dispatch) {
-    dispatch({ type: GET_INGREDIENTS_REQUEST });
+    dispatch({ type: constants.GET_INGREDIENTS_REQUEST });
     fetch(API_URL + "/ingredients")
       .then((res) => {
         if (res.ok) {
@@ -41,10 +36,10 @@ export function getIngredients() {
       })
       .then((data) => {
         const ingredientData: IIngredientData[] = data.data;
-        dispatch({ type: GET_INGREDIENTS_SUCCESS, payload: ingredientData });
+        dispatch({ type: constants.GET_INGREDIENTS_SUCCESS, payload: ingredientData });
       })
       .catch(() => {
-        dispatch({ type: GET_INGREDIENTS_FAILED });
+        dispatch({ type: constants.GET_INGREDIENTS_FAILED });
       });
   };
 }

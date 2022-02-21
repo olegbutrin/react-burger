@@ -9,7 +9,7 @@ import {
   clearOrder,
 } from "../../../../services/actions/burger-order";
 
-import { CLEAR_BURGER_PRODUCTS } from "../../../../services/actions/ingredient-constructor";
+import { CLEAR_BURGER_PRODUCTS } from "../../../../services/constants/ingredient-constructor";
 
 import Modal from "../../../modal/modal";
 import OrderDetails from "../../../order-details/order-details";

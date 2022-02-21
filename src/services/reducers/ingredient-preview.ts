@@ -1,8 +1,6 @@
-import {
-  SET_ITEM_DATA,
-  CLEAR_ITEM_DATA,
-  TItemPreviewActions,
-} from "../actions/ingredient-preview";
+import * as constants from "../constants/ingredient-preview";
+
+import { TItemPreviewActions } from "../actions/ingredient-preview";
 
 import { IIngredientData } from "../../utils/types";
 
@@ -19,9 +17,9 @@ export const ingrPreviewReducer = (
   action: TItemPreviewActions
 ) => {
   switch (action.type) {
-    case SET_ITEM_DATA:
+    case constants.SET_ITEM_DATA:
       return { ...state, productData: action.payload };
-    case CLEAR_ITEM_DATA:
+    case constants.CLEAR_ITEM_DATA:
       return { ...initialState };
     default:
       return state;

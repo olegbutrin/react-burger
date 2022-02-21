@@ -2,26 +2,23 @@ import { Dispatch } from "redux";
 import { API_URL } from "../../utils/defaults";
 import { TOrder, TOrderType } from "../../utils/types";
 
-export const GET_ORDER_REQUEST: "GET_ORDER_REQUEST" = "GET_ORDER_REQUEST";
-export const GET_ORDER_FAILED: "GET_ORDER_FAILED" = "GET_ORDER_FAILED";
-export const GET_ORDER_SUCCESS: "GET_ORDER_SUCCESS" = "GET_ORDER_SUCCESS";
-export const CLEAR_ORDER_DATA: "CLEAR_ORDER_DATA" = "CLEAR_ORDER_DATA";
+import * as constants from "../constants/burger-order";
 
 export interface IGetOrderRequest {
-  readonly type: typeof GET_ORDER_REQUEST;
+  readonly type: typeof constants.GET_ORDER_REQUEST;
 }
 
 export interface IGetOrderSuccess {
-  readonly type: typeof GET_ORDER_SUCCESS;
+  readonly type: typeof constants.GET_ORDER_SUCCESS;
   readonly payload: TOrder;
 }
 
 export interface IGetOrderFailed {
-  readonly type: typeof GET_ORDER_FAILED;
+  readonly type: typeof constants.GET_ORDER_FAILED;
 }
 
 export interface IClearOrderData {
-  readonly type: typeof CLEAR_ORDER_DATA;
+  readonly type: typeof constants.CLEAR_ORDER_DATA;
 }
 
 export type TOrderActions =
@@ -32,7 +29,7 @@ export type TOrderActions =
 
 export function getOrder(products: string[]) {
   return function (dispatch: Dispatch) {
-    dispatch({ type: GET_ORDER_REQUEST });
+    dispatch({ type: constants.GET_ORDER_REQUEST });
     fetch(API_URL + "/orders", {
       method: "POST",
       body: JSON.stringify({ ingredients: products }),
@@ -48,16 +45,16 @@ export function getOrder(products: string[]) {
         }
       })
       .then((data:TOrderType) => {
-        dispatch({ type: GET_ORDER_SUCCESS, payload: data });
+        dispatch({ type: constants.GET_ORDER_SUCCESS, payload: data });
       })
       .catch(() => {
-        dispatch({ type: GET_ORDER_FAILED });
+        dispatch({ type: constants.GET_ORDER_FAILED });
       });
   };
 }
 
 export function clearOrder() {
   return function (dispatch: Dispatch) {
-    dispatch({ type: CLEAR_ORDER_DATA });
+    dispatch({ type: constants.CLEAR_ORDER_DATA });
   };
 }

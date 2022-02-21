@@ -10,7 +10,7 @@ import BurgerEmpty from "./components/burger-empty/burger-empty";
 import {
   SET_BURGER_BUN,
   ADD_BURGER_PRODUCT,
-} from "../../services/actions/ingredient-constructor";
+} from "../../services/constants/ingredient-constructor";
 
 import css from "./burger-constructor.module.css";
 import { TBurgerStore, IBurgerIngredientData } from "../../utils/types";

@@ -1,11 +1,6 @@
-import {
-  SET_BURGER_BUN,
-  ADD_BURGER_PRODUCT,
-  REMOVE_BURGER_PRODUCT,
-  SWAP_BURGER_PRODUCTS,
-  CLEAR_BURGER_PRODUCTS,
-  TBurgerActions,
-} from "../actions/ingredient-constructor";
+import * as constants from "../constants/ingredient-constructor";
+
+import { TBurgerActions } from "../actions/ingredient-constructor";
 
 import { TBurger } from "../../utils/types";
 
@@ -16,9 +11,9 @@ const initialState:TBurger = {
 
 export const constructorReducer = (state = initialState, action:TBurgerActions) => {
   switch (action.type) {
-    case SET_BURGER_BUN:
+    case constants.SET_BURGER_BUN:
       return { ...state, bun: action.payload };
-    case ADD_BURGER_PRODUCT:
+    case constants.ADD_BURGER_PRODUCT:
       return {
         ...state,
         products: [
@@ -26,14 +21,14 @@ export const constructorReducer = (state = initialState, action:TBurgerActions) 
           ...state.products,
         ],
       };
-    case REMOVE_BURGER_PRODUCT:
+    case constants.REMOVE_BURGER_PRODUCT:
       return {
         ...state,
         products: state.products.filter((prod) => {
           return prod.index !== action.payload.index;
         }),
       };
-    case SWAP_BURGER_PRODUCTS:
+    case constants.SWAP_BURGER_PRODUCTS:
       const nextState = {
         ...state,
         products: state.products.map((prod) => {
@@ -47,7 +42,7 @@ export const constructorReducer = (state = initialState, action:TBurgerActions) 
         }),
       };
       return nextState;
-    case CLEAR_BURGER_PRODUCTS:
+    case constants.CLEAR_BURGER_PRODUCTS:
       return initialState;
     default:
       return state;
