@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "../../utils/hooks";
 import { useHistory } from "react-router-dom";
 
 import { getUserEmail } from "../../services/user";
@@ -14,14 +14,12 @@ import {
 
 import css from "../pages.module.css";
 
-import { TAuthStore } from "../../utils/types";
-
 const ForgotPasswordPage = () => {
   const history = useHistory();
 
   const [email, setEmail] = useState<string>("");
 
-  const { isLogged, isForgot } = useSelector((store:TAuthStore) => store.auth);
+  const { isLogged, isForgot } = useSelector((store) => store.auth);
 
   const dispatch = useDispatch();
 

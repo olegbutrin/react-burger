@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../../../../utils/hooks";
 import { useDrop, useDrag } from "react-dnd";
 
 import {

@@ -1,3 +1,5 @@
+import { Reducer } from 'redux';
+
 import { PUBLIC_APP } from "../../utils/defaults";
 
 import * as constants from "../constants/auth";
@@ -17,6 +19,8 @@ const initialState: TUserAuthStore = {
   isForgot: false,
 };
 
+type TAuthReducerActions = TAuthSuccess | TAuthError;
+
 // По определению, основные свойства состояния могут быть:
 // аутенификация пройдена - состояние содержит актуальные данные статуса, токена и времени годности
 // аутенификация провалена - состояние содержит исходные данные статуса, токена и времени годности
@@ -28,8 +32,8 @@ const authSuccess = (state: TUserAuthStore, action: TAuthUserData) => {
     // при рефреше токена сревер не возвращает данные user
     // поэтому если их нет в payload, используем user из состояния
     user: action.payload.user ? action.payload.user : state.user,
-    accessToken: action.payload.accessToken,
-    expired: action.payload.expired,
+    accessToken: action.payload.accessToken ? action.payload.accessToken : state.accessToken,
+    expired: action.payload.expired ? action.payload.expired : state.expired,
   };
 };
 
@@ -58,7 +62,7 @@ const forgotState = (action: TAuthSuccess | TAuthError) => {
   }
 };
 
-export const authReducer = (state = initialState, action: TAuthSuccess | TAuthError) => {
+export const authReducer: Reducer<TUserAuthStore, TAuthReducerActions> = (state = initialState, action) => {
   switch (action.type) {
     case constants.REGISTER_SUCCESS:
       return authSuccess(state, action);
@@ -89,7 +93,7 @@ export const authReducer = (state = initialState, action: TAuthSuccess | TAuthEr
         ...state,
         isLogged: action.payload.isLogged,
         user: action.payload.user,
-        accessToken: action.payload.accessToken,
+        accessToken: action.payload.accessToken ? action.payload.accessToken : state.accessToken,
         expired: action.payload.expired,
       };
     default:

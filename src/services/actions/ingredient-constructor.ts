@@ -1,6 +1,6 @@
 import { IBurgerIngredientData } from "../../utils/types";
 
-import * as constants from "../constants/ingredient-constructor"
+import * as constants from "../constants/ingredient-constructor";
 
 export interface ISetBurgerBun {
   readonly type: typeof constants.SET_BURGER_BUN;
@@ -9,7 +9,7 @@ export interface ISetBurgerBun {
 
 export interface IAddBurgerProduct {
   readonly type: typeof constants.ADD_BURGER_PRODUCT;
-  readonly payload: { item: IBurgerIngredientData; index: number };
+  readonly payload: { item: IBurgerIngredientData; index: string };
 }
 
 export interface IRemoveBurgerProduct {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "../../utils/hooks";
 import { useHistory } from "react-router-dom";
 
 import { resetPassword } from "../../services/actions/auth";
@@ -14,16 +14,13 @@ import {
 
 import css from "../pages.module.css";
 
-import { TAuthStore } from "../../utils/types";
-
 const ResetPasswordPage = () => {
   const history = useHistory();
 
   const [password, setPassword] = useState<string>("");
   const [code, setCode] = useState<string>("");
 
-  // store пока не типизируем
-  const { isLogged, isForgot } = useSelector((store: TAuthStore) => store.auth);
+  const { isLogged, isForgot } = useSelector((store) => store.auth);
 
   const dispatch = useDispatch();
 

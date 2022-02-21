@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../../utils/hooks";
 import {
   BrowserRouter as Router,
   Switch,
@@ -36,8 +36,6 @@ import { getIngredients } from "../../services/actions/ingredient-list";
 import mainMenu from "../../utils/menu";
 
 import { TCustomHystory } from "../../utils/types";
-
-import { TListStore, TErrorStore } from "../../utils/types";
 
 // ================================
 // выносим роутированный контент в отдельный компонент
@@ -126,7 +124,7 @@ const App = () => {
 
   // импорт чистых данных
   const { ingredients, ingredientRequest } = useSelector(
-    (store: TListStore) => store.list
+    (store) => store.list
   );
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера
@@ -137,7 +135,7 @@ const App = () => {
   }, [dispatch, ingredients, ingredientRequest]);
 
   // читаем возможную ошибку перед очередным рендером
-  const { source, message } = useSelector((store: TErrorStore) => store.error);
+  const { source, message } = useSelector((store) => store.error);
 
   // функция для очистки ошибки при закрытии модального окна с ошибкой
   const closeErrorModal = () => {

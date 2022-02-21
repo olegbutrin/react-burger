@@ -1,5 +1,4 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector } from "../../utils/hooks";
 
 import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../components/burger-constructor/burger-constructor";
@@ -7,12 +6,11 @@ import BurgerConstructor from "../../components/burger-constructor/burger-constr
 import { InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./main-page.module.css";
-import { TListStore } from "../../utils/types";
 
 const MainPage = () => {
   // получаем состояние для рендера
   const { ingredients, ingredientRequest, ingredientFailed } = useSelector(
-    (store: TListStore) => store.list
+    (store) => store.list
   );
   return (
     <>

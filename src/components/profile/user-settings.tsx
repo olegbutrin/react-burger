@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../../utils/hooks";
 
 import { getUserEmail, getUserName, getUserRefreshToken } from "../../services/user";
 import { getProfile, setProfile } from "../../services/actions/auth";

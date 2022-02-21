@@ -1,11 +1,6 @@
-import { useSelector } from "react-redux";
+import { useSelector } from "../utils/hooks";
 
-import {
-  TStorageUserData,
-  TUserPair,
-  TAuthStore,
-  TUserAuthStats,
-} from "../utils/types";
+import { TStorageUserData, TUserPair, TUserAuthStats } from "../utils/types";
 
 const storageKey: string = "_StellarBurgersUser_";
 
@@ -91,7 +86,7 @@ export const getLocalStorageAuth: () => TUserAuthStats | null = () => {
 // хук для получения статуса пользователя на конкретный момент
 export const useUserStatus: () => { isAuthenticated: boolean } = () => {
   const timeNow: number = new Date().getTime();
-  const { isLogged, expired } = useSelector((store: TAuthStore) => store.auth);
+  const { isLogged, expired } = useSelector((store) => store.auth);
   const isAuthenticated: boolean = isLogged && timeNow < expired;
 
   return { isAuthenticated: isAuthenticated };

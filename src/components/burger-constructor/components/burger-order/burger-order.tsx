@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../../../../utils/hooks";
 import { useHistory } from "react-router-dom";
 
 import { useUserStatus } from "../../../../services/user";
@@ -21,8 +21,6 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./burger-order.module.css";
-
-import { TBurgerStore, TOrderStore } from "../../../../utils/types";
 
 // выносим кнопку запроса заказа в отдельный компонент потому,
 // что нужно использовать хук проверки статуса пользователя
@@ -64,13 +62,13 @@ const OrderButton: React.FC<{ productsID: string[] }> = ({ productsID }) => {
 const BurgerOrder = () => {
   const dispatch = useDispatch();
 
-  const { bunData, productsData } = useSelector((store: TBurgerStore) => ({
+  const { bunData, productsData } = useSelector((store) => ({
     bunData: store.burger.bun,
     productsData: store.burger.products,
   }));
 
   const { order, orderRequest, orderFailed } = useSelector(
-    (store: TOrderStore) => store.order
+    (store) => store.order
   );
 
   // расчет общей стоимости

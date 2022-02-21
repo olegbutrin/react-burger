@@ -80,22 +80,10 @@ export type TStorageUserData = TUserAuthStats & {
   readonly refreshToken: string;
 };
 
-// Типизация для отдельного набора данных из store
-// Логика: мы не знаем всех полей в глобальном хранилище,
-// но знаем, что конкретное поле соответствует определенному типу.
-// В результате при декомпозиции объекта store константы будут типизированы
-export type TListStore = { [key: string]: any } & {
-  list: TIngredientListStore;
-};
-
-export type TAuthStore = { [key: string]: any } & { auth: TUserAuthStore };
-
 export type TBurger = {
   bun: IIngredientData | null;
   products: Array<IBurgerIngredientData>;
 };
-
-export type TBurgerStore = { [key: string]: any } & { burger: TBurger };
 
 export type TOrderType = {
   name: string;
@@ -111,15 +99,9 @@ export type TOrder = {
   orderFailed: boolean;
 };
 
-export type TOrderStore = { [key: string]: any } & { order: TOrder };
-
 export type TError = {
   source: string;
   message: string;
-};
-
-export type TErrorStore = { [key: string]: any } & {
-  error: TError;
 };
 
 // Расширяем тип History для использования стейта и поля from

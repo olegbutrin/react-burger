@@ -12,6 +12,7 @@ import {
 import {
   TServerData,
   TUserAuthStats,
+  TUserAuthStore,
   TStorageUserData,
   TError,
   TUserPair,
@@ -25,7 +26,7 @@ export interface IRegisterRequest {
 
 export interface IRegisterSuccess {
   readonly type: typeof constants.REGISTER_SUCCESS;
-  readonly payload: Partial<TUserAuthStats>;
+  readonly payload: Partial<TUserAuthStore>;
 }
 
 export interface IRegisterError {
@@ -39,7 +40,7 @@ export interface ILoginRequest {
 
 export interface ILoginSuccess {
   readonly type: typeof constants.LOGIN_SUCCESS;
-  readonly payload: Partial<TUserAuthStats>;
+  readonly payload: Partial<TUserAuthStore>;
 }
 
 export interface ILoginError {
@@ -66,7 +67,7 @@ export interface IUpdateTokenRequest {
 
 export interface IUpdateTokenSuccess {
   readonly type: typeof constants.UPDATE_TOKEN_SUCCESS;
-  readonly payload: Partial<TUserAuthStats>;
+  readonly payload: Partial<TUserAuthStore>;
 }
 
 export interface IUpdateTokenError {
@@ -120,7 +121,7 @@ export interface IUpdateProfileRequest {
 
 export interface IUpdateProfileSuccess {
   readonly type: typeof constants.UPDATE_PROFILE_SUCCESS;
-  readonly payload: Partial<TUserAuthStats>;
+  readonly payload: Partial<TUserAuthStore>;
 }
 
 export interface IUpdateProfileError {

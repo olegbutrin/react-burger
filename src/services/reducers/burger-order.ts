@@ -1,3 +1,5 @@
+import { Reducer } from "redux";
+
 import { TOrder } from "../../utils/types";
 import * as constants from "../constants/burger-order";
 
@@ -9,7 +11,10 @@ const initialState: TOrder = {
   orderFailed: false,
 };
 
-export const orderReducer = (state = initialState, action:TOrderActions) => {
+export const orderReducer: Reducer<TOrder, TOrderActions> = (
+  state = initialState,
+  action
+) => {
   switch (action.type) {
     case constants.GET_ORDER_REQUEST:
       return {
@@ -25,7 +30,8 @@ export const orderReducer = (state = initialState, action:TOrderActions) => {
       };
     case constants.GET_ORDER_FAILED:
       return {
-        ...initialState, orderFailed: true
+        ...initialState,
+        orderFailed: true,
       };
     case constants.CLEAR_ORDER_DATA:
       return initialState;

@@ -1,15 +1,20 @@
+import { Reducer } from "redux";
+
 import * as constants from "../constants/ingredient-constructor";
 
 import { TBurgerActions } from "../actions/ingredient-constructor";
 
 import { TBurger } from "../../utils/types";
 
-const initialState:TBurger = {
+const initialState: TBurger = {
   bun: null,
   products: [],
 };
 
-export const constructorReducer = (state = initialState, action:TBurgerActions) => {
+export const constructorReducer: Reducer<TBurger, TBurgerActions> = (
+  state = initialState,
+  action
+) => {
   switch (action.type) {
     case constants.SET_BURGER_BUN:
       return { ...state, bun: action.payload };

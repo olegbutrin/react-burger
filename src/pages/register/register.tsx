@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "../../utils/hooks";
 import { useHistory } from "react-router-dom";
 
 import LoginLink from "../../components/login-link/login-link";
@@ -15,8 +15,6 @@ import { registerUser } from "../../services/actions/auth";
 
 import css from "../pages.module.css";
 
-import { TAuthStore } from "../../utils/types";
-
 const RegisterPage = () => {
   const history = useHistory();
 
@@ -24,7 +22,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { isLogged } = useSelector((store: TAuthStore) => store.auth);
+  const { isLogged } = useSelector((store) => store.auth);
 
   const dispatch = useDispatch();
 

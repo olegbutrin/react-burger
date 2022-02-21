@@ -1,14 +1,11 @@
-import { useSelector } from "react-redux";
+import { useSelector } from "../../utils/hooks";
 import { useParams } from "react-router-dom";
 
 import css from "../order-details/order-details.module.css";
 
-import { TListStore } from "../../utils/types";
-
 const IngredientDetails = () => {
-
-  const { ingredients } = useSelector((store:TListStore) => store.list);
-  const { id } = useParams<{id?: string}>();
+  const { ingredients } = useSelector((store) => store.list);
+  const { id } = useParams<{ id?: string }>();
   const data = ingredients.find((item) => {
     return item._id === id;
   });

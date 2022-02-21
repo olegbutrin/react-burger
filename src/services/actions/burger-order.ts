@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import { API_URL } from "../../utils/defaults";
-import { TOrder, TOrderType } from "../../utils/types";
+import { TOrderType } from "../../utils/types";
 
 import * as constants from "../constants/burger-order";
 
@@ -10,7 +10,7 @@ export interface IGetOrderRequest {
 
 export interface IGetOrderSuccess {
   readonly type: typeof constants.GET_ORDER_SUCCESS;
-  readonly payload: TOrder;
+  readonly payload: TOrderType;
 }
 
 export interface IGetOrderFailed {
@@ -44,8 +44,9 @@ export function getOrder(products: string[]) {
           throw new Error("Error order receive");
         }
       })
-      .then((data:TOrderType) => {
-        dispatch({ type: constants.GET_ORDER_SUCCESS, payload: data });
+      .then((data) => {
+        const orderData: TOrderType = data;
+        dispatch({ type: constants.GET_ORDER_SUCCESS, payload: orderData });
       })
       .catch(() => {
         dispatch({ type: constants.GET_ORDER_FAILED });
