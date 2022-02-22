@@ -2,6 +2,8 @@ import { Dispatch } from "redux";
 import { API_URL } from "../../utils/defaults";
 import { TOrderType } from "../../utils/types";
 
+import { getUserAccessToken } from "../user";
+
 import * as constants from "../constants/burger-order";
 
 export interface IGetOrderRequest {
@@ -35,6 +37,7 @@ export function getOrder(products: string[]) {
       body: JSON.stringify({ ingredients: products }),
       headers: {
         "Content-Type": "application/json",
+        'Authorization': getUserAccessToken(),
       },
     })
       .then((res) => {

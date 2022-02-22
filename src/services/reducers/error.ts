@@ -1,3 +1,5 @@
+import { Reducer } from "redux";
+
 import * as constants from "../constants/auth";
 
 import { TAuthError } from "../actions/auth";
@@ -10,9 +12,9 @@ const initialState: TError = {
   message: "",
 };
 
-export const errorReducer = (
+export const errorReducer: Reducer<TError, TAuthError  | IClearError > = (
   state = initialState,
-  action: TAuthError | IClearError
+  action
 ) => {
   switch (action.type) {
     case constants.REGISTER_ERROR:
@@ -23,6 +25,7 @@ export const errorReducer = (
     case constants.FORGOT_PASS_ERROR:
     case constants.RESET_PASS_ERROR:
     case constants.UPDATE_TOKEN_ERROR:
+      return { source: action.payload.source, message: action.payload.message };
     case CLEAR_ERROR:
       return { ...initialState };
     default:

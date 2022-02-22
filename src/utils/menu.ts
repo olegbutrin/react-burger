@@ -11,7 +11,7 @@ const mainMenu: IMenuItem[] = [
     id: 2,
     value: "Лента заказов",
     icon: "list",
-    route: "/profile/orders",
+    route: "/feed",
   },
   {
     id: 3,

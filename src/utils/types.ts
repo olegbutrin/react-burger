@@ -14,6 +14,21 @@ import { IClearError } from "../services/actions/error";
 import { TBurgerActions } from "../services/actions/ingredient-constructor";
 import { TGetIngredientsActions } from "../services/actions/ingredient-list";
 import { TItemPreviewActions } from "../services/actions/ingredient-preview";
+import { TWSActions } from "../services/actions/websocket";
+import { TFeedActions } from "../services/actions/feed";
+
+import {
+  WS_CONNECTION_START,
+  WS_CONNECTION_ERROR,
+  WS_CLOSE,
+  WS_CONNECTION_CLOSED,
+  WS_SEND_MESSAGE,
+} from "../services/constants/websocket";
+
+import {
+  FEED_FETCH_ORDER,
+  FEED_RECEIVE_ORDERS,
+} from "../services/constants/feed";
 
 export type IIngredientTypeName = "bun" | "sauce" | "main";
 
@@ -104,6 +119,51 @@ export type TError = {
   message: string;
 };
 
+export type TWebsocketState = {
+  connected: boolean;
+  messages: string[];
+};
+
+// FEED
+export type TFeedType = "all" | "user";
+
+export enum FeedStatus {
+  DONE = "done",
+  CREATED = "created",
+  CANCELLED = "cancelled",
+  PENDING = "pending",
+}
+
+export type TFeedOrder = {
+  _id: string;
+  number: number;
+  ingredients: ReadonlyArray<string>;
+  createdAt: string;
+  updatedAt: string;
+  status: FeedStatus;
+  name: string;
+};
+
+export type TFeedFeed = {
+  feed: {
+    orders: ReadonlyArray<TFeedOrder>,
+  }
+}
+
+export type TFeedServerMessage = {
+  orders: ReadonlyArray<TFeedOrder>;
+  total: number;
+  totalToday: number;
+  success: boolean;
+}
+
+export type TFeedStore = {
+  type: TFeedType;
+  orders: ReadonlyArray<TFeedOrder>;
+  total: number;
+  totalToday: number;
+};
+
 // Расширяем тип History для использования стейта и поля from
 export type TCustomHystory = History & { from?: string };
 
@@ -142,7 +202,9 @@ export type TApplicationActions =
   | IClearError
   | TBurgerActions
   | TGetIngredientsActions
-  | TItemPreviewActions;
+  | TItemPreviewActions
+  | TWSActions
+  | TFeedActions;
 
 // Определяем Thunk
 export type AppThunk<TReturn = void> = ActionCreator<
@@ -150,4 +212,15 @@ export type AppThunk<TReturn = void> = ActionCreator<
 >;
 
 // Определяем тип диспетчера через дженерик из редакс и экшены
-export type AppDispatch = Dispatch<TApplicationActions>; 
+export type AppDispatch = Dispatch<TApplicationActions>;
+
+//
+export type TWSMiddlewareActions = {
+  readonly onInit: typeof WS_CONNECTION_START;
+  readonly onError: typeof WS_CONNECTION_ERROR;
+  readonly onClose: typeof WS_CLOSE;
+  readonly onClosed: typeof WS_CONNECTION_CLOSED;
+  readonly onSend: typeof WS_SEND_MESSAGE;
+  readonly onOpen: typeof FEED_FETCH_ORDER;
+  readonly onMessage: typeof FEED_RECEIVE_ORDERS;
+};

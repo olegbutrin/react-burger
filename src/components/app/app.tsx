@@ -28,6 +28,7 @@ import {
   ResetPasswordPage,
   ProfilePage,
   IngredientPreviewPage,
+  FeedPage,
   NotFoundPage,
 } from "../../pages";
 
@@ -85,6 +86,9 @@ const RoutedContent = () => {
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPreviewPage />
+          </Route>
+          <Route path="/feed" exact={true}>
+            <FeedPage />
           </Route>
           <Route>
             <NotFoundPage />

@@ -2,17 +2,23 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "../../utils/hooks";
 import { setFeedType } from "../../services/actions/feed";
 import { wsConnect } from "../../services/actions/websocket";
+import css from "../pages.module.css";
 
-import css from "./profile.module.css";
-
-const UserOrders = () => {
+const FeedPage = () => {
   const dispatch = useDispatch();
   // set feed state
   useEffect(() => {
-    dispatch(setFeedType("user"));
+    dispatch(setFeedType("all"));
     dispatch(wsConnect());
   }, [dispatch]);
-  return <div className={css.profileOrders}>ORDER LIST</div>;
+
+  return (
+    <div className={css.wrapper}>
+      <div className={css.container + " pt-20"}>
+        <p className="text text_type_main-standard">feed</p>
+      </div>
+    </div>
+  );
 };
 
-export default UserOrders;
+export default FeedPage;

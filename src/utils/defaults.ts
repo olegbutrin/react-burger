@@ -4,3 +4,5 @@ export const API_URL: string = "https://norma.nomoreparties.space/api";
 export const TOKEN_EXPIRED: number = 20 * 60 * 1000 - 3;
 // is app used as public client
 export const PUBLIC_APP: boolean = false;
+// websocket url
+export const WS_URL = 'wss://norma.nomoreparties.space';

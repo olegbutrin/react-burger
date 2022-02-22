@@ -1,0 +1,12 @@
+.contents {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: center;
+}
+
+.contents > * {
+  text-align: center;
+  max-width: 500px;
+  hyphens: auto;
+}
