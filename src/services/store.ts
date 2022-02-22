@@ -13,7 +13,7 @@ import {
   WS_SEND_MESSAGE,
 } from "../services/constants/websocket";
 
-import {FEED_FETCH_ORDER, FEED_RECEIVE_ORDERS} from "../services/constants/feed";
+import {FEED_FETCH_ORDERS, FEED_RECEIVE_ORDERS} from "../services/constants/feed";
 
 declare global {
   interface Window {
@@ -23,12 +23,12 @@ declare global {
 
 const wsActions: TWSMiddlewareActions = {
   onInit: WS_CONNECTION_START,
-  onOpen: FEED_FETCH_ORDER,
-  onMessage: FEED_RECEIVE_ORDERS,
   onError: WS_CONNECTION_ERROR,
   onClose: WS_CLOSE,
   onClosed: WS_CONNECTION_CLOSED,
   onSend: WS_SEND_MESSAGE,
+  onOpen: FEED_FETCH_ORDERS,
+  onMessage: FEED_RECEIVE_ORDERS,
 };
 
 const wsMiddleware = socketMiddleware(wsActions);

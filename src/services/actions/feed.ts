@@ -2,11 +2,15 @@ import { Dispatch } from "redux";
 
 import * as constants from "../constants/feed";
 
-import { TFeedFeed, TFeedServerMessage, TFeedType } from "../../utils/types";
+import { TFeedServerMessage, TFeedType } from "../../utils/types";
 
 export interface IFeedSetType {
   readonly type: typeof constants.FEED_SET_TYPE;
   readonly payload: TFeedType;
+}
+
+export interface IFeedFetchOrders {
+  readonly type: typeof constants.FEED_FETCH_ORDERS;
 }
 
 export interface IFeedReceiveOrders {
@@ -14,7 +18,7 @@ export interface IFeedReceiveOrders {
   readonly payload: TFeedServerMessage;
 }
 
-export type TFeedActions = IFeedSetType  | IFeedReceiveOrders; 
+export type TFeedActions = IFeedSetType | IFeedFetchOrders | IFeedReceiveOrders; 
 
 export function setFeedType(type: TFeedType) {
   return function (dispatch: Dispatch) {

@@ -33,38 +33,40 @@ export const socketMiddleware = (
       //
       const { onInit, onOpen, onMessage, onError, onClose, onClosed, onSend } =
         wsActions;
+
       // start process actions
       if (action.type === onInit) {
+        // инициализация сокета в зависимости от типа (просматриваемой страницы)
         const { dispatch, getState } = store;
         const { feed } = getState();
         const url = getWSUrl(feed.type);
-        console.log(url);
-        // connect
+
+        // соединение с сервером
         socket = new WebSocket(url);
-        console.log(socket)
+
         if (socket) {
           // on open
           socket.onopen = (event) => {
-            console.log("Socket Open");
-            console.log(event);
+            dispatch({ type: onOpen });
           };
+
           // on error
           socket.onerror = (event) => {
-            console.log("Socket Error");
-            console.log(event);
-            dispatch({ type: onError, payload: event });
+            dispatch({
+              type: onError,
+              payload: { source: "WebSocket Connection", message: event.type },
+            });
           };
+
           // on message
           socket.onmessage = (event) => {
             const { data } = event;
             const parsedData = JSON.parse(data);
-            console.log(parsedData)
             dispatch({ type: onMessage, payload: parsedData });
           };
+
           // on close
           socket.onclose = (event) => {
-            console.log("Socket Closed");
-            console.log(event);
             dispatch({ type: onClosed, payload: event });
           };
         }

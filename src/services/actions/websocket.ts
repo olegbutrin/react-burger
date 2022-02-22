@@ -1,4 +1,5 @@
 import { Dispatch } from "redux";
+import { TError } from "../../utils/types";
 
 import * as constants from "../constants/websocket";
 
@@ -12,7 +13,7 @@ export interface IWSConnectionSuccess {
 
 export interface IWSConnectionError {
   readonly type: typeof constants.WS_CONNECTION_ERROR;
-  readonly payload: Event;
+  readonly payload: TError;
 }
 
 export interface IWSConnectionClosed {
@@ -43,6 +44,8 @@ export type TWSActions =
   | IWSSendMessage
   | IWSClose;
 
+
+export type TWSError = IWSConnectionError;
 
   export function wsConnect() {
     return function (dispatch: Dispatch) {

@@ -26,7 +26,7 @@ import {
 } from "../services/constants/websocket";
 
 import {
-  FEED_FETCH_ORDER,
+  FEED_FETCH_ORDERS,
   FEED_RECEIVE_ORDERS,
 } from "../services/constants/feed";
 
@@ -221,6 +221,6 @@ export type TWSMiddlewareActions = {
   readonly onClose: typeof WS_CLOSE;
   readonly onClosed: typeof WS_CONNECTION_CLOSED;
   readonly onSend: typeof WS_SEND_MESSAGE;
-  readonly onOpen: typeof FEED_FETCH_ORDER;
+  readonly onOpen: typeof FEED_FETCH_ORDERS;
   readonly onMessage: typeof FEED_RECEIVE_ORDERS;
 };

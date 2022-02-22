@@ -21,6 +21,7 @@ export const websocketReducer: Reducer<TWebsocketState, TWSActions> = (
         ...state,
         connected: true,
       };
+    case constants.WS_CONNECTION_CLOSED:
     case constants.WS_CONNECTION_ERROR:
       return {
         ...state,
