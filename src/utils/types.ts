@@ -144,14 +144,21 @@ export type TFeedOrder = {
   name: string;
 };
 
-export type TFeedFeed = {
-  feed: {
-    orders: ReadonlyArray<TFeedOrder>,
-  }
-}
+export type TFeedTicket = TFeedOrder & {
+  price: number;
+  icons: Map<string, string>;
+  names: Map<string, string>;
+};
 
 export type TFeedServerMessage = {
-  orders: ReadonlyArray<TFeedOrder>;
+  orders: Array<TFeedOrder>;
+  total: number;
+  totalToday: number;
+  success: boolean;
+};
+
+export type TFeedTicketMessage = {
+  tickets: Array<TFeedTicket>;
   total: number;
   totalToday: number;
   success: boolean;
@@ -159,7 +166,7 @@ export type TFeedServerMessage = {
 
 export type TFeedStore = {
   type: TFeedType;
-  orders: ReadonlyArray<TFeedOrder>;
+  tickets: Array<TFeedTicket>;
   total: number;
   totalToday: number;
 };

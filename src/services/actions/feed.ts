@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 
 import * as constants from "../constants/feed";
 
-import { TFeedServerMessage, TFeedType } from "../../utils/types";
+import { TFeedTicketMessage, TFeedType } from "../../utils/types";
 
 export interface IFeedSetType {
   readonly type: typeof constants.FEED_SET_TYPE;
@@ -15,7 +15,7 @@ export interface IFeedFetchOrders {
 
 export interface IFeedReceiveOrders {
   readonly type: typeof constants.FEED_RECEIVE_ORDERS;
-  readonly payload: TFeedServerMessage;
+  readonly payload: TFeedTicketMessage;
 }
 
 export type TFeedActions = IFeedSetType | IFeedFetchOrders | IFeedReceiveOrders; 

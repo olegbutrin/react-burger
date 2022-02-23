@@ -1,15 +1,20 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "../../utils/hooks";
+import { useDispatch } from "../../utils/hooks";
 import { setFeedType } from "../../services/actions/feed";
-import { wsConnect } from "../../services/actions/websocket";
+import { wsConnect, wsDisconnect } from "../../services/actions/websocket";
 import css from "../pages.module.css";
 
 const FeedPage = () => {
   const dispatch = useDispatch();
-  // set feed state
+  // Логика работы с лентой заказов:
+  // 1. При монтировании компонента или страницы происходит перезапуск сокета на нужный фид (общий или пользователя)
+  // 2. При размонтировании компонента сокет закрывается
   useEffect(() => {
     dispatch(setFeedType("all"));
     dispatch(wsConnect());
+    return () => {
+      dispatch(wsDisconnect());
+    };
   }, [dispatch]);
 
   return (

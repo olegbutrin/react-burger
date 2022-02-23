@@ -1,8 +1,12 @@
 import type { Middleware, MiddlewareAPI } from "redux";
 import type {
   AppDispatch,
+  IIngredientData,
   RootState,
   TApplicationActions,
+  TFeedServerMessage,
+  TFeedTicket,
+  TFeedTicketMessage,
   TFeedType,
   TWSMiddlewareActions,
 } from "../../utils/types";
@@ -23,6 +27,57 @@ const getWSUrl = (type: TFeedType) => {
   }
 };
 
+const convertOrdersToTickets: (
+  data: TFeedServerMessage,
+  ingredients: IIngredientData[]
+) => TFeedTicketMessage = (data, ingredients) => {
+  const message: TFeedTicketMessage = {
+    success: data.success,
+    tickets: [],
+    total: data.total,
+    totalToday: data.totalToday,
+  };
+  data.orders.forEach((order) => {
+    const ticket: TFeedTicket = {
+      name: order.name,
+      status: order.status,
+      number: order.number,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      ingredients: order.ingredients,
+      names: new Map(),
+      icons: new Map(),
+      price: 0,
+      _id: order._id,
+    };
+    order.ingredients.forEach((id) => {
+      const ingredient = ingredients.find((item) => {
+        return item._id === id;
+      });
+      if (ingredient) {
+        ticket.names.set(id, ingredient.name);
+        ticket.icons.set(id, ingredient.image_mobile);
+        if (ingredient.type === "bun") {
+          ticket.price += ingredient.price * 2;
+        } else {
+          ticket.price += ingredient.price;
+        }
+      } else {
+        ticket.names.set(id, "");
+        ticket.icons.set(id, "");
+      }
+    });
+    message.tickets.push(ticket);
+  });
+
+  message.tickets.sort((t1, t2) => {
+    return new Date(t1.createdAt).getTime() - new Date(t2.createdAt).getTime();
+  });
+  message.tickets.reverse();
+  console.log(message);
+  return message;
+};
+
 export const socketMiddleware = (
   wsActions: TWSMiddlewareActions
 ): Middleware => {
@@ -36,17 +91,18 @@ export const socketMiddleware = (
 
       // start process actions
       if (action.type === onInit) {
-        // инициализация сокета в зависимости от типа (просматриваемой страницы)
         const { dispatch, getState } = store;
         const { feed } = getState();
         const url = getWSUrl(feed.type);
 
-        // соединение с сервером
+        // инициализация сокета в зависимости от типа (просматриваемой страницы)
+        // и соединение с сервером
         socket = new WebSocket(url);
 
         if (socket) {
           // on open
-          socket.onopen = (event) => {
+          socket.onopen = () => {
+            console.log("Socket connected");
             dispatch({ type: onOpen });
           };
 
@@ -61,8 +117,15 @@ export const socketMiddleware = (
           // on message
           socket.onmessage = (event) => {
             const { data } = event;
-            const parsedData = JSON.parse(data);
-            dispatch({ type: onMessage, payload: parsedData });
+            const parsedData: TFeedServerMessage = JSON.parse(data);
+            console.log("Socket receive data:");
+            console.log(parsedData);
+            const { list } = getState();
+            const ingredients = list.ingredients;
+            dispatch({
+              type: onMessage,
+              payload: convertOrdersToTickets(parsedData, ingredients),
+            });
           };
 
           // on close
@@ -77,6 +140,7 @@ export const socketMiddleware = (
         }
       } else if (action.type === onClose) {
         if (socket) {
+          console.log("Socket closed");
           socket.close();
         }
       }

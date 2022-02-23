@@ -24,9 +24,9 @@ export type TGetIngredientsActions =
 
 // функция  для получения данных с сервера
 export function getIngredients() {
-  return function (dispatch: Dispatch) {
+  return async function (dispatch: Dispatch) {
     dispatch({ type: constants.GET_INGREDIENTS_REQUEST });
-    fetch(API_URL + "/ingredients")
+    await fetch(API_URL + "/ingredients")
       .then((res) => {
         if (res.ok) {
           return res.json();

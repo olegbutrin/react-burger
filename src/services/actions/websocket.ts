@@ -44,11 +44,16 @@ export type TWSActions =
   | IWSSendMessage
   | IWSClose;
 
-
 export type TWSError = IWSConnectionError;
 
-  export function wsConnect() {
-    return function (dispatch: Dispatch) {
-      dispatch({ type: constants.WS_CONNECTION_START});
-    };
-  }
+export function wsConnect() {
+  return function (dispatch: Dispatch) {
+    dispatch({ type: constants.WS_CONNECTION_START });
+  };
+}
+
+export function wsDisconnect() {
+  return function (dispatch: Dispatch) {
+    dispatch({ type: constants.WS_CLOSE });
+  };
+}
