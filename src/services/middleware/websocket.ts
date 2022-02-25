@@ -21,7 +21,6 @@ const getWSUrl = (type: TFeedType) => {
       return `${WS_URL}/orders/all`;
     case "user":
       let token = getUserAccessToken();
-      console.log(token);
       token = token.split(" ")[1];
       return `${WS_URL}/orders?token=${token}`;
   }
@@ -37,44 +36,48 @@ const convertOrdersToTickets: (
     total: data.total,
     totalToday: data.totalToday,
   };
-  data.orders.forEach((order) => {
-    const ticket: TFeedTicket = {
-      name: order.name,
-      status: order.status,
-      number: order.number,
-      createdAt: order.createdAt,
-      updatedAt: order.updatedAt,
-      ingredients: order.ingredients,
-      names: new Map(),
-      icons: new Map(),
-      price: 0,
-      _id: order._id,
-    };
-    order.ingredients.forEach((id) => {
-      const ingredient = ingredients.find((item) => {
-        return item._id === id;
-      });
-      if (ingredient) {
-        ticket.names.set(id, ingredient.name);
-        ticket.icons.set(id, ingredient.image_mobile);
-        if (ingredient.type === "bun") {
-          ticket.price += ingredient.price * 2;
+  if (data && data.orders) {
+    data.orders.forEach((order) => {
+      const ticket: TFeedTicket = {
+        name: order.name,
+        status: order.status,
+        number: order.number,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        ingredients: order.ingredients,
+        names: new Map(),
+        icons: new Map(),
+        prices: new Map(),
+        price: 0,
+        _id: order._id,
+      };
+      order.ingredients.forEach((id) => {
+        const ingredient = ingredients.find((item) => {
+          return item._id === id;
+        });
+        if (ingredient) {
+          ticket.names.set(id, ingredient.name);
+          ticket.icons.set(id, ingredient.image_mobile);
+          ticket.prices.set(id, ingredient.price);
+          if (ingredient.type === "bun") {
+            ticket.price += ingredient.price * 2;
+          } else {
+            ticket.price += ingredient.price;
+          }
         } else {
-          ticket.price += ingredient.price;
+          ticket.names.set(id, "");
+          ticket.icons.set(id, "");
         }
-      } else {
-        ticket.names.set(id, "");
-        ticket.icons.set(id, "");
-      }
+      });
+      message.tickets.push(ticket);
     });
-    message.tickets.push(ticket);
-  });
+  }
 
   message.tickets.sort((t1, t2) => {
     return new Date(t1.createdAt).getTime() - new Date(t2.createdAt).getTime();
   });
   message.tickets.reverse();
-  console.log(message);
+  // console.log(message);
   return message;
 };
 
@@ -102,7 +105,7 @@ export const socketMiddleware = (
         if (socket) {
           // on open
           socket.onopen = () => {
-            console.log("Socket connected");
+            // console.log("Socket connected");
             dispatch({ type: onOpen });
           };
 
@@ -118,8 +121,8 @@ export const socketMiddleware = (
           socket.onmessage = (event) => {
             const { data } = event;
             const parsedData: TFeedServerMessage = JSON.parse(data);
-            console.log("Socket receive data:");
-            console.log(parsedData);
+            // console.log("Socket receive data:");
+            // console.log(parsedData);
             const { list } = getState();
             const ingredients = list.ingredients;
             dispatch({
@@ -140,7 +143,7 @@ export const socketMiddleware = (
         }
       } else if (action.type === onClose) {
         if (socket) {
-          console.log("Socket closed");
+          // console.log("Socket closed");
           socket.close();
         }
       }

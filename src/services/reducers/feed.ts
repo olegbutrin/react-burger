@@ -19,15 +19,11 @@ export const feedReducer: Reducer<TFeedStore, TFeedActions> = (
     case constants.FEED_SET_TYPE:
       return {
         ...state,
-        type: action.payload !== state.type ? action.payload : state.type,
-        orders:
-          action.payload !== state.type ? initialState.tickets : state.tickets,
-        total: action.payload !== state.type ? initialState.total : state.total,
-        totalToday:
-          action.payload !== state.type
-            ? initialState.totalToday
-            : state.totalToday,
-      };
+        type: action.payload,
+        tickets: initialState.tickets,
+        total: initialState.total,
+        totalToday: initialState.totalToday,
+      }
     case constants.FEED_RECEIVE_ORDERS:
       return {
         ...state,

@@ -13,6 +13,7 @@ import { restoreUser } from "../../services/actions/auth";
 
 import AppHeader from "../app-header/app-header";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import TicketDetails from "../ticket-details/ticket-details";
 import ProtectedRoute from "../protected-route/protected-route";
 
 import ErrorNotifier from "../error-notifier/error-notifier";
@@ -29,6 +30,7 @@ import {
   ProfilePage,
   IngredientPreviewPage,
   FeedPage,
+  TicketDetailsPage,
   NotFoundPage,
 } from "../../pages";
 
@@ -80,6 +82,9 @@ const RoutedContent = () => {
           <ProtectedRoute path="/profile/orders" exact={true}>
             <ProfilePage />
           </ProtectedRoute>
+          <ProtectedRoute path="/profile/orders/:id" exact={true}>
+            <TicketDetailsPage />
+          </ProtectedRoute>
           {/* выход только для авторизованного (неавторизованному неоткуда выходить) */}
           <ProtectedRoute path="/logout" exact={true}>
             <ProfilePage />
@@ -96,17 +101,27 @@ const RoutedContent = () => {
         </Switch>
       </div>
       {background && (
-        <Route
-          path="/ingredients/:id"
-          children={
-            <Modal
-              closeCallback={closeModalPreview}
-              header={"Детали ингредиента"}
-            >
-              <IngredientDetails />
-            </Modal>
-          }
-        />
+        <>
+          <Route exact={true}
+            path="/ingredients/:id"
+            children={
+              <Modal
+                closeCallback={closeModalPreview}
+                header={"Детали ингредиента"}
+              >
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+          <ProtectedRoute exact={true}
+            path="/profile/orders/:id"
+            children={
+              <Modal closeCallback={closeModalPreview} header={"Детали заказа"}>
+                <TicketDetails />
+              </Modal>
+            }
+          />
+        </>
       )}
     </>
   );
@@ -127,9 +142,7 @@ const App = () => {
   }, [dispatch, userData]);
 
   // импорт чистых данных
-  const { ingredients, ingredientRequest } = useSelector(
-    (store) => store.list
-  );
+  const { ingredients, ingredientRequest } = useSelector((store) => store.list);
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера
   React.useEffect(() => {

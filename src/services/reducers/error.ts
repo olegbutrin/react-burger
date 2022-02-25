@@ -8,13 +8,15 @@ import { TWSError } from "../actions/websocket";
 import { WS_CONNECTION_ERROR } from "../constants/websocket";
 import { IClearError } from "../actions/error";
 import { TError } from "../../utils/types";
+import { TOrderError } from "../actions/order";
+import { ORDER_DETAILS_ERROR } from "../constants/order";
 
 const initialState: TError = {
   source: "",
   message: "",
 };
 
-export const errorReducer: Reducer<TError, TAuthError | TWSError | IClearError > = (
+export const errorReducer: Reducer<TError, TAuthError | TWSError | TOrderError | IClearError  > = (
   state = initialState,
   action
 ) => {
@@ -28,6 +30,7 @@ export const errorReducer: Reducer<TError, TAuthError | TWSError | IClearError >
     case constants.RESET_PASS_ERROR:
     case constants.UPDATE_TOKEN_ERROR:
     case WS_CONNECTION_ERROR:
+    case ORDER_DETAILS_ERROR:
       return { source: action.payload.source, message: action.payload.message };
     case CLEAR_ERROR:
       return { ...initialState };

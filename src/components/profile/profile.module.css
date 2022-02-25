@@ -11,6 +11,16 @@
 }
 
 .profileOrders {
-  width: 25%;
-  text-align: center;
+  width: 100%;
+  max-height: 60vh;
+  overflow-y: scroll;
+}
+
+.profileOrders > *:first-child {
+  margin-top: 0px;
+}
+
+.routeLink {
+  color: unset;
+  text-decoration: unset;
 }

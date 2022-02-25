@@ -16,6 +16,7 @@ import { TGetIngredientsActions } from "../services/actions/ingredient-list";
 import { TItemPreviewActions } from "../services/actions/ingredient-preview";
 import { TWSActions } from "../services/actions/websocket";
 import { TFeedActions } from "../services/actions/feed";
+import { TOrderDetails } from "../services/actions/order";
 
 import {
   WS_CONNECTION_START,
@@ -148,6 +149,7 @@ export type TFeedTicket = TFeedOrder & {
   price: number;
   icons: Map<string, string>;
   names: Map<string, string>;
+  prices: Map<string, number>;
 };
 
 export type TFeedServerMessage = {
@@ -162,13 +164,23 @@ export type TFeedTicketMessage = {
   total: number;
   totalToday: number;
   success: boolean;
-}
+};
 
 export type TFeedStore = {
   type: TFeedType;
   tickets: Array<TFeedTicket>;
   total: number;
   totalToday: number;
+};
+
+export type TOrderServerMessage = {
+  success: boolean;
+  orders: Array<TFeedOrder>;
+};
+
+export type TOrderStore = {
+  request: boolean;
+  order: TFeedOrder | null;
 };
 
 // Расширяем тип History для использования стейта и поля from
@@ -211,7 +223,8 @@ export type TApplicationActions =
   | TGetIngredientsActions
   | TItemPreviewActions
   | TWSActions
-  | TFeedActions;
+  | TFeedActions
+  | TOrderDetails;
 
 // Определяем Thunk
 export type AppThunk<TReturn = void> = ActionCreator<

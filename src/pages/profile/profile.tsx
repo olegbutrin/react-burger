@@ -9,19 +9,38 @@ import css from "../pages.module.css";
 
 const ProfilePage = () => {
   const { pathname } = useLocation();
-  const isProfile:boolean = pathname === "/profile"
-  const isOrders:boolean = pathname.indexOf("/profile/orders") !== -1;
-  const isLogout:boolean = pathname === "/logout";
+  const isProfile: boolean = pathname === "/profile";
+  const isOrders: boolean = pathname.indexOf("/profile/orders") !== -1;
+  const isLogout: boolean = pathname === "/logout";
 
   return (
     <div className={css.hwrapper + " pt-30"}>
-      <div className={css.container_1_3 + " pr-20"}><ProfileNavigation /></div>
-      <div className={css.container_2_3}>
-        {isProfile && <UserSettings />}
-        {isOrders && <UserOrders />}
-        {isLogout && <UserLogout />}
+      <div className={css.container_1_3 + " pr-20"}>
+        <ProfileNavigation />
       </div>
-      <div className={css.container_3_3 + " pl-20"}></div>
+      {isProfile && (
+        <>
+          <div className={css.container_2_3}>
+            <UserSettings />
+          </div>
+          <div className={css.container_3_3 + " pl-20"}></div>
+        </>
+      )}
+      {isOrders && (
+        <>
+          <div className={css.container_max}>
+            <UserOrders />
+          </div>
+        </>
+      )}
+      {isLogout && (
+        <>
+          <div className={css.container_2_3}>
+            <UserLogout />
+          </div>
+          <div className={css.container_3_3 + " pl-20"}></div>
+        </>
+      )}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import ProfilePage from "./profile/profile";
 import MainPage from "./main-page/main-page";
 import IngredientPreviewPage from "./ingredient-preview/ingredient-preview";
 import FeedPage from "./feed/feed";
+import TicketDetailsPage from "./ticket-details/ticket-details";
 import NotFoundPage from "./not-found/not-found";
 
 export {
@@ -17,5 +18,6 @@ export {
   MainPage,
   IngredientPreviewPage,
   FeedPage,
+  TicketDetailsPage,
   NotFoundPage,
 };
