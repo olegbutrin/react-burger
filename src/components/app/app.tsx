@@ -95,6 +95,9 @@ const RoutedContent = () => {
           <Route path="/feed" exact={true}>
             <FeedPage />
           </Route>
+          <Route path="/feed/:id" exact={true}>
+            <TicketDetailsPage />
+          </Route>
           <Route>
             <NotFoundPage />
           </Route>
@@ -102,7 +105,8 @@ const RoutedContent = () => {
       </div>
       {background && (
         <>
-          <Route exact={true}
+          <Route
+            exact={true}
             path="/ingredients/:id"
             children={
               <Modal
@@ -113,7 +117,17 @@ const RoutedContent = () => {
               </Modal>
             }
           />
-          <ProtectedRoute exact={true}
+          <Route
+            exact={true}
+            path="/feed/:id"
+            children={
+              <Modal closeCallback={closeModalPreview} header={"Детали заказа"}>
+                <TicketDetails />
+              </Modal>
+            }
+          />
+          <ProtectedRoute
+            exact={true}
             path="/profile/orders/:id"
             children={
               <Modal closeCallback={closeModalPreview} header={"Детали заказа"}>

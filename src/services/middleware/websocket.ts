@@ -38,13 +38,30 @@ const convertOrdersToTickets: (
   };
   if (data && data.orders) {
     data.orders.forEach((order) => {
+      // Фильтруем и пытаемся рассортировать ингредиенты так, 
+      // чтобы id булки был в одном экземпляре и располагался на последнем месте в массиве.
+      // Такое поведение нужно потому, что общий список заказов содержит разные составы ингредиентов,
+      // в зависимости от того, как разные студенты ренализовали отправку заказа.
+      const bun = order.ingredients.find((id) => {
+        const ingredient = ingredients.find((ingredient) => {
+          return ingredient._id === id;
+        });
+        if (ingredient && ingredient.type === "bun") {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      const ingrs = order.ingredients.filter((item) => {
+        return item !== bun;
+      });
       const ticket: TFeedTicket = {
         name: order.name,
         status: order.status,
         number: order.number,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
-        ingredients: order.ingredients,
+        ingredients: ingrs && bun ? [...ingrs, bun] : order.ingredients,
         names: new Map(),
         icons: new Map(),
         prices: new Map(),
@@ -74,10 +91,9 @@ const convertOrdersToTickets: (
   }
 
   message.tickets.sort((t1, t2) => {
-    return new Date(t1.createdAt).getTime() - new Date(t2.createdAt).getTime();
+    return new Date(t1.updatedAt).getTime() - new Date(t2.updatedAt).getTime();
   });
   message.tickets.reverse();
-  // console.log(message);
   return message;
 };
 
@@ -105,7 +121,6 @@ export const socketMiddleware = (
         if (socket) {
           // on open
           socket.onopen = () => {
-            // console.log("Socket connected");
             dispatch({ type: onOpen });
           };
 
@@ -121,8 +136,6 @@ export const socketMiddleware = (
           socket.onmessage = (event) => {
             const { data } = event;
             const parsedData: TFeedServerMessage = JSON.parse(data);
-            // console.log("Socket receive data:");
-            // console.log(parsedData);
             const { list } = getState();
             const ingredients = list.ingredients;
             dispatch({
@@ -143,7 +156,6 @@ export const socketMiddleware = (
         }
       } else if (action.type === onClose) {
         if (socket) {
-          // console.log("Socket closed");
           socket.close();
         }
       }

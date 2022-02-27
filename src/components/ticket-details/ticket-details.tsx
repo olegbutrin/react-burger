@@ -37,7 +37,21 @@ const TicketDetails = () => {
   // что это позволяет легко избавиться от дубликатов
   const orderIngredients: Map<string, TOrderIngredientDetails> = new Map();
   if (order) {
-    order.ingredients.forEach((id) => {
+    const bun = order.ingredients.find((id) => {
+      const ingredient = ingredients.find((ingredient) => {
+        return ingredient._id === id;
+      });
+      if (ingredient && ingredient.type === "bun") {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    const ingrs = order.ingredients.filter((item) => {
+      return item !== bun;
+    });
+    const ingredientList = ingrs && bun ? [...ingrs, bun] : order.ingredients
+    ingredientList.forEach((id) => {
       const product = ingredients.find((ingredient) => {
         return ingredient._id === id;
       });
