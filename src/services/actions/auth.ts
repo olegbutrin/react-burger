@@ -414,7 +414,7 @@ export function getProfile() {
         if (response.ok) {
           return response.json();
         } else {
-          if (response.status === 403 || response.status === 401) {
+          if (response.status === 403) {
             throw new Error("Token expired");
           } else {
             throw new Error(
