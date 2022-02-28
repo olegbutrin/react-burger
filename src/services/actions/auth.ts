@@ -1,11 +1,12 @@
 import { Dispatch } from "redux";
-import { API_URL, TOKEN_EXPIRED } from "../../utils/defaults";
+import { API_URL } from "../../utils/defaults";
 import {
   getUserAccessToken,
   getUserRefreshToken,
   setUserData,
   setUserProfile,
   updateUserRefreshToken,
+  updateUserAccessToken,
   setUserIsLogged,
 } from "../user";
 
@@ -19,6 +20,7 @@ import {
 } from "../../utils/types";
 
 import * as constants from "../constants/auth";
+import { store } from "../store";
 
 export interface IRegisterRequest {
   readonly type: typeof constants.REGISTER_REQUEST;
@@ -203,13 +205,17 @@ const checkResponse = (response: Response) => {
   if (response.ok) {
     return response.json();
   } else {
-    return Promise.reject(`Ошибка ${response.status}`);
+    if (response.status === 401) {
+      return Promise.reject("Неверный пароль!");
+    } else {
+      return Promise.reject(`Ошибка ${response.status}`);
+    }
   }
 };
 
-const setAuthData = (serverData: TServerData, expired: number) => {
+const setAuthData = (serverData: TServerData) => {
   const userData: TStorageUserData = (({ success, ...data }) => {
-    return { ...data, expired: expired, isLogged: false };
+    return { ...data, isLogged: false };
   })({
     ...serverData,
   });
@@ -218,6 +224,41 @@ const setAuthData = (serverData: TServerData, expired: number) => {
     ...userData,
   });
   return authData;
+};
+
+function updateAllTokens(successCallback:Function, errorCallback:Function) {
+  const refreshToken = getUserRefreshToken();
+  apiRequest("/auth/token", { token: refreshToken })
+    .then(checkResponse)
+    .then((result) => {
+      if (result.success) {
+        successCallback(result.refreshToken, result.accessToken);
+      } else {
+        throw new Error("User Update Token JSON Error!");
+      }
+    })
+    .catch((error) => {
+      errorCallback(error);
+    });
+}
+
+const successUpdateTokens: (
+  refreshToken: string,
+  accessToken: string
+) => void = (refreshToken, accessToken) => {
+  updateUserRefreshToken(refreshToken);
+  updateUserAccessToken(accessToken);
+  store.dispatch({
+    type: constants.UPDATE_TOKEN_SUCCESS,
+    payload: { accessToken: accessToken },
+  });
+};
+
+const errorUpdateTokens: (error: string) => void = (error) => {
+  store.dispatch({
+    type: constants.UPDATE_TOKEN_ERROR,
+    payload: { source: "Update token", message: error },
+  });
 };
 
 export function registerUser(user: string, email: string, password: string) {
@@ -237,8 +278,7 @@ export function registerUser(user: string, email: string, password: string) {
       })
       .then((result) => {
         if (result.success) {
-          const expired = new Date().getTime() + TOKEN_EXPIRED;
-          const authData = setAuthData(result, expired);
+          const authData = setAuthData(result);
           dispatch({
             type: constants.REGISTER_SUCCESS,
             payload: authData,
@@ -264,8 +304,7 @@ export function loginUser(email: string, password: string) {
       .then(checkResponse)
       .then((result) => {
         if (result.success) {
-          const expired = new Date().getTime() + TOKEN_EXPIRED;
-          const authData = setAuthData(result, expired);
+          const authData = setAuthData(result);
           dispatch({
             type: constants.LOGIN_SUCCESS,
             payload: authData,
@@ -298,33 +337,6 @@ export function logoutUser() {
         dispatch({
           type: constants.LOGOUT_ERROR,
           payload: { source: "User Logout", message: error },
-        });
-      });
-  };
-}
-
-export function updateAllTokens() {
-  const refreshToken = getUserRefreshToken();
-  return function (dispatch: Dispatch) {
-    dispatch({ type: constants.UPDATE_TOKEN_REQUEST });
-    apiRequest("/auth/token", { token: refreshToken })
-      .then(checkResponse)
-      .then((result) => {
-        if (result.success) {
-          updateUserRefreshToken(result.refreshToken);
-          const expired = new Date().getTime() + TOKEN_EXPIRED;
-          dispatch({
-            type: constants.UPDATE_TOKEN_SUCCESS,
-            payload: { accessToken: result.accessToken, expired: expired },
-          });
-        } else {
-          throw new Error("User Update Token JSON Error!");
-        }
-      })
-      .catch((error) => {
-        dispatch({
-          type: constants.UPDATE_TOKEN_ERROR,
-          payload: { source: "Update token", message: error },
         });
       });
   };
@@ -402,9 +414,13 @@ export function getProfile() {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error(
-            "Update user profile request: " + response.statusText
-          );
+          if (response.status === 403 || response.status === 401) {
+            throw new Error("Token expired");
+          } else {
+            throw new Error(
+              "Update user profile request: " + response.statusText
+            );
+          }
         }
       })
       .then((result) => {
@@ -417,10 +433,15 @@ export function getProfile() {
         }
       })
       .catch((error) => {
-        dispatch({
-          type: constants.PROFILE_ERROR,
-          payload: { source: "Get User Error", message: error.message },
-        });
+        if (error.message === "Token expired") {
+          dispatch({ type: constants.UPDATE_TOKEN_REQUEST });
+          updateAllTokens(successUpdateTokens, errorUpdateTokens);
+        } else {
+          dispatch({
+            type: constants.PROFILE_ERROR,
+            payload: { source: "Get User Error", message: error.message },
+          });
+        }
       });
   };
 }

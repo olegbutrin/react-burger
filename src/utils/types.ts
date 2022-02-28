@@ -82,7 +82,6 @@ export type TUserAuthStore = {
   readonly user: TUserPair;
   readonly isLogged: boolean;
   readonly accessToken: string;
-  readonly expired: number;
   readonly isForgot: boolean;
 };
 

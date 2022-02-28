@@ -15,7 +15,6 @@ const initialState: TUserAuthStore = {
   },
   isLogged: false,
   accessToken: "",
-  expired: 0,
   isForgot: false,
 };
 
@@ -33,7 +32,6 @@ const authSuccess = (state: TUserAuthStore, action: TAuthUserData) => {
     // поэтому если их нет в payload, используем user из состояния
     user: action.payload.user ? action.payload.user : state.user,
     accessToken: action.payload.accessToken ? action.payload.accessToken : state.accessToken,
-    expired: action.payload.expired ? action.payload.expired : state.expired,
   };
 };
 
@@ -46,7 +44,6 @@ const authError = (state: TUserAuthStore) => {
     isLogged: false,
     user: PUBLIC_APP ? initialState.user : state.user,
     accessToken: initialState.accessToken,
-    expired: initialState.expired,
   };
 };
 
@@ -94,7 +91,6 @@ export const authReducer: Reducer<TUserAuthStore, TAuthReducerActions> = (state 
         isLogged: action.payload.isLogged,
         user: action.payload.user,
         accessToken: action.payload.accessToken ? action.payload.accessToken : state.accessToken,
-        expired: action.payload.expired,
       };
     default:
       return state;

@@ -63,20 +63,20 @@ export const getUserAccessToken: () => string = () => {
   return data && data.accessToken ? data.accessToken : "";
 };
 
-export const getUserExpired: () => number = () => {
+export const updateUserAccessToken: (accessToken: string) => void = (
+  accessToken
+) => {
   const data = getUserData();
-  return data && data.expired ? data.expired : 0;
+  data && setUserData({ ...data, accessToken: accessToken });
 };
 
 export const getLocalStorageAuth: () => TUserAuthStats | null = () => {
-  const timeNow = new Date().getTime();
   const data = getUserData();
   if (data !== null) {
     return {
-      isLogged: !!(data.isLogged && data.expired && timeNow < data.expired),
+      isLogged: !!data.isLogged,
       user: data.user,
       accessToken: data.accessToken,
-      expired: data.expired,
     };
   } else {
     return null;
@@ -85,9 +85,7 @@ export const getLocalStorageAuth: () => TUserAuthStats | null = () => {
 
 // хук для получения статуса пользователя на конкретный момент
 export const useUserStatus: () => { isAuthenticated: boolean } = () => {
-  const timeNow: number = new Date().getTime();
-  const { isLogged, expired } = useSelector((store) => store.auth);
-  const isAuthenticated: boolean = isLogged && timeNow < expired;
-
+  const { isLogged } = useSelector((store) => store.auth);
+  const isAuthenticated: boolean = isLogged;
   return { isAuthenticated: isAuthenticated };
 };
