@@ -206,9 +206,11 @@ const checkResponse = (response: Response) => {
     return response.json();
   } else {
     if (response.status === 401) {
-      return Promise.reject("Неверный пароль!");
+      return Promise.reject(new Error("Неверный пароль!"));
+    } else if (response.status === 403) {
+      return Promise.reject(new Error ("Token expired"));
     } else {
-      return Promise.reject(`Ошибка ${response.status}`);
+      return Promise.reject(new Error(`Ошибка ${response.status}`));
     }
   }
 };
@@ -226,7 +228,7 @@ const setAuthData = (serverData: TServerData) => {
   return authData;
 };
 
-function updateAllTokens(successCallback:Function, errorCallback:Function) {
+function updateAllTokens(successCallback: Function, errorCallback: Function) {
   const refreshToken = getUserRefreshToken();
   apiRequest("/auth/token", { token: refreshToken })
     .then(checkResponse)
@@ -269,13 +271,7 @@ export function registerUser(user: string, email: string, password: string) {
       email: email,
       password: password,
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("User Register Error: " + response.statusText);
-        }
-      })
+      .then(checkResponse)
       .then((result) => {
         if (result.success) {
           const authData = setAuthData(result);
@@ -369,13 +365,7 @@ export function resetPassword(email: string, password: string, token: string) {
   return function (dispatch: Dispatch) {
     dispatch({ type: constants.RESET_PASS_REQUEST });
     apiRequest("/password-reset", { password: password, token: token })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Reset password request: " + response.statusText);
-        }
-      })
+      .then(checkResponse)
       .then((result) => {
         if (result.success) {
           dispatch({
@@ -410,19 +400,7 @@ export function getProfile() {
       referrerPolicy: "no-referrer",
     };
     fetch(url, options)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          if (response.status === 403) {
-            throw new Error("Token expired");
-          } else {
-            throw new Error(
-              "Update user profile request: " + response.statusText
-            );
-          }
-        }
-      })
+      .then(checkResponse)
       .then((result) => {
         if (result.success) {
           const userProfile: TUserPair = result.user;
@@ -432,7 +410,7 @@ export function getProfile() {
           throw new Error("User Profile JSON Error!");
         }
       })
-      .catch((error) => {
+      .catch((error:Error) => {
         if (error.message === "Token expired") {
           dispatch({ type: constants.UPDATE_TOKEN_REQUEST });
           updateAllTokens(successUpdateTokens, errorUpdateTokens);
@@ -462,15 +440,7 @@ export function setProfile(email: string, name: string, password: string) {
       body: JSON.stringify({ email, name, password }),
     };
     fetch(url, options)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error(
-            "Update user profile request: " + response.statusText
-          );
-        }
-      })
+      .then(checkResponse)
       .then((result) => {
         if (result.success) {
           const userProfile: TUserPair = result.user;
