@@ -86,8 +86,6 @@ export const getLocalStorageAuth: () => TUserAuthStats | null = () => {
 // хук для получения статуса пользователя на конкретный момент
 export const useUserStatus: () => { isAuthenticated: boolean } = () => {
   const { isLogged } = useSelector((store) => store.auth);
-  const refreshToken = getUserRefreshToken();
-  const accessToken = getUserAccessToken();
-  const isAuthenticated: boolean = isLogged && !!refreshToken && !!accessToken;
+  const isAuthenticated: boolean = isLogged;
   return { isAuthenticated: isAuthenticated };
 };
