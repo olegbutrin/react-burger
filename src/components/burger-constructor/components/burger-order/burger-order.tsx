@@ -22,6 +22,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./burger-order.module.css";
+import { getProfile } from "../../../../services/actions/auth";
 
 // выносим кнопку запроса заказа в отдельный компонент потому,
 // что нужно использовать хук проверки статуса пользователя
@@ -41,6 +42,7 @@ const OrderButton: React.FC<{ productsID: string[]; isRequest: boolean }> = ({
     }
     if (btnClicked) {
       setBtnClicked(false);
+      dispatch(getProfile())
       if (isAuthenticated) {
         dispatch(getOrder(productsID));
       } else {
