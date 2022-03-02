@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../../../../utils/hooks";
 import { useHistory } from "react-router-dom";
 
 import { useUserStatus } from "../../../../services/user";
@@ -9,10 +9,11 @@ import {
   clearOrder,
 } from "../../../../services/actions/burger-order";
 
-import { CLEAR_BURGER_PRODUCTS } from "../../../../services/actions/ingredient-constructor";
+import { CLEAR_BURGER_PRODUCTS } from "../../../../services/constants/ingredient-constructor";
 
 import Modal from "../../../modal/modal";
 import OrderDetails from "../../../order-details/order-details";
+import { OrderWaiting } from "../../../order-waiting/order-waiting";
 import ErrorInfo from "../../../order-error/order-error";
 
 import {
@@ -22,18 +23,22 @@ import {
 
 import css from "./burger-order.module.css";
 
-import { TBurgerStore, TOrderStore } from "../../../../utils/types";
-
 // выносим кнопку запроса заказа в отдельный компонент потому,
 // что нужно использовать хук проверки статуса пользователя
 // непосредственно в момент нажатия, а не рендера родителя
-const OrderButton: React.FC<{ productsID: string[] }> = ({ productsID }) => {
+const OrderButton: React.FC<{ productsID: string[]; isRequest: boolean }> = ({
+  productsID,
+  isRequest,
+}) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { isAuthenticated } = useUserStatus();
   const [btnClicked, setBtnClicked] = useState(false);
 
   useEffect(() => {
+    if (isRequest) {
+      return;
+    }
     if (btnClicked) {
       setBtnClicked(false);
       if (isAuthenticated) {
@@ -45,7 +50,7 @@ const OrderButton: React.FC<{ productsID: string[] }> = ({ productsID }) => {
         });
       }
     }
-  }, [btnClicked, isAuthenticated, history, dispatch, productsID]);
+  }, [btnClicked, isAuthenticated, isRequest, history, dispatch, productsID]);
 
   const callback = (event: SyntheticEvent) => {
     event.preventDefault();
@@ -64,13 +69,13 @@ const OrderButton: React.FC<{ productsID: string[] }> = ({ productsID }) => {
 const BurgerOrder = () => {
   const dispatch = useDispatch();
 
-  const { bunData, productsData } = useSelector((store: TBurgerStore) => ({
+  const { bunData, productsData } = useSelector((store) => ({
     bunData: store.burger.bun,
     productsData: store.burger.products,
   }));
 
   const { order, orderRequest, orderFailed } = useSelector(
-    (store: TOrderStore) => store.order
+    (store) => store.order
   );
 
   // расчет общей стоимости
@@ -107,15 +112,22 @@ const BurgerOrder = () => {
         <p className="text text_type_digits-medium mr-3">{summary}</p>
         <CurrencyIcon type="primary" />
       </div>
-      <OrderButton productsID={productsID}></OrderButton>
+      <OrderButton
+        productsID={productsID}
+        isRequest={orderRequest}
+      ></OrderButton>
       {orderFailed && (
         <Modal closeCallback={closeModal}>
           <ErrorInfo />
         </Modal>
       )}
+      {orderRequest && (
+        <Modal closeCallback={() => {}}>
+          <OrderWaiting />
+        </Modal>
+      )}
       {!orderRequest && !orderFailed && order && (
         <Modal closeCallback={closeModalClearBurger}>
-          {/* провайдер контекста для модального окна заказа */}
           <OrderDetails orderState={order} />
         </Modal>
       )}

@@ -1,5 +1,5 @@
 import React, { RefObject } from "react";
-import { useSelector } from "react-redux";
+import { useSelector } from "../../utils/hooks";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -7,13 +7,11 @@ import IngredientBox from "./components/ingredient-box/ingredient-box";
 
 import css from "./burger-ingredients.module.css";
 
-import { TListStore } from "../../utils/types";
-
-type TRefsType = Map<string, RefObject<HTMLDivElement | null | undefined>> 
+type TRefsType = Map<string, RefObject<HTMLDivElement | null | undefined>>;
 
 const BurgerIngredients = () => {
   // получаем список ингредиентов из провайдера
-  const { productsData } = useSelector((state: TListStore) => ({
+  const { productsData } = useSelector((state) => ({
     productsData: state.list.ingredients,
   }));
 
@@ -21,7 +19,7 @@ const BurgerIngredients = () => {
   const [activeType, setActiveType] = React.useState("bun");
 
   // мапим рефы для дальнейшего использования
-  const itemRefs:TRefsType = new Map([
+  const itemRefs: TRefsType = new Map([
     ["bun", React.useRef()],
     ["sauce", React.useRef()],
     ["main", React.useRef()],
@@ -124,7 +122,7 @@ const BurgerIngredients = () => {
       </div>
       <div
         className={css.container + " custom-scroll"}
-        ref={itemRefs.get("scroller")  as RefObject<HTMLDivElement>}
+        ref={itemRefs.get("scroller") as RefObject<HTMLDivElement>}
       >
         <IngredientBox
           tabRef={itemRefs.get("bun") as RefObject<HTMLDivElement>}

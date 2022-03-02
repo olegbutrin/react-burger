@@ -1,0 +1,73 @@
+.ticket {
+  display: flex;
+  flex-direction: column;
+  background: #1c1c21;
+  /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06),
+    0px 0px 1px rgba(0, 0, 0, 0.04); */
+  border-radius: 40px;
+  margin: 24px 0px;
+  padding: 24px;
+  width: 90%;
+}
+
+.fullRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.done {
+  color: rgb(0, 204, 204);
+}
+
+.cancelled {
+  color: rgb(229, 43, 26);
+}
+
+.itemContainer {
+  position: relative;
+  height: 72px;
+}
+
+.icon {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  top: 0px;
+  background: linear-gradient(63.18deg, #801ab3 0%, #4c4cff 100%);
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconBackground {
+  height: 58px;
+  width: 58px;
+  background: #131316;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-x: center;
+  background-position-y: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #131316;
+  border-radius: 100px;
+}
+
+.counter {
+  text-shadow: 1px 1px 2px #131316;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
+
+.priceContainer > span {
+  margin-right: 12px;
+}

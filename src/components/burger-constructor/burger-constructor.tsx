@@ -1,5 +1,4 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../../utils/hooks";
 import { useDrop } from "react-dnd";
 import { v4 as UUID } from "uuid";
 
@@ -10,32 +9,32 @@ import BurgerEmpty from "./components/burger-empty/burger-empty";
 import {
   SET_BURGER_BUN,
   ADD_BURGER_PRODUCT,
-} from "../../services/actions/ingredient-constructor";
+} from "../../services/constants/ingredient-constructor";
 
 import css from "./burger-constructor.module.css";
-import { TBurgerStore, IBurgerIngredientData } from "../../utils/types";
+import { IBurgerIngredientData } from "../../utils/types";
 
 // Основной класс конструктора бургеров
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
 
-  const { bun, products } = useSelector((state:TBurgerStore) => state.burger);
+  const { bun, products } = useSelector((state) => state.burger);
 
   const isEmpty = !bun && products.length === 0;
 
-  const setBun = (item:IBurgerIngredientData) => {
+  const setBun = (item: IBurgerIngredientData) => {
     dispatch({ type: SET_BURGER_BUN, payload: item });
   };
 
-  const addItem = (item:IBurgerIngredientData) => {
+  const addItem = (item: IBurgerIngredientData) => {
     dispatch({
       type: ADD_BURGER_PRODUCT,
       payload: { item: item, index: UUID() },
     });
   };
 
-  const handleDrop = (item:IBurgerIngredientData) => {
+  const handleDrop = (item: IBurgerIngredientData) => {
     if (item.type === "bun") {
       setBun(item);
     } else {
@@ -45,7 +44,7 @@ const BurgerConstructor = () => {
 
   const [, dropTarget] = useDrop({
     accept: "product",
-    drop(item:IBurgerIngredientData) {
+    drop(item: IBurgerIngredientData) {
       handleDrop(item);
     },
   });

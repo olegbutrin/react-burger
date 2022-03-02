@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../../utils/hooks";
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,6 +13,7 @@ import { restoreUser } from "../../services/actions/auth";
 
 import AppHeader from "../app-header/app-header";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import TicketDetails from "../ticket-details/ticket-details";
 import ProtectedRoute from "../protected-route/protected-route";
 
 import ErrorNotifier from "../error-notifier/error-notifier";
@@ -28,6 +29,8 @@ import {
   ResetPasswordPage,
   ProfilePage,
   IngredientPreviewPage,
+  FeedPage,
+  TicketDetailsPage,
   NotFoundPage,
 } from "../../pages";
 
@@ -36,8 +39,6 @@ import { getIngredients } from "../../services/actions/ingredient-list";
 import mainMenu from "../../utils/menu";
 
 import { TCustomHystory } from "../../utils/types";
-
-import { TListStore, TErrorStore } from "../../utils/types";
 
 // ================================
 // выносим роутированный контент в отдельный компонент
@@ -81,6 +82,9 @@ const RoutedContent = () => {
           <ProtectedRoute path="/profile/orders" exact={true}>
             <ProfilePage />
           </ProtectedRoute>
+          <ProtectedRoute path="/profile/orders/:id" exact={true}>
+            <TicketDetailsPage />
+          </ProtectedRoute>
           {/* выход только для авторизованного (неавторизованному неоткуда выходить) */}
           <ProtectedRoute path="/logout" exact={true}>
             <ProfilePage />
@@ -88,23 +92,50 @@ const RoutedContent = () => {
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPreviewPage />
           </Route>
+          <Route path="/feed" exact={true}>
+            <FeedPage />
+          </Route>
+          <Route path="/feed/:id" exact={true}>
+            <TicketDetailsPage />
+          </Route>
           <Route>
             <NotFoundPage />
           </Route>
         </Switch>
       </div>
       {background && (
-        <Route
-          path="/ingredients/:id"
-          children={
-            <Modal
-              closeCallback={closeModalPreview}
-              header={"Детали ингредиента"}
-            >
-              <IngredientDetails />
-            </Modal>
-          }
-        />
+        <>
+          <Route
+            exact={true}
+            path="/ingredients/:id"
+            children={
+              <Modal
+                closeCallback={closeModalPreview}
+                header={"Детали ингредиента"}
+              >
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            exact={true}
+            path="/feed/:id"
+            children={
+              <Modal closeCallback={closeModalPreview} header={"Детали заказа"}>
+                <TicketDetails />
+              </Modal>
+            }
+          />
+          <ProtectedRoute
+            exact={true}
+            path="/profile/orders/:id"
+            children={
+              <Modal closeCallback={closeModalPreview} header={"Детали заказа"}>
+                <TicketDetails />
+              </Modal>
+            }
+          />
+        </>
       )}
     </>
   );
@@ -125,9 +156,7 @@ const App = () => {
   }, [dispatch, userData]);
 
   // импорт чистых данных
-  const { ingredients, ingredientRequest } = useSelector(
-    (store: TListStore) => store.list
-  );
+  const { ingredients, ingredientRequest } = useSelector((store) => store.list);
 
   // запускаем асинхронное получение данных через хук при объявлении диспетчера
   React.useEffect(() => {
@@ -137,7 +166,7 @@ const App = () => {
   }, [dispatch, ingredients, ingredientRequest]);
 
   // читаем возможную ошибку перед очередным рендером
-  const { source, message } = useSelector((store: TErrorStore) => store.error);
+  const { source, message } = useSelector((store) => store.error);
 
   // функция для очистки ошибки при закрытии модального окна с ошибкой
   const closeErrorModal = () => {

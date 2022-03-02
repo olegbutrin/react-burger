@@ -1,5 +1,3 @@
-import React from "react";
-
 import LoginLink from "../../components/login-link/login-link";
 
 import css from "./not-found.module.css"

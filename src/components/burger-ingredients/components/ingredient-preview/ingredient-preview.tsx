@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector } from "../../../../utils/hooks";
 import { useDrag } from "react-dnd";
 
 import {
@@ -10,7 +10,7 @@ import {
 
 import css from "./ingredient-preview.module.css";
 
-import { TBurgerStore, IIngredientData } from "../../../../utils/types";
+import { IIngredientData } from "../../../../utils/types";
 
 // =================
 // компонент для ингредиента в списке выбора
@@ -20,7 +20,7 @@ const IngredientPreview: React.FC<{
   const location = useLocation();
 
   const prodID = productsData._id;
-  const { bun, products } = useSelector((store: TBurgerStore) => store.burger);
+  const { bun, products } = useSelector((store) => store.burger);
   const count =
     productsData.type === "bun"
       ? bun && bun._id === prodID

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../../../../utils/hooks";
 import { useDrop, useDrag } from "react-dnd";
 
 import {
@@ -10,7 +10,7 @@ import {
 import {
   SWAP_BURGER_PRODUCTS,
   REMOVE_BURGER_PRODUCT,
-} from "../../../../services/actions/ingredient-constructor";
+} from "../../../../services/constants/ingredient-constructor";
 
 import { IBurgerIngredientData } from "../../../../utils/types";
 

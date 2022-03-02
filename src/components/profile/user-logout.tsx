@@ -1,5 +1,5 @@
 import { FormEvent } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../../utils/hooks";
 import {Redirect } from "react-router-dom";
 import { logoutUser } from "../../services/actions/auth";
 import { useUserStatus } from "../../services/user";

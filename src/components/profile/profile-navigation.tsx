@@ -44,6 +44,11 @@ const ProfileNavigation = () => {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       )}
+      {isOrders() === "" && (
+        <p className="text text_type_main-small text_color_inactive pt-20">
+          В этом разделе вы можете посмотреть свою историю заказов
+        </p>
+      )}
     </div>
   );
 };

@@ -5,6 +5,19 @@ import ForgotPasswordPage from "./forgot-password/forgot-password";
 import ProfilePage from "./profile/profile";
 import MainPage from "./main-page/main-page";
 import IngredientPreviewPage from "./ingredient-preview/ingredient-preview";
+import FeedPage from "./feed/feed";
+import TicketDetailsPage from "./ticket-details/ticket-details";
 import NotFoundPage from "./not-found/not-found";
 
-export {LoginPage, RegisterPage, ResetPasswordPage, ForgotPasswordPage, ProfilePage, MainPage, IngredientPreviewPage, NotFoundPage};
+export {
+  LoginPage,
+  RegisterPage,
+  ResetPasswordPage,
+  ForgotPasswordPage,
+  ProfilePage,
+  MainPage,
+  IngredientPreviewPage,
+  FeedPage,
+  TicketDetailsPage,
+  NotFoundPage,
+};
