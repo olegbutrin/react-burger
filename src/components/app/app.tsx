@@ -176,7 +176,7 @@ const App = () => {
   return (
     <div className={css.page}>
       <main className={css.main + " mt-10 ml-10 mr-10"}>
-        <Router basename="/react-burger">
+        <Router>
           <RoutedContent />
         </Router>
         {/* вывод ошибки в модальном окне */}

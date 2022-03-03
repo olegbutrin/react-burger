@@ -17,6 +17,7 @@ import {
   TStorageUserData,
   TError,
   TUserPair,
+  AppDispatch,
 } from "../../utils/types";
 
 import * as constants from "../constants/auth";
@@ -227,8 +228,11 @@ const setAuthData = (serverData: TServerData) => {
   return authData;
 };
 
-const updateAllTokens: (dispatch:Dispatch) => void  = (dispatch) => {
+const updateAllTokens: (dispatch: AppDispatch) => void = (dispatch) => {
   const refreshToken = getUserRefreshToken();
+  if (!refreshToken) {
+    return;
+  }
   dispatch({ type: constants.UPDATE_TOKEN_REQUEST });
   apiRequest("/auth/token", { token: refreshToken })
     .then(checkResponse)
@@ -250,6 +254,12 @@ const updateAllTokens: (dispatch:Dispatch) => void  = (dispatch) => {
         payload: { source: "Update token", message: error.message },
       });
     });
+};
+
+export function reconnectUser() {
+  return function (dispatch: Dispatch) {
+    updateAllTokens(dispatch);
+  }
 }
 
 export function registerUser(user: string, email: string, password: string) {
@@ -442,10 +452,14 @@ export function setProfile(email: string, name: string, password: string) {
         }
       })
       .catch((error) => {
-        dispatch({
-          type: constants.UPDATE_PROFILE_ERROR,
-          payload: { source: "Set User Error", message: error.message },
-        });
+        if (error.message === "Token expired") {
+          updateAllTokens(dispatch);
+        } else {
+          dispatch({
+            type: constants.UPDATE_PROFILE_ERROR,
+            payload: { source: "Set User Error", message: error.message },
+          });
+        }
       });
   };
 }
