@@ -33,7 +33,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy-script": "npm run build && scp -r ./build/* olegbutrin@burger.stellar.nomoredomains.xyz:/home/olegbutrin/praktikum/react-burger" 
+    "cypress:open": "cypress open",
+    "deploy-script": "npm run build && scp -r ./build/* olegbutrin@burger.stellar.nomoredomains.xyz:/home/olegbutrin/praktikum/react-burger"
   },
   "eslintConfig": {
     "extends": [
@@ -56,6 +57,10 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.3.2",
     "@types/uuid": "^8.3.3",
-    "gh-pages": "^3.2.3"
+    "cypress": "^9.5.1",
+    "eslint-plugin-cypress": "^2.12.1",
+    "fetch-mock": "^9.11.0",
+    "gh-pages": "^3.2.3",
+    "redux-mock-store": "^1.5.4"
   }
 }

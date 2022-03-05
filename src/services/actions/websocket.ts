@@ -11,6 +11,10 @@ export interface IWSConnectionSuccess {
   readonly type: typeof constants.WS_CONNECTION_SUCCESS;
 }
 
+export interface IWSConnectionRefused {
+  readonly type: typeof constants.WS_CONNECTION_REFUSED;
+}
+
 export interface IWSConnectionError {
   readonly type: typeof constants.WS_CONNECTION_ERROR;
   readonly payload: TError;
@@ -38,6 +42,7 @@ export interface IWSClose {
 export type TWSActions =
   | IWSConnectionStart
   | IWSConnectionSuccess
+  | IWSConnectionRefused
   | IWSConnectionError
   | IWSConnectionClosed
   | IWSGetMessage

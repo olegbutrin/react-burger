@@ -11,6 +11,8 @@ import {
   WS_CLOSE,
   WS_CONNECTION_CLOSED,
   WS_SEND_MESSAGE,
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_REFUSED,
 } from "../services/constants/websocket";
 
 import {FEED_FETCH_ORDERS, FEED_RECEIVE_ORDERS} from "../services/constants/feed";
@@ -23,6 +25,8 @@ declare global {
 
 const wsActions: TWSMiddlewareActions = {
   onInit: WS_CONNECTION_START,
+  onConnect: WS_CONNECTION_SUCCESS,
+  onRefuse: WS_CONNECTION_REFUSED,
   onError: WS_CONNECTION_ERROR,
   onClose: WS_CLOSE,
   onClosed: WS_CONNECTION_CLOSED,

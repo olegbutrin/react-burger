@@ -259,7 +259,7 @@ const updateAllTokens: (dispatch: AppDispatch) => void = (dispatch) => {
 export function reconnectUser() {
   return function (dispatch: Dispatch) {
     updateAllTokens(dispatch);
-  }
+  };
 }
 
 export function registerUser(user: string, email: string, password: string) {
@@ -286,7 +286,7 @@ export function registerUser(user: string, email: string, password: string) {
       .catch((error) => {
         dispatch({
           type: constants.REGISTER_ERROR,
-          payload: { source: "New User Registration", message: error },
+          payload: { source: "New User Registration", message: error.message },
         });
       });
   };
@@ -306,13 +306,13 @@ export function loginUser(email: string, password: string) {
           });
           setUserIsLogged(true);
         } else {
-          throw new Error("User Login JSON Error!");
+          throw new Error("User Login Error!");
         }
       })
       .catch((error) => {
         dispatch({
           type: constants.LOGIN_ERROR,
-          payload: { source: "User Login", message: error },
+          payload: { source: "User Login", message: error.message },
         });
       });
   };
@@ -331,7 +331,7 @@ export function logoutUser() {
       .catch((error) => {
         dispatch({
           type: constants.LOGOUT_ERROR,
-          payload: { source: "User Logout", message: error },
+          payload: { source: "User Logout", message: error.message },
         });
       });
   };
@@ -354,7 +354,7 @@ export function forgotPassword(email: string) {
       .catch((error) => {
         dispatch({
           type: constants.FORGOT_PASS_ERROR,
-          payload: { source: "Forgot Password", message: error },
+          payload: { source: "Forgot Password", message: error.message },
         });
       });
   };
@@ -378,14 +378,14 @@ export function resetPassword(email: string, password: string, token: string) {
       .catch((error) => {
         dispatch({
           type: constants.RESET_PASS_ERROR,
-          payload: { source: "Reset Password", message: error },
+          payload: { source: "Reset Password", message: error.message },
         });
       });
   };
 }
 
 export function getProfile() {
-  return async function (dispatch: Dispatch) {
+  return function (dispatch: Dispatch) {
     dispatch({ type: constants.PROFILE_REQUEST });
     const url = `${API_URL}/auth/user`;
     const options: RequestInit = {
@@ -398,7 +398,7 @@ export function getProfile() {
       redirect: "follow",
       referrerPolicy: "no-referrer",
     };
-    await fetch(url, options)
+    fetch(url, options)
       .then(checkResponse)
       .then((result) => {
         if (result.success) {
@@ -410,8 +410,12 @@ export function getProfile() {
         }
       })
       .catch((error: Error) => {
-        if (error.message === "Token expired") {
+        if (
+          error.message === "Token expired" ||
+          error.message === "Неверный пароль!"
+        ) {
           updateAllTokens(dispatch);
+          getProfile();
         } else {
           dispatch({
             type: constants.PROFILE_ERROR,
@@ -452,8 +456,12 @@ export function setProfile(email: string, name: string, password: string) {
         }
       })
       .catch((error) => {
-        if (error.message === "Token expired") {
+        if (
+          error.message === "Token expired" ||
+          error.message === "Неверный пароль!"
+        ) {
           updateAllTokens(dispatch);
+          setProfile(email, name, password);
         } else {
           dispatch({
             type: constants.UPDATE_PROFILE_ERROR,

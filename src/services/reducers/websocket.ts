@@ -9,6 +9,7 @@ import { TWebsocketState } from "../../utils/types";
 const initialState: TWebsocketState = {
   connected: false,
   messages: [],
+  refused: false,
 };
 
 export const websocketReducer: Reducer<TWebsocketState, TWSActions> = (
@@ -20,7 +21,14 @@ export const websocketReducer: Reducer<TWebsocketState, TWSActions> = (
       return {
         ...state,
         connected: true,
+        refused: false,
       };
+    case constants.WS_CONNECTION_REFUSED:
+      return {
+        ...state,
+        connected: false,
+        refused: true,
+      }
     case constants.WS_CONNECTION_CLOSED:
     case constants.WS_CONNECTION_ERROR:
       return {
