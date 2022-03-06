@@ -83,7 +83,6 @@ export type TServerData = {
 export type TUserAuthStore = {
   readonly user: TUserPair;
   readonly isLogged: boolean;
-  readonly accessToken: string;
   readonly isForgot: boolean;
 };
 
@@ -95,6 +94,7 @@ export type TUserAuthStats = Omit<TUserAuthStore, "isForgot">;
 // То же самое, что и для статуса, плюс токен обновления
 export type TStorageUserData = TUserAuthStats & {
   readonly refreshToken: string;
+  readonly accessToken: string;
 };
 
 export type TBurger = {

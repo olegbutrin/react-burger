@@ -14,15 +14,10 @@ const initialState: TUserAuthStore = {
     email: "",
   },
   isLogged: false,
-  accessToken: "",
   isForgot: false,
 };
 
 type TAuthReducerActions = TAuthSuccess | TAuthError;
-
-// По определению, основные свойства состояния могут быть:
-// аутенификация пройдена - состояние содержит актуальные данные статуса, токена и времени годности
-// аутенификация провалена - состояние содержит исходные данные статуса, токена и времени годности
 
 const authSuccess = (state: TUserAuthStore, action: TAuthUserData) => {
   return {
@@ -31,7 +26,6 @@ const authSuccess = (state: TUserAuthStore, action: TAuthUserData) => {
     // при рефреше токена сревер не возвращает данные user
     // поэтому если их нет в payload, используем user из состояния
     user: action.payload.user ? action.payload.user : state.user,
-    accessToken: action.payload.accessToken ? action.payload.accessToken : state.accessToken,
   };
 };
 
@@ -43,7 +37,6 @@ const authError = (state: TUserAuthStore) => {
     ...state,
     isLogged: false,
     user: PUBLIC_APP ? initialState.user : state.user,
-    accessToken: initialState.accessToken,
   };
 };
 
@@ -71,10 +64,6 @@ export const authReducer: Reducer<TUserAuthStore, TAuthReducerActions> = (state 
       return authError(state);
     case constants.LOGOUT_SUCCESS:
       return authError(state);
-    case constants.UPDATE_TOKEN_SUCCESS:
-      return authSuccess(state, action);
-    case constants.UPDATE_TOKEN_ERROR:
-      return authError(state);
     case constants.UPDATE_PROFILE_SUCCESS:
       return authSuccess(state, action);
     case constants.UPDATE_PROFILE_ERROR:
@@ -90,7 +79,6 @@ export const authReducer: Reducer<TUserAuthStore, TAuthReducerActions> = (state 
         ...state,
         isLogged: action.payload.isLogged,
         user: action.payload.user,
-        accessToken: action.payload.accessToken ? action.payload.accessToken : state.accessToken,
       };
     default:
       return state;

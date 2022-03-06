@@ -6,7 +6,6 @@ import Ticket from "../ticket/ticket";
 
 import css from "./profile.module.css";
 import { Link, useLocation } from "react-router-dom";
-import { reconnectUser } from "../../services/actions/auth";
 
 const UserOrders = () => {
   const dispatch = useDispatch();
@@ -23,7 +22,6 @@ const UserOrders = () => {
 
   useEffect(() => {
     if (refused) {
-      dispatch(reconnectUser());
       dispatch(wsConnect());
     }
   }, [dispatch, refused]);

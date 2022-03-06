@@ -14,7 +14,7 @@ import type {
 import { WS_URL } from "../../utils/defaults";
 
 import { getUserAccessToken } from "../user";
-import { reconnectUser } from "../actions/auth";
+import { updateTokens } from "../actions/auth";
 
 const getWSUrl = (type: TFeedType) => {
   switch (type) {
@@ -119,7 +119,7 @@ export const socketMiddleware = (
       } = wsActions;
 
       // start process actions
-      if (action.type === onInit) {
+      if (action.type === onInit || action.type === onRefuse) {
         const { dispatch, getState } = store;
         const { feed } = getState();
         const url = getWSUrl(feed.type);
@@ -138,26 +138,13 @@ export const socketMiddleware = (
 
           // on error
           socket.onerror = (event) => {
-            if (event.currentTarget) {
-              const ws = event.currentTarget as WebSocket;
-              if (ws.readyState !== 3) {
-                dispatch({
-                  type: onError,
-                  payload: {
-                    source: "WebSocket Connection",
-                    message: event.type,
-                  },
-                });
-              }
-            } else {
-              dispatch({
-                type: onError,
-                payload: {
-                  source: "WebSocket Connection",
-                  message: event.type,
-                },
-              });
-            }
+            dispatch({
+              type: onError,
+              payload: {
+                source: "WebSocket Connection",
+                message: event.type,
+              },
+            });
           };
 
           // on message
@@ -172,8 +159,18 @@ export const socketMiddleware = (
                 payload: convertOrdersToTickets(parsedData, ingredients),
               });
             } else {
-              dispatch({
-                type: onRefuse,
+              updateTokens().then((result) => {
+                if (result) {
+                  dispatch({ type: onRefuse });
+                } else {
+                  dispatch({
+                    type: onError,
+                    payload: {
+                      source: "WebSocket Connection",
+                      message: "Server refused access token!",
+                    },
+                  });
+                }
               });
             }
           };

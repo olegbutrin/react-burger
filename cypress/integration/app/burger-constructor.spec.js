@@ -1,8 +1,7 @@
-const { exists } = require("fs");
 
 const APP_URL = "http://localhost:3000";
-const USER_EMAIL = "olegbutrin@gmail.com";
-const USER_PASS = "123456";
+const INGREDIENTS_API_URL = "https://norma.nomoreparties.space/api/ingredients";
+const ORDERS_API_URL = "https://norma.nomoreparties.space/api/orders";
 
 function rndInt(min, max) {
   min = Math.ceil(min);
@@ -11,10 +10,17 @@ function rndInt(min, max) {
 }
 
 describe("check burger order", () => {
+  // load user data
+  let user;
+  before(() => {
+    cy.fixture("user.json").then((data) => {
+      user = data;
+    });
+  });
   // открываем приложение
-  before(function () {
+  it("should be available on localhost:3000", () => {
     cy.visit(APP_URL);
-    cy.wait(1500);
+    cy.intercept("GET", INGREDIENTS_API_URL, { fixture: "ingredients.json" });
   });
 
   it("set burger ingredients", () => {
@@ -65,14 +71,15 @@ describe("check burger order", () => {
 
   it("order burger", () => {
     cy.get("[class^=burger-order_priceValue__]").get("[class^=button]").click();
-    cy.get("[name=email]").type(USER_EMAIL, { force: true });
-    cy.get("[name=password]").type(USER_PASS, { force: true });
+    cy.get("[name=email]").type(user.email, { force: true });
+    cy.get("[name=password]").type(user.pass, { force: true });
     cy.get("button").contains("Войти").click();
     cy.get("[class^=burger-order_priceValue__]").get("[class^=button]").click();
   });
 
   it("close ticket", () => {
-    cy.get("[class^=order-details_contents__]", { timeout: 22000 }).as(
+    cy.intercept("POST", ORDERS_API_URL, { fixture: "order.json" });
+    cy.get("[class^=order-details_contents__]").as(
       "orderDetails"
     );
     cy.get("@orderDetails")
@@ -80,6 +87,7 @@ describe("check burger order", () => {
       .then(($el) => {
         expect(/^\d+$/.test($el[0].textContent.trim())).equal(true);
       });
+    cy.wait(500);
     cy.get("[class^=modal_container__]")
       .find("[class^=modal_closeButton__]")
       .click({ force: true });

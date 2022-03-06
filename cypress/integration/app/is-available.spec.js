@@ -5,20 +5,7 @@ describe("service is available", () => {
   // открываем приложение
   it("should be available on localhost:3000", () => {
     cy.visit(APP_URL);
-  });
-
-  // тестируем загрузку ингредиентов
-  it("ingredients fetch should be done", () => {
-    cy.intercept({
-      method: "GET",
-      url: INGREDIENTS_API_URL,
-    }).as("ingredientsAPI");
-    cy.wait("@ingredientsAPI").then((interception) => {
-      assert.isNotNull(
-        interception.response.body,
-        "Ingredients API return data"
-      );
-    });
+    cy.intercept('GET', INGREDIENTS_API_URL, { fixture: 'ingredients.json' });
   });
 
   // проверяем загрузку элементов меню
@@ -50,6 +37,7 @@ describe("service is available", () => {
               posBefore = $el.position().top;
             });
           cy.get("@buttons").eq(i).click({ force: true });
+          cy.wait(500);
           cy.get("@ingredientsContainer")
             .find("[class^=ingredient-box_ingrBox__]")
             .eq(i)

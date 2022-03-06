@@ -17,7 +17,6 @@ import {
   TStorageUserData,
   TError,
   TUserPair,
-  AppDispatch,
 } from "../../utils/types";
 
 import * as constants from "../constants/auth";
@@ -60,20 +59,6 @@ export interface ILogoutSuccess {
 
 export interface ILogoutError {
   readonly type: typeof constants.LOGOUT_ERROR;
-  readonly payload: TError;
-}
-
-export interface IUpdateTokenRequest {
-  readonly type: typeof constants.UPDATE_TOKEN_REQUEST;
-}
-
-export interface IUpdateTokenSuccess {
-  readonly type: typeof constants.UPDATE_TOKEN_SUCCESS;
-  readonly payload: Partial<TUserAuthStore>;
-}
-
-export interface IUpdateTokenError {
-  readonly type: typeof constants.UPDATE_TOKEN_ERROR;
   readonly payload: TError;
 }
 
@@ -140,7 +125,6 @@ export type TAuthRequests =
   | IRegisterRequest
   | ILoginRequest
   | ILogoutRequest
-  | IUpdateTokenRequest
   | IForgotPassRequest
   | IResetPassRequest
   | IProfileRequest
@@ -150,7 +134,6 @@ export type TAuthSuccess =
   | IRegisterSuccess
   | ILoginSuccess
   | ILogoutSuccess
-  | IUpdateTokenSuccess
   | IForgotPassSuccess
   | IResetPassSuccess
   | IProfileSuccess
@@ -161,7 +144,6 @@ export type TAuthError =
   | IRegisterError
   | ILoginError
   | ILogoutError
-  | IUpdateTokenError
   | IForgotPassError
   | IResetPassError
   | IProfileError
@@ -170,7 +152,6 @@ export type TAuthError =
 export type TAuthUserData =
   | IRegisterSuccess
   | ILoginSuccess
-  | IUpdateTokenSuccess
   | IUpdateProfileSuccess;
 
 type TFetchMethod = "POST" | "GET" | "PATH";
@@ -201,18 +182,45 @@ const apiRequest: (
   return fetch(API_URL + endpoint, requestOptions);
 };
 
-export const checkResponse = (response: Response) => {
+const apiSecureRequest: (
+  endpoint: string,
+  auth: string,
+  method?: TFetchMethod
+) => Promise<Response> = (endpoint, auth, method) => {
+  const requestOptions: RequestInit = {
+    method: method,
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: auth,
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+  };
+  return fetch(API_URL + endpoint, requestOptions);
+};
+
+const checkResponse = (response: Response) => {
   if (response.ok) {
     return response.json();
   } else {
     if (response.status === 401) {
       return Promise.reject(new Error("Неверный пароль!"));
     } else if (response.status === 403) {
-      return Promise.reject(new Error("Token expired"));
+      return Promise.reject(new Error("Токен просрочен или недействителен!"));
     } else {
       return Promise.reject(new Error(`Ошибка ${response.status}`));
     }
   }
+};
+
+const isTokenIssue: (error: Error) => boolean = (error) => {
+  return (
+    error.message === "Неверный пароль!" ||
+    error.message === "Токен просрочен или недействителен!"
+  );
 };
 
 const setAuthData = (serverData: TServerData) => {
@@ -222,45 +230,30 @@ const setAuthData = (serverData: TServerData) => {
     ...serverData,
   });
   setUserData(userData);
-  const authData: TUserAuthStats = (({ refreshToken, ...data }) => data)({
+  const authData: TUserAuthStats = (({ refreshToken, accessToken, ...data }) =>
+    data)({
     ...userData,
   });
   return authData;
 };
 
-const updateAllTokens: (dispatch: AppDispatch) => void = (dispatch) => {
+export const updateTokens = async () => {
   const refreshToken = getUserRefreshToken();
-  if (!refreshToken) {
-    return;
-  }
-  dispatch({ type: constants.UPDATE_TOKEN_REQUEST });
-  apiRequest("/auth/token", { token: refreshToken })
+  return apiRequest("/auth/token", { token: refreshToken })
     .then(checkResponse)
     .then((result) => {
       if (result.success) {
         updateUserRefreshToken(result.refreshToken);
         updateUserAccessToken(result.accessToken);
-        dispatch({
-          type: constants.UPDATE_TOKEN_SUCCESS,
-          payload: { accessToken: result.accessToken },
-        });
+        return true;
       } else {
-        throw new Error("User Update Token JSON Error!");
+        return false;
       }
     })
-    .catch((error) => {
-      dispatch({
-        type: constants.UPDATE_TOKEN_ERROR,
-        payload: { source: "Update token", message: error.message },
-      });
+    .catch(() => {
+      return false;
     });
 };
-
-export function reconnectUser() {
-  return function (dispatch: Dispatch) {
-    updateAllTokens(dispatch);
-  };
-}
 
 export function registerUser(user: string, email: string, password: string) {
   return function (dispatch: Dispatch) {
@@ -280,7 +273,7 @@ export function registerUser(user: string, email: string, password: string) {
           });
           setUserIsLogged(true);
         } else {
-          throw new Error("User Register JSON Error!");
+          return Promise.reject(new Error("User Register JSON Error!"));
         }
       })
       .catch((error) => {
@@ -306,7 +299,7 @@ export function loginUser(email: string, password: string) {
           });
           setUserIsLogged(true);
         } else {
-          throw new Error("User Login Error!");
+          return Promise.reject(new Error("User Login Error!"));
         }
       })
       .catch((error) => {
@@ -348,7 +341,7 @@ export function forgotPassword(email: string) {
             type: constants.FORGOT_PASS_SUCCESS,
           });
         } else {
-          throw new Error("Forgot Password JSON Error!");
+          return Promise.reject(new Error("Forgot Password JSON Error!"));
         }
       })
       .catch((error) => {
@@ -372,7 +365,7 @@ export function resetPassword(email: string, password: string, token: string) {
           });
           loginUser(email, password);
         } else {
-          throw new Error("Reset Password JSON Error!");
+          return Promise.reject(new Error("Reset Password JSON Error!"));
         }
       })
       .catch((error) => {
@@ -387,18 +380,7 @@ export function resetPassword(email: string, password: string, token: string) {
 export function getProfile() {
   return function (dispatch: Dispatch) {
     dispatch({ type: constants.PROFILE_REQUEST });
-    const url = `${API_URL}/auth/user`;
-    const options: RequestInit = {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: getUserAccessToken(),
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer",
-    };
-    fetch(url, options)
+    apiSecureRequest("/auth/user", getUserAccessToken(), "GET")
       .then(checkResponse)
       .then((result) => {
         if (result.success) {
@@ -406,16 +388,22 @@ export function getProfile() {
           dispatch({ type: constants.PROFILE_SUCCESS, payload: userProfile });
           setUserProfile(result.user);
         } else {
-          throw new Error("User Profile JSON Error!");
+          return Promise.reject(new Error("User Profile JSON Error!"));
         }
       })
       .catch((error: Error) => {
-        if (
-          error.message === "Token expired" ||
-          error.message === "Неверный пароль!"
-        ) {
-          updateAllTokens(dispatch);
-          getProfile();
+        const tokenIssue = isTokenIssue(error);
+        if (tokenIssue) {
+          updateTokens().then((result) => {
+            if (result) {
+              getProfile();
+            } else {
+              dispatch({
+                type: constants.PROFILE_ERROR,
+                payload: { source: "Get User Error", message: error.message },
+              });
+            }
+          });
         } else {
           dispatch({
             type: constants.PROFILE_ERROR,
@@ -452,16 +440,22 @@ export function setProfile(email: string, name: string, password: string) {
           });
           setUserProfile(userProfile);
         } else {
-          throw new Error("User Profile JSON Error!");
+          return Promise.reject(new Error("User Profile JSON Error!"));
         }
       })
       .catch((error) => {
-        if (
-          error.message === "Token expired" ||
-          error.message === "Неверный пароль!"
-        ) {
-          updateAllTokens(dispatch);
-          setProfile(email, name, password);
+        const tokenIssue = isTokenIssue(error);
+        if (tokenIssue) {
+          updateTokens().then((result) => {
+            if (result) {
+              getProfile();
+            } else {
+              dispatch({
+                type: constants.UPDATE_PROFILE_ERROR,
+                payload: { source: "Set User Error", message: error.message },
+              });
+            }
+          });
         } else {
           dispatch({
             type: constants.UPDATE_PROFILE_ERROR,

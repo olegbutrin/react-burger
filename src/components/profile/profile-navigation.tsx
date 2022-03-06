@@ -6,45 +6,37 @@ import css from "./profile.module.css";
 const ProfileNavigation = () => {
   const { pathname } = useLocation();
 
-  const isProfile: () => string = () => {
-    if (pathname === "/profile") {
-      return "";
-    } else {
-      return " text_color_inactive";
-    }
-  };
-
-  const isOrders: () => string =  () => {
-    if (pathname.indexOf("/profile/orders") === 0) {
-      return "";
-    } else {
-      return " text_color_inactive";
-    }
-  };
+  const isProfile: boolean = pathname === "/profile";
+  const isOrders: boolean = pathname.indexOf("/profile/orders") !== -1;
+  const isLogout: boolean = pathname === "/logout";
 
   return (
     <div>
-      <div className={"text text_type_main-medium mb-6 mt-2" + isProfile()}>
+      <div className={"text text_type_main-medium mb-6 mt-2"}>
         <Link className={css.profileLink} to={"/profile"}>
-          Профиль
+          <span className={isProfile ? "" : " text_color_inactive"}>
+            Профиль
+          </span>
         </Link>
       </div>
-      <div className={"text text_type_main-medium mb-6 mt-2" + isOrders()}>
+      <div className={"text text_type_main-medium mb-6 mt-2"}>
         <Link className={css.profileLink} to={"/profile/orders"}>
-          История заказов
+          <span className={isOrders ? "" : " text_color_inactive"}>
+            История заказов
+          </span>
         </Link>
       </div>
-      <p className="text text_type_main-medium text_color_inactive mb-6 mt-2">
+      <p className={"text text_type_main-medium mb-6 mt-2"}>
         <Link className={css.profileLink} to={"/logout"}>
-          Выход
+          <span className={isLogout ? "" : " text_color_inactive"}>Выход</span>
         </Link>
       </p>
-      {isProfile() === "" && (
+      {isProfile && (
         <p className="text text_type_main-small text_color_inactive pt-20">
           В этом разделе вы можете изменить свои персональные данные
         </p>
       )}
-      {isOrders() === "" && (
+      {isOrders && (
         <p className="text text_type_main-small text_color_inactive pt-20">
           В этом разделе вы можете посмотреть свою историю заказов
         </p>
