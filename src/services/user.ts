@@ -76,7 +76,6 @@ export const getLocalStorageAuth: () => TUserAuthStats | null = () => {
     return {
       isLogged: !!data.isLogged,
       user: data.user,
-      accessToken: data.accessToken,
     };
   } else {
     return null;

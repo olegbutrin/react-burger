@@ -5,7 +5,7 @@ import * as constants from "../constants/burger-order";
 
 import { TOrderActions } from "../actions/burger-order";
 
-const initialState: TOrder = {
+export const initialState: TOrder = {
   order: null,
   orderRequest: false,
   orderFailed: false,

@@ -22,6 +22,8 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import css from "./burger-order.module.css";
+import { updateTokens } from "../../../../services/actions/auth";
+import { LOGOUT_SUCCESS } from "../../../../services/constants/auth";
 
 // выносим кнопку запроса заказа в отдельный компонент потому,
 // что нужно использовать хук проверки статуса пользователя
@@ -42,7 +44,17 @@ const OrderButton: React.FC<{ productsID: string[]; isRequest: boolean }> = ({
     if (btnClicked) {
       setBtnClicked(false);
       if (isAuthenticated) {
-        dispatch(getOrder(productsID));
+        updateTokens().then((result) => {
+          if (result) {
+            dispatch(getOrder(productsID));
+          } else {
+            dispatch({ type: LOGOUT_SUCCESS });
+            history.push({
+              pathname: "/login",
+              state: { from: history.location.pathname },
+            });
+          }
+        });
       } else {
         history.push({
           pathname: "/login",
@@ -50,7 +62,14 @@ const OrderButton: React.FC<{ productsID: string[]; isRequest: boolean }> = ({
         });
       }
     }
-  }, [btnClicked, isAuthenticated, isRequest, history, dispatch, productsID]);
+  }, [
+    btnClicked,
+    isAuthenticated,
+    isRequest,
+    history,
+    dispatch,
+    productsID,
+  ]);
 
   const callback = (event: SyntheticEvent) => {
     event.preventDefault();

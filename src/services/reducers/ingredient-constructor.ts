@@ -6,7 +6,7 @@ import { TBurgerActions } from "../actions/ingredient-constructor";
 
 import { TBurger } from "../../utils/types";
 
-const initialState: TBurger = {
+export const initialState: TBurger = {
   bun: null,
   products: [],
 };

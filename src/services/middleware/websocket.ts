@@ -14,6 +14,7 @@ import type {
 import { WS_URL } from "../../utils/defaults";
 
 import { getUserAccessToken } from "../user";
+import { updateTokens } from "../actions/auth";
 
 const getWSUrl = (type: TFeedType) => {
   switch (type) {
@@ -38,7 +39,7 @@ const convertOrdersToTickets: (
   };
   if (data && data.orders) {
     data.orders.forEach((order) => {
-      // Фильтруем и пытаемся рассортировать ингредиенты так, 
+      // Фильтруем и пытаемся рассортировать ингредиенты так,
       // чтобы id булки был в одном экземпляре и располагался на последнем месте в массиве.
       // Такое поведение нужно потому, что общий список заказов содержит разные составы ингредиентов,
       // в зависимости от того, как разные студенты ренализовали отправку заказа.
@@ -105,11 +106,20 @@ export const socketMiddleware = (
     let socket: WebSocket | null = null;
     return (next) => (action: TApplicationActions) => {
       //
-      const { onInit, onOpen, onMessage, onError, onClose, onClosed, onSend } =
-        wsActions;
+      const {
+        onInit,
+        onConnect,
+        onRefuse,
+        onOpen,
+        onMessage,
+        onError,
+        onClose,
+        onClosed,
+        onSend,
+      } = wsActions;
 
       // start process actions
-      if (action.type === onInit) {
+      if (action.type === onInit || action.type === onRefuse) {
         const { dispatch, getState } = store;
         const { feed } = getState();
         const url = getWSUrl(feed.type);
@@ -120,6 +130,8 @@ export const socketMiddleware = (
 
         if (socket) {
           // on open
+          dispatch({ type: onConnect });
+
           socket.onopen = () => {
             dispatch({ type: onOpen });
           };
@@ -128,7 +140,10 @@ export const socketMiddleware = (
           socket.onerror = (event) => {
             dispatch({
               type: onError,
-              payload: { source: "WebSocket Connection", message: event.type },
+              payload: {
+                source: "WebSocket Connection",
+                message: event.type,
+              },
             });
           };
 
@@ -136,12 +151,28 @@ export const socketMiddleware = (
           socket.onmessage = (event) => {
             const { data } = event;
             const parsedData: TFeedServerMessage = JSON.parse(data);
-            const { list } = getState();
-            const ingredients = list.ingredients;
-            dispatch({
-              type: onMessage,
-              payload: convertOrdersToTickets(parsedData, ingredients),
-            });
+            if (parsedData.success) {
+              const { list } = getState();
+              const ingredients = list.ingredients;
+              dispatch({
+                type: onMessage,
+                payload: convertOrdersToTickets(parsedData, ingredients),
+              });
+            } else {
+              updateTokens().then((result) => {
+                if (result) {
+                  dispatch({ type: onRefuse });
+                } else {
+                  dispatch({
+                    type: onError,
+                    payload: {
+                      source: "WebSocket Connection",
+                      message: "Server refused access token!",
+                    },
+                  });
+                }
+              });
+            }
           };
 
           // on close

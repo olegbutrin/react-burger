@@ -24,6 +24,8 @@ import {
   WS_CLOSE,
   WS_CONNECTION_CLOSED,
   WS_SEND_MESSAGE,
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_REFUSED,
 } from "../services/constants/websocket";
 
 import {
@@ -81,7 +83,6 @@ export type TServerData = {
 export type TUserAuthStore = {
   readonly user: TUserPair;
   readonly isLogged: boolean;
-  readonly accessToken: string;
   readonly isForgot: boolean;
 };
 
@@ -93,6 +94,7 @@ export type TUserAuthStats = Omit<TUserAuthStore, "isForgot">;
 // То же самое, что и для статуса, плюс токен обновления
 export type TStorageUserData = TUserAuthStats & {
   readonly refreshToken: string;
+  readonly accessToken: string;
 };
 
 export type TBurger = {
@@ -122,6 +124,7 @@ export type TError = {
 export type TWebsocketState = {
   connected: boolean;
   messages: string[];
+  refused: boolean;
 };
 
 // FEED
@@ -156,6 +159,7 @@ export type TFeedServerMessage = {
   total: number;
   totalToday: number;
   success: boolean;
+  message?: string;
 };
 
 export type TFeedTicketMessage = {
@@ -236,6 +240,8 @@ export type AppDispatch = Dispatch<TApplicationActions>;
 //
 export type TWSMiddlewareActions = {
   readonly onInit: typeof WS_CONNECTION_START;
+  readonly onConnect: typeof WS_CONNECTION_SUCCESS;
+  readonly onRefuse: typeof WS_CONNECTION_REFUSED
   readonly onError: typeof WS_CONNECTION_ERROR;
   readonly onClose: typeof WS_CLOSE;
   readonly onClosed: typeof WS_CONNECTION_CLOSED;

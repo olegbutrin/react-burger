@@ -18,9 +18,15 @@ const UserOrders = () => {
     };
   }, [dispatch]);
 
-  const { tickets, type } = useSelector(
-    (store) => store.feed
-  );
+  const { refused } = useSelector((store) => store.socket);
+
+  useEffect(() => {
+    if (refused) {
+      dispatch(wsConnect());
+    }
+  }, [dispatch, refused]);
+
+  const { tickets, type } = useSelector((store) => store.feed);
 
   const location = useLocation();
 
@@ -29,15 +35,15 @@ const UserOrders = () => {
       {type === "user" &&
         tickets.map((ticket) => {
           return (
-            <Link key={`Ticket_user_${ticket._id}`} to={{
-              pathname: `/profile/orders/${ticket.number}`,
-              state: { background: location },
-            }}
-            className={css.routeLink}>
-              <Ticket
-              ticketData={ticket}
-              tickedType={"user"}
-            />
+            <Link
+              key={`Ticket_user_${ticket._id}`}
+              to={{
+                pathname: `/profile/orders/${ticket.number}`,
+                state: { background: location },
+              }}
+              className={css.routeLink}
+            >
+              <Ticket ticketData={ticket} tickedType={"user"} />
             </Link>
           );
         })}

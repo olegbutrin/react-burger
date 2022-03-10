@@ -40,18 +40,24 @@ export function getOrder(products: string[]) {
         'Authorization': getUserAccessToken(),
       },
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
         } else {
-          throw new Error("Error order receive");
+          if (response.status === 401) {
+            return Promise.reject(new Error("Неверный пароль!"));
+          } else if (response.status === 403) {
+            return Promise.reject(new Error("Token expired"));
+          } else {
+            return Promise.reject(new Error(`Ошибка ${response.status}`));
+          }
         }
       })
       .then((data) => {
         const orderData: TOrderType = data;
         dispatch({ type: constants.GET_ORDER_SUCCESS, payload: orderData });
       })
-      .catch(() => {
+      .catch((error) => {
         dispatch({ type: constants.GET_ORDER_FAILED });
       });
   };

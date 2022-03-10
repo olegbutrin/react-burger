@@ -11,7 +11,7 @@ import { TError } from "../../utils/types";
 import { TOrderError } from "../actions/order";
 import { ORDER_DETAILS_ERROR } from "../constants/order";
 
-const initialState: TError = {
+export const initialState: TError = {
   source: "",
   message: "",
 };
@@ -28,7 +28,6 @@ export const errorReducer: Reducer<TError, TAuthError | TWSError | TOrderError |
     case constants.UPDATE_PROFILE_ERROR:
     case constants.FORGOT_PASS_ERROR:
     case constants.RESET_PASS_ERROR:
-    case constants.UPDATE_TOKEN_ERROR:
     case WS_CONNECTION_ERROR:
     case ORDER_DETAILS_ERROR:
       return { source: action.payload.source, message: action.payload.message };
