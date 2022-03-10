@@ -59,7 +59,7 @@ const RoutedContent = () => {
       <AppHeader menu={mainMenu} />
       <div className={css.contents}>
         <Switch location={background || location}>
-          <Route path="/" exact={true}>
+          <Route path="/react-burger" exact={true}>
             <MainPage />
           </Route>
           <Route path="/login" exact={true}>

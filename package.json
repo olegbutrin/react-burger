@@ -2,7 +2,7 @@
   "name": "react-burger",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://burger.stellar.nomoredomains.xyz",
+  "homepage": "https://olegbutrin.github.io/react-burger/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.1",
     "@testing-library/jest-dom": "^5.15.1",
