@@ -59,7 +59,7 @@ const RoutedContent = () => {
       <AppHeader menu={mainMenu} />
       <div className={css.contents}>
         <Switch location={background || location}>
-          <Route path="/react-burger" exact={true}>
+          <Route path="/" exact={true}>
             <MainPage />
           </Route>
           <Route path="/login" exact={true}>
@@ -176,7 +176,7 @@ const App = () => {
   return (
     <div className={css.page}>
       <main className={css.main + " mt-10 ml-10 mr-10"}>
-        <Router>
+        <Router basename="/react-burger">
           <RoutedContent />
         </Router>
         {/* вывод ошибки в модальном окне */}
