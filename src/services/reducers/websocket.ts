@@ -6,7 +6,7 @@ import { TWSActions } from "../actions/websocket";
 
 import { TWebsocketState } from "../../utils/types";
 
-const initialState: TWebsocketState = {
+export const initialState: TWebsocketState = {
   connected: false,
   messages: [],
   refused: false,

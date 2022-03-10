@@ -5,7 +5,7 @@ import * as constants from "../constants/order";
 import { TOrderStore } from "../../utils/types";
 import { TOrderDetails, TOrderError } from "../actions/order";
 
-const initialState: TOrderStore = {
+export const initialState: TOrderStore = {
   request: false,
   order: null,
 };

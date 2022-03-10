@@ -8,7 +8,7 @@ type TPreviewState = {
   productData: IIngredientData | null;
 };
 
-const initialState: TPreviewState = {
+export const initialState: TPreviewState = {
   productData: null,
 };
 

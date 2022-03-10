@@ -11,7 +11,7 @@ import { TError } from "../../utils/types";
 import { TOrderError } from "../actions/order";
 import { ORDER_DETAILS_ERROR } from "../constants/order";
 
-const initialState: TError = {
+export const initialState: TError = {
   source: "",
   message: "",
 };

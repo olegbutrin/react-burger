@@ -8,7 +8,7 @@ import { TAuthSuccess, TAuthError, TAuthUserData } from "../actions/auth";
 
 import { TUserAuthStore } from "../../utils/types";
 
-const initialState: TUserAuthStore = {
+export const initialState: TUserAuthStore = {
   user: {
     name: "",
     email: "",
@@ -73,6 +73,7 @@ export const authReducer: Reducer<TUserAuthStore, TAuthReducerActions> = (state 
       return {
         ...state,
         isForgot: forgotState(action),
+        isLogged: false,
       };
     case constants.RESTORE_USER:
       return {

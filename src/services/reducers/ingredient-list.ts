@@ -4,7 +4,7 @@ import * as constants from "../constants/ingredient-list";
 
 import { TGetIngredientsActions } from "../actions/ingredient-list";
 
-const initialState: TIngredientListStore = {
+export const initialState: TIngredientListStore = {
   ingredients: [],
   ingredientRequest: false,
   ingredientFailed: false,
@@ -30,6 +30,7 @@ export const ingredientsReducer = (
     case constants.GET_INGREDIENTS_FAILED:
       return {
         ...initialState,
+        ingredientRequest: false,
         ingredientFailed: true,
       };
     default:
