@@ -4,8 +4,10 @@
 
 ## Учебный проект курса React-разработчик в Яндекс.Практикум
 
-[Демо-сайт на github.io](https://olegbutrin.github.io/react-burger/)
+[Демо-сайт на github.io](https://olegbutrin.github.io/react-burger/)\
 [Демо-сайт в Яндекс.Облаке](https://burger.stellar.nomoredomains.xyz/)
+
+![App Preview](https://github.com/olegbutrin/react-burger//raw/sprint-6\/step-1/public/Preview.png)
 
 ## Установка
 
