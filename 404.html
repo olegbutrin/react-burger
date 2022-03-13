@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <title>Single Page Apps for GitHub Pages</title>
     <script type="text/javascript">
+      localStorage.setItem("_burgerloc_", JSON.stringify(window.location));
+      localStorage.setItem("_burgerhist_", JSON.stringify(window.history));
       var pathSegmentsToKeep = 1;
       var l = window.location;
-      console.log(l);
       l.replace(
         l.protocol +
           "//" +
