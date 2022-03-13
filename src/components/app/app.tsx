@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "../../utils/hooks";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
   useLocation,
